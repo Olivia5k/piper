@@ -3,6 +3,10 @@
 `piper` is a manifest-based build system which is completely controlled from
 configuration files local to a repository.
 
+## Installation
+
+As with any good Python project; `sudo pip install piper`.
+
 ## Rationale
 
 *"Whatever you do, don't ever build a new build system. That would be the worst
