@@ -16,10 +16,14 @@ class PyTest(TestCommand):
         sys.exit(errno)
 
 
-def load_requirements():
-    filename = os.path.join(os.path.dirname(sys.argv[0]), 'requirements.txt')
+def load_requirements(prefix=None):
+    filename = 'requirements.txt'
+    if prefix:
+        filename = '{0}.{1}'.format(prefix, filename)
 
-    with open(filename) as handle:
+    path = os.path.join(os.path.dirname(sys.argv[0]), filename)
+
+    with open(path) as handle:
         lines = (line.strip() for line in handle)
         return [line for line in lines if line and not line.startswith("#")]
 
@@ -34,6 +38,7 @@ setup(
     license='MIT',
     packages=['piper'],
     install_requires=load_requirements(),
+    tests_require=load_requirements('test'),
     zip_safe=False,
     entry_points={
         'console_scripts': [
