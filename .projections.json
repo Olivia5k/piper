@@ -1,0 +1,10 @@
+{
+    "piper/*.py": {
+        "alternate": "test/test_{}.py",
+        "command": "source"
+    },
+    "test/test_*.py": {
+        "alternate": "piper/{}.py",
+        "command": "test"
+    },
+}
