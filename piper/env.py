@@ -1,3 +1,5 @@
+import tempfile
+import shutil
 from piper.utils import DotDict
 
 
@@ -23,10 +25,11 @@ class TempDirEnvironment(DotDict):
     """
 
     def setup(self):
-        pass
+        self.dir = tempfile.mkdtemp()
 
     def teardown(self):
-        pass
+        if self.delete_when_done:
+            shutil.rmtree(self.dir)
 
     def execute(self, step):
         raise NotImplementedError()
