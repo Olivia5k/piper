@@ -1,6 +1,6 @@
 import pytest
 
-from piper.core import Environment
+from piper.env import Environment
 
 
 class TestEnvironment(object):
