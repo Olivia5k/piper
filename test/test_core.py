@@ -1,4 +1,5 @@
 import pytest
+import mock
 
 from piper.env import Environment
 
@@ -9,4 +10,4 @@ class TestEnvironment(object):
 
     def test_execute_raises_notimplemented(self):
         with pytest.raises(NotImplementedError):
-            self.env.execute()
+            self.env.execute(mock.MagicMock())

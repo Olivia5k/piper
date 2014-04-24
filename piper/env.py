@@ -8,7 +8,7 @@ class Environment(DotDict):
     def teardown(self):
         pass
 
-    def execute(self):
+    def execute(self, step):
         raise NotImplementedError()
 
 
@@ -28,5 +28,5 @@ class TempDirEnvironment(DotDict):
     def teardown(self):
         pass
 
-    def execute(self):
+    def execute(self, step):
         raise NotImplementedError()
