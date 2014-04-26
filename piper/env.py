@@ -47,7 +47,7 @@ class TempDirEnvironment(Environment):
         cwd = os.getcwd()
         if cwd != self.dir:
             self.log.warning(
-                "Working directory changed to '{}'. Resetting to '{}'.".format(
+                "Directory changed to '{0}'. Resetting to '{1}'.".format(
                     cwd, self.dir
                 )
             )

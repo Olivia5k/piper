@@ -20,7 +20,7 @@ class Step(object):
         self.index = index
 
         self.log = logbook.Logger(
-            '{}-{}'.format(self.__class__.__name__, self.index)
+            '{0}-{1}'.format(self.__class__.__name__, self.index)
         )
 
     def execute(self):
