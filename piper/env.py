@@ -1,9 +1,17 @@
 import tempfile
 import shutil
+
+import logbook
+
 from piper.utils import DotDict
 
 
-class Environment(DotDict):
+class Environment(object):
+    def __init__(self, conf):
+        self.conf = DotDict(conf)
+
+        self.log = logbook.Logger(self.__class__.__name__)
+
     def setup(self):  # pragma: nocover
         pass
 
@@ -26,9 +34,10 @@ class TempDirEnvironment(Environment):
 
     def setup(self):
         self.dir = tempfile.mkdtemp()
+        self.log.info("Working directory set to '{0}'".format(self.dir))
 
     def teardown(self):
-        if self.delete_when_done:
+        if self.conf.delete_when_done:
             shutil.rmtree(self.dir)
 
     def execute(self, step):

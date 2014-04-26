@@ -28,14 +28,17 @@ class TestTempDirEnvironment(object):
     @mock.patch('shutil.rmtree')
     def test_teardown_default(self, rmtree):
         self.env.dir = mock.MagicMock()
-        self.env.delete_when_done = True
+        self.env.conf.delete_when_done = True
         self.env.teardown()
 
         rmtree.assert_called_once_with(self.env.dir)
 
     @mock.patch('shutil.rmtree')
     def test_teardown_not_permitted(self, rmtree):
-        self.env.delete_when_done = False
+        self.env.conf.delete_when_done = False
         self.env.teardown()
 
         assert rmtree.call_count == 0
+
+    def test_execute(self):
+        pass
