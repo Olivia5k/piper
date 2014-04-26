@@ -44,4 +44,13 @@ class TempDirEnvironment(Environment):
             shutil.rmtree(self.dir)
 
     def execute(self, step):
-        raise NotImplementedError()
+        cwd = os.getcwd()
+        if cwd != self.dir:
+            self.log.warning(
+                "Working directory changed to '{}'. Resetting to '{}'.".format(
+                    cwd, self.dir
+                )
+            )
+            os.chdir(self.dir)
+
+        step.execute()

@@ -43,5 +43,25 @@ class TestTempDirEnvironment(object):
 
         assert rmtree.call_count == 0
 
-    def test_execute(self):
-        pass
+
+class TestTempDirEnvironmentExecution(object):
+    def setup_method(self, method):
+        self.env = TempDirEnvironment({})
+        self.env.dir = '/'
+        self.step = mock.MagicMock()
+
+    @mock.patch('os.getcwd')
+    def test_execute(self, getcwd):
+        getcwd.return_value = self.env.dir
+        self.env.execute(self.step)
+
+        getcwd.assert_called_once_with()
+        self.step.execute.assert_called_once_with()
+
+    @mock.patch('os.chdir')
+    @mock.patch('os.getcwd')
+    def test_execute_cwd_changes_back(self, getcwd, chdir):
+        getcwd.return_value = '/space/police'
+
+        self.env.execute(self.step)
+        self.step.execute.assert_called_once_with()
