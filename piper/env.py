@@ -14,7 +14,7 @@ class Environment(DotDict):
         raise NotImplementedError()
 
 
-class TempDirEnvironment(DotDict):
+class TempDirEnvironment(Environment):
     """
     Example implementation of an environment, probably useful as well
 
