@@ -1,7 +1,21 @@
-import os
 import sys
 from setuptools import setup
 from setuptools.command.test import test as TestCommand
+
+install_requires = (
+    'Logbook==0.6.0',
+)
+
+tests_require = (
+    'cov-core==1.7',
+    'coverage==3.7.1',
+    'mock==1.0.1',
+    'py==1.4.20',
+    'pytest==2.5.2',
+    'pytest-cov==1.6',
+    'tox==1.7.1',
+    'virtualenv==1.11.4',
+)
 
 
 class PyTest(TestCommand):
@@ -16,18 +30,6 @@ class PyTest(TestCommand):
         sys.exit(errno)
 
 
-def load_requirements(prefix=None):
-    filename = 'requirements.txt'
-    if prefix:
-        filename = '{0}.{1}'.format(prefix, filename)
-
-    path = os.path.join(os.path.dirname(sys.argv[0]), filename)
-
-    with open(path) as handle:
-        lines = (line.strip() for line in handle)
-        return [line for line in lines if line and not line.startswith("#")]
-
-
 setup(
     name='piper',
     version='0.0.1',
@@ -37,8 +39,8 @@ setup(
     description=('Manifest-based build pipeline system'),
     license='MIT',
     packages=['piper'],
-    install_requires=load_requirements(),
-    tests_require=load_requirements('test'),
+    install_requires=install_requires,
+    tests_require=tests_require,
     zip_safe=False,
     entry_points={
         'console_scripts': [
