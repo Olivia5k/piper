@@ -1,3 +1,4 @@
+import os
 import tempfile
 import shutil
 
@@ -34,6 +35,8 @@ class TempDirEnvironment(Environment):
 
     def setup(self):
         self.dir = tempfile.mkdtemp()
+
+        os.chdir(self.dir)
         self.log.info("Working directory set to '{0}'".format(self.dir))
 
     def teardown(self):

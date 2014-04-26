@@ -18,11 +18,14 @@ class TestTempDirEnvironment(object):
     def setup_method(self, method):
         self.env = TempDirEnvironment({})
 
+    @mock.patch('os.chdir')
     @mock.patch('tempfile.mkdtemp')
-    def test_setup(self, mkdtemp):
+    def test_setup(self, mkdtemp, chdir):
+        mkdtemp.return_value = '/'
         self.env.setup()
 
         mkdtemp.assert_called_once_with()
+        chdir.assert_called_once_with(mkdtemp.return_value)
         assert self.env.dir == mkdtemp.return_value
 
     @mock.patch('shutil.rmtree')
