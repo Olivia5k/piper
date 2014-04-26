@@ -10,7 +10,7 @@ class DotDict(object):
     def __init__(self, data):
         self.data = data
 
-    def __repr__(self):
+    def __repr__(self):  # pragma: nocover
         return '<DotDict {}>'.format(self.data)
 
     def __getattr__(self, key):

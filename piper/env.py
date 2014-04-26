@@ -4,10 +4,10 @@ from piper.utils import DotDict
 
 
 class Environment(DotDict):
-    def setup(self):
+    def setup(self):  # pragma: nocover
         pass
 
-    def teardown(self):
+    def teardown(self):  # pragma: nocover
         pass
 
     def execute(self, step):
