@@ -29,7 +29,7 @@ class Piper(object):
 
         """
 
-        pass
+        self.load_config()
 
     def load_config(self):
         """
