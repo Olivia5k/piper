@@ -1,3 +1,6 @@
+import sys
+import os
+
 import logbook
 
 
@@ -34,7 +37,9 @@ class Piper(object):
 
         """
 
-        pass
+        if not os.path.isfile('piper.yml'):
+            self.log.error('Config file not found in $PWD. Aborting.')
+            sys.exit(127)
 
     def setup_environment(self):
         """
