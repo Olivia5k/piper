@@ -4,6 +4,7 @@ from setuptools.command.test import test as TestCommand
 
 install_requires = (
     'Logbook==0.6.0',
+    'PyYAML==3.11',
 )
 
 tests_require = (
