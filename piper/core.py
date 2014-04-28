@@ -1,6 +1,7 @@
 import sys
 import os
 
+import yaml
 import logbook
 
 
@@ -39,7 +40,11 @@ class Piper(object):
 
         if not os.path.isfile('piper.yml'):
             self.log.error('Config file not found in $PWD. Aborting.')
-            sys.exit(127)
+            return sys.exit(127)  # 'return' is for the tests to make sense
+
+        with open('piper.yml') as config:
+            self.raw_config = yaml.safe_load(config)
+            self.log.info('Configuration file loaded.')
 
     def setup_environment(self):
         """
