@@ -25,15 +25,19 @@ class Piper(object):
         'additionalProperties': False,
         'properties': {
             'version': {
-                'type': 'string'
+                'description': 'Semantic version string for this config.',
+                'type': 'string',
             },
             'environment': {
+                'description': 'The environment configuration for this build.',
                 'type': 'object',
             },
             'steps': {
+                'description': 'Definitions of executable build steps.',
                 'type': 'array',
             },
             'sets': {
+                'description': 'Runnable collections of steps.',
                 'type': 'object',
                 'additionalProperties': True,
             },
