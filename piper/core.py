@@ -4,6 +4,8 @@ import os
 import yaml
 import logbook
 
+from piper.utils import DotDict
+
 
 class Piper(object):
     """
@@ -19,6 +21,9 @@ class Piper(object):
     """
 
     def __init__(self):
+        self.raw_config = None  # Dict data
+        self.config = None  # DotDict object
+
         self.log = logbook.Logger(self.__class__.__name__)
 
     def setup(self):
@@ -43,8 +48,18 @@ class Piper(object):
             return sys.exit(127)  # 'return' is for the tests to make sense
 
         with open('piper.yml') as config:
-            self.raw_config = yaml.safe_load(config)
-            self.log.info('Configuration file loaded.')
+            file_data = config.read()
+
+            try:
+                self.raw_config = yaml.safe_load(file_data)
+
+            except yaml.parser.ParserError as exc:
+                self.log.error(exc)
+                self.log.error('Invalid YAML in piper.yml. Aborting.')
+                return sys.exit(126)
+
+        self.config = DotDict(self.raw_config)
+        self.log.info('Configuration file loaded.')
 
     def setup_environment(self):
         """

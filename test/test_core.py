@@ -1,6 +1,7 @@
 import mock
 
 from piper.core import Piper
+from piper.utils import DotDict
 
 from test.utils import builtin
 
@@ -32,6 +33,17 @@ class TestPiperConfigLoader(PiperTestBase):
 
         exit.assert_called_once_with(127)
 
+    @mock.patch('sys.exit')
+    @mock.patch('os.path.isfile')
+    def test_load_config_invald_yaml(self, isfile, exit):
+        isfile.return_value = True
+        fake = mock.mock_open(read_data='{')
+
+        with mock.patch(builtin('open'), fake):
+            self.piper.load_config()
+
+        exit.assert_called_once_with(126)
+
     @mock.patch('yaml.safe_load')
     @mock.patch('os.path.isfile')
     def test_load_config(self, isfile, sl):
@@ -41,4 +53,7 @@ class TestPiperConfigLoader(PiperTestBase):
         with mock.patch(builtin('open'), fake):
             self.piper.load_config()
 
-        sl.assert_called_once_with(fake.return_value)
+        sl.assert_called_once_with(fake.return_value.read.return_value)
+        assert self.piper.raw_config == sl.return_value
+        assert isinstance(self.piper.config, DotDict)
+        assert self.piper.config.data == sl.return_value
