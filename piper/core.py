@@ -34,12 +34,15 @@ class Piper(object):
             },
             'steps': {
                 'description': 'Definitions of executable build steps.',
-                'type': 'array',
+                'type': 'object',
             },
             'sets': {
                 'description': 'Runnable collections of steps.',
                 'type': 'object',
-                'additionalProperties': True,
+                'additionalProperties': {
+                    'type': 'array',
+                    'items': {'type': 'string'},
+                },
             },
         },
     }
