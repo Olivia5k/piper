@@ -1,0 +1,20 @@
+version: '0.0.1-alpha1'
+
+environment:
+  class: 'piper.env.TempDirEnvironment'
+  delete_when_done: false
+
+steps:
+  test:
+    class: 'piper.step.Step'
+    command: '/usr/bin/env python setup.py test'
+  build:
+    class: 'piper.step.Step'
+    command: '/usr/bin/env python setup.py sdist'
+
+sets:
+    test:
+    - 'test'
+    build:
+    - 'test'
+    - 'build'
