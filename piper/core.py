@@ -20,6 +20,26 @@ class Piper(object):
 
     """
 
+    schema = {
+        'type': 'object',
+        'additionalProperties': False,
+        'properties': {
+            'version': {
+                'type': 'string'
+            },
+            'environment': {
+                'type': 'object',
+            },
+            'steps': {
+                'type': 'array',
+            },
+            'sets': {
+                'type': 'object',
+                'additionalProperties': True,
+            },
+        },
+    }
+
     def __init__(self):
         self.raw_config = None  # Dict data
         self.config = None  # DotDict object
