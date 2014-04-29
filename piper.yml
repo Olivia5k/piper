@@ -13,8 +13,8 @@ steps:
     command: '/usr/bin/env python setup.py sdist'
 
 sets:
-    test:
-    - 'test'
-    build:
-    - 'test'
-    - 'build'
+  test:
+  - 'test'
+  build:
+  - 'test'
+  - 'build'
