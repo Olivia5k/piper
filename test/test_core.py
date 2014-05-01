@@ -14,10 +14,12 @@ class PiperTestBase(object):
 class TestPiperSetup(PiperTestBase):
     def test_setup_calls(self):
         self.piper.load_config = mock.MagicMock()
+        self.piper.validate_config = mock.MagicMock()
 
         self.piper.setup()
 
         self.piper.load_config.assert_called_once_with()
+        self.piper.validate_config.assert_called_once_with()
 
 
 class TestPiperConfigLoader(PiperTestBase):

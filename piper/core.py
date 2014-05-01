@@ -3,6 +3,7 @@ import os
 
 import yaml
 import logbook
+import jsonschema
 
 from piper.utils import DotDict
 
@@ -67,6 +68,7 @@ class Piper(object):
         """
 
         self.load_config()
+        self.validate_config()
 
     def load_config(self):
         """
@@ -91,6 +93,9 @@ class Piper(object):
 
         self.config = DotDict(self.raw_config)
         self.log.info('Configuration file loaded.')
+
+    def validate_config(self):
+        jsonschema.validate(self.config.data, self.schema)
 
     def setup_environment(self):
         """
