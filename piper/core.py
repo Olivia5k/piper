@@ -28,9 +28,12 @@ class Piper(object):
                 'description': 'Semantic version string for this config.',
                 'type': 'string',
             },
-            'environment': {
+            'environments': {
                 'description': 'The environment configuration for this build.',
                 'type': 'object',
+                'additionalProperties': {
+                    'type': 'object',
+                },
             },
             'steps': {
                 'description': 'Definitions of executable build steps.',
