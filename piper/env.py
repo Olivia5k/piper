@@ -3,6 +3,7 @@ import tempfile
 import shutil
 
 import logbook
+import jsonschema
 
 from piper.utils import DotDict
 
@@ -13,6 +14,24 @@ class Environment(object):
 
         self.log = logbook.Logger(self.__class__.__name__)
 
+        # Schema is defined here so that subclasses can change the base schema
+        # without it affecting all other classes.
+        self.schema = {
+            '$schema': 'http://json-schema.org/draft-04/schema',
+            'type': 'object',
+            'additionalProperties': False,
+            'properties': {
+                'version': {
+                    'description': 'Semantic version string for this config.',
+                    'type': 'string',
+                },
+                'type': {
+                    'description': 'Python class to load for this environment',
+                    'type': 'string',
+                },
+            },
+        }
+
     def setup(self):  # pragma: nocover
         pass
 
@@ -21,6 +40,9 @@ class Environment(object):
 
     def execute(self, step):
         raise NotImplementedError()
+
+    def validate(self, config):
+        jsonschema.validate(config, self.schema)
 
 
 class TempDirEnvironment(Environment):
