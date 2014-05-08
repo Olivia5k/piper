@@ -14,6 +14,10 @@ class TestDotDict(object):
         dd = DotDict({'danger': 'zone'})
         assert dd.danger == 'zone'
 
+    def test_get_item_dict_access(self):
+        dd = DotDict({'danger': 'zone'})
+        assert dd['danger'] == 'zone'
+
     def test_dict_items_become_dotdicts(self):
         dd = DotDict({'highway': {'danger': 'zone'}})
         assert isinstance(dd.highway, DotDict) is True

@@ -21,6 +21,9 @@ class DotDict(object):
 
         return val
 
+    # So that we can still access as dicts
+    __getitem__ = __getattr__
+
 
 def dynamic_load(target):
     """
