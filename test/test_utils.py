@@ -1,4 +1,5 @@
 from piper.utils import DotDict
+from piper.utils import dynamic_load
 
 import pytest
 
@@ -20,3 +21,13 @@ class TestDotDict(object):
     def test_nested_access(self):
         dd = DotDict({'highway': {'danger': {'zone': True}}})
         assert dd.highway.danger.zone is True
+
+
+class TestDynamicLoad(object):
+    def test_proper_load(self):
+        cls = dynamic_load('piper.utils.DotDict')
+        assert cls is DotDict
+
+    def test_nonexistant_target(self):
+        with pytest.raises(ImportError):
+            dynamic_load('gammaray.empire.Avalon')
