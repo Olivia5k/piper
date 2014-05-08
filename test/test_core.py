@@ -56,7 +56,7 @@ class TestPiperConfigLoader(PiperTestBase):
 
     @mock.patch('yaml.safe_load')
     @mock.patch('os.path.isfile')
-    def test_load_config(self, isfile, sl):
+    def test_load_config_actual_load(self, isfile, sl):
         isfile.return_value = True
         fake = mock.mock_open(read_data=str(self.data))
 
