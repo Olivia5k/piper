@@ -21,7 +21,6 @@ class TestPiperSetup(PiperTestBase):
         super(TestPiperSetup, self).setup_method(method)
 
     def test_setup_calls(self):
-
         for method in self.methods:
             setattr(self.piper, method, mock.MagicMock())
 
@@ -46,7 +45,7 @@ class TestPiperConfigLoader(PiperTestBase):
 
     @mock.patch('sys.exit')
     @mock.patch('os.path.isfile')
-    def test_load_config_invald_yaml(self, isfile, exit):
+    def test_load_config_invalid_yaml(self, isfile, exit):
         isfile.return_value = True
         fake = mock.mock_open(read_data='{')
 
