@@ -1,4 +1,6 @@
+import jsonschema
 import mock
+import pytest
 
 from piper.core import Piper
 from piper.utils import DotDict
@@ -67,3 +69,50 @@ class TestPiperConfigLoader(PiperTestBase):
         assert self.piper.raw_config == sl.return_value
         assert isinstance(self.piper.config, DotDict)
         assert self.piper.config.data == sl.return_value
+
+
+class TestPiperConfigValidator(PiperTestBase):
+    def setup_method(self, method):
+        super(TestPiperConfigValidator, self).setup_method(method)
+
+        self.piper.config = DotDict({
+            'version': '0.0.1-alpha1',
+            'sets': {'test': ['test'], 'build': ['test', 'build']},
+            'environments': {
+                'local': {
+                    'class': 'piper.env.TempDirEnvironment',
+                    'delete_when_done': False,
+                },
+            },
+            'steps': {
+                'test': {
+                    'class': 'piper.step.Step',
+                    'command': '/usr/bin/env python setup.py test',
+                },
+                'build': {
+                    'class': 'piper.step.Step',
+                    'command': '/usr/bin/env python setup.py sdist',
+                },
+            },
+        })
+
+    def check_missing_key(self, key):
+        del self.piper.config.data[key]
+        with pytest.raises(jsonschema.exceptions.ValidationError):
+            self.piper.validate_config()
+
+    def test_passing_validation(self):
+        # Do nothing; if no exception happens, this is valid.
+        self.piper.validate_config()
+
+    def test_no_version_specified(self):
+        self.check_missing_key('version')
+
+    def test_no_environments_specified(self):
+        self.check_missing_key('environments')
+
+    def test_no_steps_specified(self):
+        self.check_missing_key('steps')
+
+    def test_no_sets_specified(self):
+        self.check_missing_key('sets')

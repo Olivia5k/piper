@@ -25,6 +25,7 @@ class Piper(object):
         "$schema": "http://json-schema.org/draft-04/schema",
         'type': 'object',
         'additionalProperties': False,
+        'required': ['version', 'environments', 'steps', 'sets'],
         'properties': {
             'version': {
                 'description': 'Semantic version string for this config.',
