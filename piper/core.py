@@ -75,6 +75,8 @@ class Piper(object):
         self.validate_config()
         self.load_classes()
 
+        self.setup_env()
+
     def load_config(self):
         """
         Parses the configuration file and dies in flames if there are errors.
