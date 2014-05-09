@@ -27,7 +27,7 @@ class Step(object):
         """
         The main entry point.
 
-        This is what Environment()s are supposed to run.
+        This is what Env()s are supposed to run.
 
         """
 

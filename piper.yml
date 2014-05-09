@@ -1,8 +1,8 @@
 version: '0.0.1-alpha1'
 
-environments:
+envs:
   local:
-    class: 'piper.env.TempDirEnvironment'
+    class: 'piper.env.TempDirEnv'
     delete_when_done: false
 
 steps:

@@ -8,7 +8,7 @@ import jsonschema
 from piper.utils import DotDict
 
 
-class Environment(object):
+class Env(object):
     def __init__(self, conf):
         self.conf = DotDict(conf)
 
@@ -26,7 +26,7 @@ class Environment(object):
                     'type': 'string',
                 },
                 'type': {
-                    'description': 'Python class to load for this environment',
+                    'description': 'Python class to load for this env',
                     'type': 'string',
                 },
             },
@@ -45,9 +45,9 @@ class Environment(object):
         jsonschema.validate(config, self.schema)
 
 
-class TempDirEnvironment(Environment):
+class TempDirEnv(Env):
     """
-    Example implementation of an environment, probably useful as well
+    Example implementation of an env, probably useful as well
 
     Does the build in a temporary directory as done by the tempfile module.
     Once build is done, the temporary directory is removed unless specified

@@ -36,11 +36,10 @@ The main executor of the `piper` pipeline is the `Piper()` class. It's
 a singleton (shut up) that reads the configuration and uses that configuration
 to set and host a couple of other classes:
 
-* `Environment()`: Sets and tears the execution environment. The environment
-  can be a temporary directory, an AWS machine, a schroot or something of the
-  sort. Can optionally provide a wrapper method for `Step()` that all
-  execution will run through, e.g. `schroot -c 'squeeze-amd64' -- {0}` to run
-  something in a schroot.
+* `Env()`: Sets and tears the execution env. The env can be a temporary
+  directory, an AWS machine, a schroot or something of the sort. Can optionally
+  provide a wrapper method for `Step()` that all execution will run through,
+  e.g. `schroot -c 'squeeze-amd64' -- {0}` to run something in a schroot.
 * `Step()`: Executes a build step. `Piper()` has a list of these and will
   execute them in order. Each step can specify upstream and downstream steps
   that will deterministically build a graph of steps.

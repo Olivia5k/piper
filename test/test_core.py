@@ -14,9 +14,9 @@ class PiperTestBase(object):
         self.base_config = {
             'version': '0.0.1-alpha1',
             'sets': {'test': ['test'], 'build': ['test', 'build']},
-            'environments': {
+            'envs': {
                 'local': {
-                    'class': 'piper.env.TempDirEnvironment',
+                    'class': 'piper.env.TempDirEnv',
                     'delete_when_done': False,
                 },
             },
@@ -109,8 +109,8 @@ class TestPiperConfigValidator(PiperTestBase):
     def test_no_version_specified(self):
         self.check_missing_key('version')
 
-    def test_no_environments_specified(self):
-        self.check_missing_key('environments')
+    def test_no_envs_specified(self):
+        self.check_missing_key('envs')
 
     def test_no_steps_specified(self):
         self.check_missing_key('steps')
@@ -125,7 +125,7 @@ class TestPiperClassLoader(PiperTestBase):
         self.piper.config = DotDict(self.base_config)
 
         self.step = 'piper.step.Step'
-        self.env = 'piper.env.TempDirEnvironment'
+        self.env = 'piper.env.TempDirEnv'
 
     @mock.patch('piper.core.dynamic_load')
     def test_load_classes(self, dl):

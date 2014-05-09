@@ -24,14 +24,14 @@ class Piper(object):
         "$schema": "http://json-schema.org/draft-04/schema",
         'type': 'object',
         'additionalProperties': False,
-        'required': ['version', 'environments', 'steps', 'sets'],
+        'required': ['version', 'envs', 'steps', 'sets'],
         'properties': {
             'version': {
                 'description': 'Semantic version string for this config.',
                 'type': 'string',
             },
-            'environments': {
-                'description': 'The environment configuration for this build.',
+            'envs': {
+                'description': 'The env configuration for this build.',
                 'type': 'object',
                 'additionalProperties': {
                     'type': 'object',
@@ -52,8 +52,8 @@ class Piper(object):
         },
     }
 
-    def __init__(self, environment, set):
-        self.environment = environment
+    def __init__(self, env, set):
+        self.env = env
         self.set = set
 
         self.raw_config = None  # Dict data
@@ -103,10 +103,10 @@ class Piper(object):
         jsonschema.validate(self.config.data, self.schema)
 
     def load_classes(self):
-        self.log.info("Loading classes for steps and environments...")
+        self.log.info("Loading classes for steps and envs...")
 
         classes = set()
-        for env in self.config.environments.values():
+        for env in self.config.envs.values():
             classes.add(env['class'])
 
         for step in self.config.steps.values():
@@ -118,9 +118,9 @@ class Piper(object):
 
         self.log.info("Class loading done.")
 
-    def setup_environment(self):
+    def setup_env(self):
         """
-        Load the environment and it's configuration
+        Load the env and it's configuration
 
         """
 
@@ -155,9 +155,9 @@ class Piper(object):
 
         pass
 
-    def teardown_environment(self):
+    def teardown_env(self):
         """
-        Execute teardown step of the environment
+        Execute teardown step of the env
 
         """
 

@@ -1,22 +1,22 @@
 import pytest
 import mock
 
-from piper.env import Environment
-from piper.env import TempDirEnvironment
+from piper.env import Env
+from piper.env import TempDirEnv
 
 
-class TestEnvironment(object):
+class TestEnv(object):
     def setup_method(self, method):
-        self.env = Environment({})
+        self.env = Env({})
 
     def test_execute_raises_notimplemented(self):
         with pytest.raises(NotImplementedError):
             self.env.execute(mock.MagicMock())
 
 
-class TestTempDirEnvironment(object):
+class TestTempDirEnv(object):
     def setup_method(self, method):
-        self.env = TempDirEnvironment({})
+        self.env = TempDirEnv({})
 
     @mock.patch('os.chdir')
     @mock.patch('tempfile.mkdtemp')
@@ -44,9 +44,9 @@ class TestTempDirEnvironment(object):
         assert rmtree.call_count == 0
 
 
-class TestTempDirEnvironmentExecution(object):
+class TestTempDirEnvExecution(object):
     def setup_method(self, method):
-        self.env = TempDirEnvironment({})
+        self.env = TempDirEnv({})
         self.env.dir = '/'
         self.step = mock.MagicMock()
 
