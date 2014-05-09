@@ -11,6 +11,26 @@ from test.utils import builtin
 class PiperTestBase(object):
     def setup_method(self, method):
         self.piper = Piper()
+        self.base_config = {
+            'version': '0.0.1-alpha1',
+            'sets': {'test': ['test'], 'build': ['test', 'build']},
+            'environments': {
+                'local': {
+                    'class': 'piper.env.TempDirEnvironment',
+                    'delete_when_done': False,
+                },
+            },
+            'steps': {
+                'test': {
+                    'class': 'piper.step.Step',
+                    'command': '/usr/bin/env python setup.py test',
+                },
+                'build': {
+                    'class': 'piper.step.Step',
+                    'command': '/usr/bin/env python setup.py sdist',
+                },
+            },
+        }
 
 
 class TestPiperSetup(PiperTestBase):
@@ -76,26 +96,7 @@ class TestPiperConfigValidator(PiperTestBase):
     def setup_method(self, method):
         super(TestPiperConfigValidator, self).setup_method(method)
 
-        self.piper.config = DotDict({
-            'version': '0.0.1-alpha1',
-            'sets': {'test': ['test'], 'build': ['test', 'build']},
-            'environments': {
-                'local': {
-                    'class': 'piper.env.TempDirEnvironment',
-                    'delete_when_done': False,
-                },
-            },
-            'steps': {
-                'test': {
-                    'class': 'piper.step.Step',
-                    'command': '/usr/bin/env python setup.py test',
-                },
-                'build': {
-                    'class': 'piper.step.Step',
-                    'command': '/usr/bin/env python setup.py sdist',
-                },
-            },
-        })
+        self.piper.config = DotDict(self.base_config)
 
     def check_missing_key(self, key):
         del self.piper.config.data[key]
