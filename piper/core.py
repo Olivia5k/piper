@@ -110,7 +110,7 @@ class Piper(object):
             classes.add(step['class'])
 
         for cls in classes:
-            self.log.debug("Loading class '{}()'".format(cls))
+            self.log.debug("Loading class '{0}()'".format(cls))
             self.classes[cls] = dynamic_load(cls)
 
         self.log.info("Class loading done.")
