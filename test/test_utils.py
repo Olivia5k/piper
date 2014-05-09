@@ -22,6 +22,10 @@ class TestDotDict(object):
         dd = DotDict({'highway': {'danger': 'zone'}})
         assert isinstance(dd.highway, DotDict) is True
 
+    def test_dict_items_become_dotdicts_when_using_dict_access(self):
+        dd = DotDict({'highway': {'danger': 'zone'}})
+        assert isinstance(dd['highway'], DotDict) is True
+
     def test_nested_access(self):
         dd = DotDict({'highway': {'danger': {'zone': True}}})
         assert dd.highway.danger.zone is True
