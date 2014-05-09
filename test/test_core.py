@@ -18,6 +18,7 @@ class TestPiperSetup(PiperTestBase):
         self.methods = (
             'load_config',
             'validate_config',
+            'load_classes',
         )
 
         super(TestPiperSetup, self).setup_method(method)

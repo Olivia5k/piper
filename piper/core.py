@@ -17,8 +17,6 @@ class Piper(object):
     data about the state of the pipeline and persists it, and finally tears
     down the components that needs tearing down.
 
-    The functions are almost executed in the order found in this file. Woo!
-
     """
 
     schema = {
@@ -56,6 +54,7 @@ class Piper(object):
     def __init__(self):
         self.raw_config = None  # Dict data
         self.config = None  # DotDict object
+        self.classes = {}
 
         self.log = logbook.Logger(self.__class__.__name__)
 
@@ -70,6 +69,7 @@ class Piper(object):
 
         self.load_config()
         self.validate_config()
+        self.load_classes()
 
     def load_config(self):
         """
@@ -97,6 +97,9 @@ class Piper(object):
 
     def validate_config(self):
         jsonschema.validate(self.config.data, self.schema)
+
+    def load_classes(self):
+        pass
 
     def setup_environment(self):
         """
