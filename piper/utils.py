@@ -21,6 +21,9 @@ class DotDict(object):
 
         return val
 
+    def values(self):
+        return self.data.values()
+
     # So that we can still access as dicts
     __getitem__ = __getattr__
 
