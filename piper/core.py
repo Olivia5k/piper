@@ -52,7 +52,10 @@ class Piper(object):
         },
     }
 
-    def __init__(self):
+    def __init__(self, environment, set):
+        self.environment = environment
+        self.set = set
+
         self.raw_config = None  # Dict data
         self.config = None  # DotDict object
         self.classes = {}

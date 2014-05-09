@@ -10,7 +10,7 @@ from test.utils import builtin
 
 class PiperTestBase(object):
     def setup_method(self, method):
-        self.piper = Piper()
+        self.piper = Piper(mock.MagicMock(), mock.MagicMock())
         self.base_config = {
             'version': '0.0.1-alpha1',
             'sets': {'test': ['test'], 'build': ['test', 'build']},
