@@ -95,7 +95,6 @@ class TestPiperConfigLoader(PiperTestBase):
 class TestPiperConfigValidator(PiperTestBase):
     def setup_method(self, method):
         super(TestPiperConfigValidator, self).setup_method(method)
-
         self.piper.config = DotDict(self.base_config)
 
     def check_missing_key(self, key):
@@ -118,3 +117,21 @@ class TestPiperConfigValidator(PiperTestBase):
 
     def test_no_sets_specified(self):
         self.check_missing_key('sets')
+
+
+class TestPiperClassLoader(PiperTestBase):
+    def setup_method(self, method):
+        super(TestPiperClassLoader, self).setup_method(method)
+        self.piper.config = DotDict(self.base_config)
+
+        self.step = 'piper.step.Step'
+        self.env = 'piper.env.TempDirEnvironment'
+
+    @mock.patch('piper.core.dynamic_load')
+    def test_load_classes(self, dl):
+        self.piper.load_classes()
+
+        calls = (mock.call(self.step), mock.call(self.env))
+        assert dl.has_calls(calls, any_order=True)
+        assert self.piper.classes[self.step] is dl.return_value
+        assert self.piper.classes[self.env] is dl.return_value

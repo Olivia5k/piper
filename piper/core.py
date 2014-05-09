@@ -6,6 +6,7 @@ import logbook
 import jsonschema
 
 from piper.utils import DotDict
+from piper.utils import dynamic_load
 
 
 class Piper(object):
@@ -99,7 +100,20 @@ class Piper(object):
         jsonschema.validate(self.config.data, self.schema)
 
     def load_classes(self):
-        pass
+        self.log.info("Loading classes for steps and environments...")
+
+        classes = set()
+        for env in self.config.environments.values():
+            classes.add(env['class'])
+
+        for step in self.config.steps.values():
+            classes.add(step['class'])
+
+        for cls in classes:
+            self.log.debug("Loading class '{}()'".format(cls))
+            self.classes[cls] = dynamic_load(cls)
+
+        self.log.info("Class loading done.")
 
     def setup_environment(self):
         """
