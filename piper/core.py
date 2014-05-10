@@ -75,7 +75,7 @@ class Piper(object):
         self.validate_config()
         self.load_classes()
 
-        self.setup_env()
+        self.load_env()
 
     def load_config(self):
         """
@@ -120,19 +120,17 @@ class Piper(object):
 
         self.log.info("Class loading done.")
 
-    def setup_env(self):
+    def load_env(self):
         """
         Load the env and it's configuration
 
         """
 
-        pass
+        cls = self.classes[self.env]
 
-    def setup_steps(self):
+    def load_steps(self):
         """
         Loads the steps and their configuration.
-
-        Also determines which collection of steps is to be ran.
 
         """
 

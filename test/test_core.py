@@ -39,7 +39,7 @@ class TestPiperSetup(PiperTestBase):
             'load_config',
             'validate_config',
             'load_classes',
-            'setup_env',
+            'load_env',
         )
 
         super(TestPiperSetup, self).setup_method(method)
