@@ -76,6 +76,7 @@ class Piper(object):
         self.load_classes()
 
         self.load_env()
+        self.load_steps()
 
     def load_config(self):
         """
