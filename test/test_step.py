@@ -3,7 +3,7 @@ from piper.step import Step
 import mock
 
 
-class TestStep(object):
+class TestStepExecute(object):
     def setup_method(self, method):
         self.step = Step({}, 1)
 

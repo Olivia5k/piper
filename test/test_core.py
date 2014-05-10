@@ -55,10 +55,10 @@ class TestPiperSetup(PiperTestBase):
             getattr(self.piper, method).assert_called_once_with()
 
 
-class TestPiperConfigLoader(PiperTestBase):
+class TestPiperLoadConfig(PiperTestBase):
     def setup_method(self, method):
         self.data = 'lel: 10\ntest: wizard\n\n'
-        super(TestPiperConfigLoader, self).setup_method(method)
+        super(TestPiperLoadConfig, self).setup_method(method)
 
     @mock.patch('sys.exit')
     @mock.patch('os.path.isfile')
@@ -94,9 +94,9 @@ class TestPiperConfigLoader(PiperTestBase):
         assert self.piper.config.data == sl.return_value
 
 
-class TestPiperConfigValidator(PiperTestBase):
+class TestPiperValidateConfig(PiperTestBase):
     def setup_method(self, method):
-        super(TestPiperConfigValidator, self).setup_method(method)
+        super(TestPiperValidateConfig, self).setup_method(method)
         self.piper.config = DotDict(self.base_config)
 
     def check_missing_key(self, key):
@@ -121,9 +121,9 @@ class TestPiperConfigValidator(PiperTestBase):
         self.check_missing_key('sets')
 
 
-class TestPiperClassLoader(PiperTestBase):
+class TestPiperLoadClasses(PiperTestBase):
     def setup_method(self, method):
-        super(TestPiperClassLoader, self).setup_method(method)
+        super(TestPiperLoadClasses, self).setup_method(method)
         self.piper.config = DotDict(self.base_config)
 
         self.step = 'piper.step.Step'
@@ -139,7 +139,7 @@ class TestPiperClassLoader(PiperTestBase):
         assert self.piper.classes[self.env] is dl.return_value
 
 
-class TestPiperEnvLoader(PiperTestBase):
+class TestPiperLoadEnv(PiperTestBase):
     def setup_method(self, method):
         self.env_key = 'local'
         self.cls_key = 'unisonic.KingForADay'

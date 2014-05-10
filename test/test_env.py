@@ -5,7 +5,7 @@ from piper.env import Env
 from piper.env import TempDirEnv
 
 
-class TestEnv(object):
+class TestEnvExecute(object):
     def setup_method(self, method):
         self.env = Env({})
 
@@ -14,7 +14,7 @@ class TestEnv(object):
             self.env.execute(mock.MagicMock())
 
 
-class TestTempDirEnv(object):
+class TestTempDirEnvSetup(object):
     def setup_method(self, method):
         self.env = TempDirEnv({})
 
@@ -27,6 +27,11 @@ class TestTempDirEnv(object):
         mkdtemp.assert_called_once_with()
         chdir.assert_called_once_with(mkdtemp.return_value)
         assert self.env.dir == mkdtemp.return_value
+
+
+class TestTempDirEnvTeardown(object):
+    def setup_method(self, method):
+        self.env = TempDirEnv({})
 
     @mock.patch('shutil.rmtree')
     def test_teardown_default(self, rmtree):
@@ -44,7 +49,7 @@ class TestTempDirEnv(object):
         assert rmtree.call_count == 0
 
 
-class TestTempDirEnvExecution(object):
+class TestTempDirEnvExecute(object):
     def setup_method(self, method):
         self.env = TempDirEnv({})
         self.env.dir = '/'
