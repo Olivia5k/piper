@@ -24,6 +24,9 @@ class DotDict(object):
     def values(self):
         return self.data.values()
 
+    def __eq__(self, other):
+        return self.data == other.data
+
     # So that we can still access as dicts
     __getitem__ = __getattr__
 
