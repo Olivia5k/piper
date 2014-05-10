@@ -136,3 +136,26 @@ class TestPiperClassLoader(PiperTestBase):
         assert dl.has_calls(calls, any_order=True)
         assert self.piper.classes[self.step] is dl.return_value
         assert self.piper.classes[self.env] is dl.return_value
+
+
+class TestPiperEnvLoader(PiperTestBase):
+    def setup_method(self, method):
+        self.env_key = 'local'
+        self.cls_key = 'unisonic.KingForADay'
+        self.cls = mock.MagicMock()
+
+        self.piper = Piper(self.env_key, mock.MagicMock())
+        self.piper.classes = {self.cls_key: self.cls}
+        self.piper.config = DotDict({
+            'envs': {
+                'local': {
+                    'class': self.cls_key,
+                }
+            },
+        })
+
+    def test_load_env(self):
+        self.piper.load_env()
+
+        self.cls.assert_called_once_with(self.piper.config.envs[self.env_key])
+        self.cls.return_value.validate.assert_called_once_with()

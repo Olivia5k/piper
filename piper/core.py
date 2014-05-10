@@ -52,9 +52,9 @@ class Piper(object):
         },
     }
 
-    def __init__(self, env, set):
-        self.env = env
-        self.set = set
+    def __init__(self, env_key, set_key):
+        self.env_key = env_key
+        self.set_key = set_key
 
         self.raw_config = None  # Dict data
         self.config = None  # DotDict object
@@ -102,6 +102,7 @@ class Piper(object):
         self.log.info('Configuration file loaded.')
 
     def validate_config(self):
+        self.log.info('Validating root config...')
         jsonschema.validate(self.config.data, self.schema)
 
     def load_classes(self):
@@ -122,11 +123,16 @@ class Piper(object):
 
     def load_env(self):
         """
-        Load the env and it's configuration
+        Load the env and its configuration
 
         """
 
-        cls = self.classes[self.env]
+        env_config = self.config.envs[self.env_key]
+        cls = self.classes[env_config['class']]
+
+        self.env = cls(env_config)
+        self.env.validate()
+        self.env.log.info('Environment loaded.')
 
     def load_steps(self):
         """
