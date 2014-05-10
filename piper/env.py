@@ -9,8 +9,8 @@ from piper.utils import DotDict
 
 
 class Env(object):
-    def __init__(self, conf):
-        self.conf = DotDict(conf)
+    def __init__(self, config):
+        self.config = DotDict(config)
 
         self.log = logbook.Logger(self.__class__.__name__)
 
@@ -41,8 +41,8 @@ class Env(object):
     def execute(self, step):
         raise NotImplementedError()
 
-    def validate(self, config):
-        jsonschema.validate(config, self.schema)
+    def validate(self):
+        jsonschema.validate(self.config, self.schema)
 
 
 class TempDirEnv(Env):
@@ -62,7 +62,7 @@ class TempDirEnv(Env):
         self.log.info("Working directory set to '{0}'".format(self.dir))
 
     def teardown(self):
-        if self.conf.delete_when_done:
+        if self.config.delete_when_done:
             shutil.rmtree(self.dir)
 
     def execute(self, step):
