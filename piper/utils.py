@@ -14,15 +14,16 @@ class DotDict(object):
         return '<DotDict {}>'.format(self.data)
 
     def __getattr__(self, key):
+        if key in ('values', 'keys', 'items'):
+            # Dict methods, just return and run them.
+            return getattr(self.data, key)
+
         val = self.data[key]
 
         if isinstance(val, dict):
             val = DotDict(val)
 
         return val
-
-    def values(self):
-        return self.data.values()
 
     def __eq__(self, other):
         return self.data == other.data
