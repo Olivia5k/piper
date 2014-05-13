@@ -26,6 +26,9 @@ class DotDict(object):
         return val
 
     def __eq__(self, other):
+        if isinstance(other, dict):
+            # If we are comparing to a dict, just check directly
+            return self.data == other
         return self.data == other.data
 
     # So that we can still access as dicts
