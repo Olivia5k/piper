@@ -160,3 +160,35 @@ class TestPiperLoadEnv(PiperTestBase):
 
         self.cls.assert_called_once_with(self.piper.config.envs[self.env_key])
         self.cls.return_value.validate.assert_called_once_with()
+
+
+class TestPiperLoadSteps(object):
+    def setup_method(self, method):
+        self.step_key = 'local'
+        self.config = {
+            'steps': {
+                'bang': {
+                    'class': 'edguy.police.LoveTyger',
+                },
+                'boom': {
+                    'class': 'bethhart.light.LiftsUUp',
+                }
+            },
+        }
+
+        self.piper = Piper(self.step_key, mock.MagicMock())
+        for key in self.config['steps']:
+            cls = self.config['steps'][key]['class']
+            self.piper.classes[cls] = mock.MagicMock()
+
+        self.piper.config = DotDict(self.config)
+
+    def test_load_steps(self):
+        self.piper.load_steps()
+
+        for key in self.config['steps']:
+            cls_key = self.config['steps'][key]['class']
+
+            cls = self.piper.classes[cls_key]
+            cls.assert_called_once_with(self.piper.config.steps[key])
+            cls.return_value.validate.assert_called_once_with()

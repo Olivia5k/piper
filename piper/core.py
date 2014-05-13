@@ -59,6 +59,7 @@ class Piper(object):
         self.raw_config = None  # Dict data
         self.config = None  # DotDict object
         self.classes = {}
+        self.steps = {}
 
         self.log = logbook.Logger(self.__class__.__name__)
 
@@ -141,7 +142,13 @@ class Piper(object):
 
         """
 
-        pass
+        for step_key, step_config in self.config.steps.items():
+            cls = self.classes[step_config['class']]
+
+            step = cls(step_config)
+            step.validate()
+            step.log.info('Step loaded.')
+            self.steps[step_key] = step
 
     def execute(self):
         """
