@@ -219,4 +219,26 @@ class TestPiperLoadSet(object):
 
 
 class TestPiperExecute(object):
-    pass
+    def setup_method(self, method):
+        self.piper = Piper(mock.MagicMock(), mock.MagicMock())
+        self.piper.execution_order = [mock.MagicMock() for _ in range(3)]
+
+    def test_all_successful(self):
+        self.piper.execute()
+
+        for step in self.piper.execution_order:
+            step.execute.assert_called_once_with()
+
+        assert self.piper.success is True
+
+    def test_execution_stops_by_failed_step(self):
+        self.piper.execution_order[1].success = False
+
+        self.piper.execute()
+
+        order = self.piper.execution_order
+        order[0].execute.assert_called_once_with()
+        order[1].execute.assert_called_once_with()
+        assert order[2].execute.call_count is 0
+
+        assert self.piper.success is False

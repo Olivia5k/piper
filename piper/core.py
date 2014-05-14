@@ -62,6 +62,7 @@ class Piper(object):
         self.classes = {}
         self.steps = {}
         self.execution_order = []
+        self.success = None
 
         self.log = logbook.Logger(self.__class__.__name__)
 
@@ -171,7 +172,18 @@ class Piper(object):
 
         """
 
-        pass
+        for step in self.execution_order:
+            step.execute()
+
+            # If the success is not positive, bail and stop running.
+            if not step.success:
+                self.success = False
+                break
+
+        # As long as we did not break out of the loop above, the build is
+        # to be deemed succesful.
+        if self.success is not False:
+            self.success = True
 
     def save_state(self):
         """
