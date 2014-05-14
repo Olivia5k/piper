@@ -140,7 +140,7 @@ class TestPiperLoadClasses(PiperTestBase):
         assert self.piper.classes[self.env] is dl.return_value
 
 
-class TestPiperLoadEnv(PiperTestBase):
+class TestPiperLoadEnv(object):
     def setup_method(self, method):
         self.env_key = 'local'
         self.cls_key = 'unisonic.KingForADay'
@@ -216,3 +216,7 @@ class TestPiperLoadSet(object):
 
         for x, _ in enumerate(self.step_keys):
             assert self.piper.execution_order[x] is self.steps[x]
+
+
+class TestPiperExecute(object):
+    pass
