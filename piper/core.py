@@ -58,8 +58,10 @@ class Piper(object):
 
         self.raw_config = None  # Dict data
         self.config = None  # DotDict object
+
         self.classes = {}
         self.steps = {}
+        self.execution_order = []
 
         self.log = logbook.Logger(self.__class__.__name__)
 
@@ -78,6 +80,7 @@ class Piper(object):
 
         self.load_env()
         self.load_steps()
+        self.load_set()
 
     def load_config(self):
         """
@@ -149,6 +152,15 @@ class Piper(object):
             step.validate()
             step.log.info('Step loaded.')
             self.steps[step_key] = step
+
+    def load_set(self):
+        """
+        Loads the selected set places steps in proper order.
+
+        """
+
+        for step_key in self.config.sets[self.set_key]:
+            self.execution_order.append(self.steps[step_key])
 
     def execute(self):
         """

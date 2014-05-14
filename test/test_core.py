@@ -41,6 +41,7 @@ class TestPiperSetup(PiperTestBase):
             'load_classes',
             'load_env',
             'load_steps',
+            'load_set',
         )
 
         super(TestPiperSetup, self).setup_method(method)
@@ -192,3 +193,26 @@ class TestPiperLoadSteps(object):
             cls = self.piper.classes[cls_key]
             cls.assert_called_once_with(self.piper.config.steps[key])
             cls.return_value.validate.assert_called_once_with()
+
+
+class TestPiperLoadSet(object):
+    def setup_method(self, method):
+        self.set_key = 'mmmbop'
+        self.step_keys = ('bidubidappa', 'dubop')
+        self.steps = (mock.MagicMock(), mock.MagicMock())
+
+        self.config = {
+            'sets': {
+                self.set_key: self.step_keys,
+            },
+        }
+
+        self.piper = Piper(mock.MagicMock(), self.set_key)
+        self.piper.steps = dict(zip(self.step_keys, self.steps))
+        self.piper.config = DotDict(self.config)
+
+    def test_load_set(self):
+        self.piper.load_set()
+
+        for x, _ in enumerate(self.step_keys):
+            assert self.piper.execution_order[x] is self.steps[x]

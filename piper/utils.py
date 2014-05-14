@@ -5,6 +5,10 @@ class DotDict(object):
     Used because the amount of configuration access is very high and just using
     dots instead of the dict notation feels good.
 
+    It should be noted that this class could definitely have a more elegant
+    writing, possibly inheriting from dict(). However, this is probably good
+    enough and will probably not cause any trouble.
+
     """
 
     def __init__(self, data):
