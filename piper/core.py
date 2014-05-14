@@ -61,7 +61,7 @@ class Piper(object):
 
         self.classes = {}
         self.steps = {}
-        self.execution_order = []
+        self.order = []
         self.success = None
 
         self.log = logbook.Logger(self.__class__.__name__)
@@ -161,7 +161,7 @@ class Piper(object):
         """
 
         for step_key in self.config.sets[self.set_key]:
-            self.execution_order.append(self.steps[step_key])
+            self.order.append(self.steps[step_key])
 
     def execute(self):
         """
@@ -172,7 +172,7 @@ class Piper(object):
 
         """
 
-        for step in self.execution_order:
+        for step in self.order:
             step.execute()
 
             # If the success is not positive, bail and stop running.
