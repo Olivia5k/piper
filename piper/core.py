@@ -79,9 +79,9 @@ class Piper(object):
         self.validate_config()
         self.load_classes()
 
-        self.load_env()
-        self.load_steps()
-        self.load_set()
+        self.configure_env()
+        self.configure_steps()
+        self.configure_set()
 
     def load_config(self):
         """
@@ -127,9 +127,9 @@ class Piper(object):
 
         self.log.info("Class loading done.")
 
-    def load_env(self):
+    def configure_env(self):
         """
-        Load the env and its configuration
+        Configures the environment according to its config file.
 
         """
 
@@ -138,11 +138,11 @@ class Piper(object):
 
         self.env = cls(env_config)
         self.env.validate()
-        self.env.log.info('Environment loaded.')
+        self.env.log.info('Environment configured.')
 
-    def load_steps(self):
+    def configure_steps(self):
         """
-        Loads the steps and their configuration.
+        Configures the steps according to their config sections.
 
         """
 
@@ -151,17 +151,19 @@ class Piper(object):
 
             step = cls(step_config)
             step.validate()
-            step.log.info('Step loaded.')
+            step.log.info('Step configured.')
             self.steps[step_key] = step
 
-    def load_set(self):
+    def configure_set(self):
         """
-        Loads the selected set places steps in proper order.
+        Places steps in proper order according to the chosen set.
 
         """
 
         for step_key in self.config.sets[self.set_key]:
             self.order.append(self.steps[step_key])
+
+        self.log.info('Set order configured.')
 
     def execute(self):
         """

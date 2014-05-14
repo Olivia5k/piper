@@ -39,9 +39,9 @@ class TestPiperSetup(PiperTestBase):
             'load_config',
             'validate_config',
             'load_classes',
-            'load_env',
-            'load_steps',
-            'load_set',
+            'configure_env',
+            'configure_steps',
+            'configure_set',
         )
 
         super(TestPiperSetup, self).setup_method(method)
@@ -156,8 +156,8 @@ class TestPiperLoadEnv(object):
             },
         })
 
-    def test_load_env(self):
-        self.piper.load_env()
+    def test_configure_env(self):
+        self.piper.configure_env()
 
         self.cls.assert_called_once_with(self.piper.config.envs[self.env_key])
         self.cls.return_value.validate.assert_called_once_with()
@@ -184,8 +184,8 @@ class TestPiperLoadSteps(object):
 
         self.piper.config = DotDict(self.config)
 
-    def test_load_steps(self):
-        self.piper.load_steps()
+    def test_configure_steps(self):
+        self.piper.configure_steps()
 
         for key in self.config['steps']:
             cls_key = self.config['steps'][key]['class']
@@ -211,8 +211,8 @@ class TestPiperLoadSet(object):
         self.piper.steps = dict(zip(self.step_keys, self.steps))
         self.piper.config = DotDict(self.config)
 
-    def test_load_set(self):
-        self.piper.load_set()
+    def test_configure_set(self):
+        self.piper.configure_set()
 
         for x, _ in enumerate(self.step_keys):
             assert self.piper.order[x] is self.steps[x]
