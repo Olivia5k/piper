@@ -1,4 +1,5 @@
 import logbook
+import jsonschema
 
 from piper.utils import DotDict
 
@@ -12,16 +13,36 @@ class Step(object):
 
     """
 
-    def __init__(self, conf, index):
-        self.conf = DotDict(conf)
+    def __init__(self, config):
+        self.config = DotDict(config)
+        self.success = None
 
-        # Index of execution order. Added by the runner when parsing the
-        # config file.
-        self.index = index
+        self.log = logbook.Logger(self.__class__.__name__)
 
-        self.log = logbook.Logger(
-            '{0}-{1}'.format(self.__class__.__name__, self.index)
-        )
+        # Schema is defined here so that subclasses can change the base schema
+        # without it affecting all other classes.
+        self.schema = {
+            '$schema': 'http://json-schema.org/draft-04/schema',
+            'type': 'object',
+            'additionalProperties': False,
+            'properties': {
+                'version': {
+                    'description': 'Semantic version string for this config.',
+                    'type': 'string',
+                },
+                'class': {
+                    'description': 'Python class to load for this env',
+                    'type': 'string',
+                },
+                'command': {
+                    'description': 'Command line to execute.',
+                    'type': 'string',
+                },
+            },
+        }
+
+    def validate(self):
+        jsonschema.validate(self.config.data, self.schema)
 
     def execute(self):
         """
@@ -39,7 +60,7 @@ class Step(object):
         pass
 
     def run(self):  # pragma: nocover
-        pass
+        self.success = True
 
     def post(self):  # pragma: nocover
         pass
