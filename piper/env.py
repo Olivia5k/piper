@@ -25,7 +25,7 @@ class Env(object):
                     'description': 'Semantic version string for this config.',
                     'type': 'string',
                 },
-                'type': {
+                'class': {
                     'description': 'Python class to load for this env',
                     'type': 'string',
                 },
@@ -42,7 +42,7 @@ class Env(object):
         raise NotImplementedError()
 
     def validate(self):
-        jsonschema.validate(self.config, self.schema)
+        jsonschema.validate(self.config.data, self.schema)
 
 
 class TempDirEnv(Env):
@@ -54,6 +54,12 @@ class TempDirEnv(Env):
     to be kept.
 
     """
+
+    def __init__(self, config):
+        super(TempDirEnv, self).__init__(config)
+        self.schema['properties']['delete_when_done'] = {
+            'type': 'boolean'
+        }
 
     def setup(self):
         self.dir = tempfile.mkdtemp()
