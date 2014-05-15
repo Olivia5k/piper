@@ -133,10 +133,12 @@ class Piper(object):
 
         """
 
+        self.log.info('Loading environment...')
         env_config = self.config.envs[self.env_key]
         cls = self.classes[env_config['class']]
 
         self.env = cls(env_config)
+        self.log.debug('Validating env config...')
         self.env.validate()
         self.env.log.info('Environment configured.')
 
@@ -150,6 +152,7 @@ class Piper(object):
             cls = self.classes[step_config['class']]
 
             step = cls(step_config)
+            step.log.debug('Validating config...')
             step.validate()
             step.log.info('Step configured.')
             self.steps[step_key] = step
@@ -174,11 +177,14 @@ class Piper(object):
 
         """
 
+        self.log.info('Running complete "{0}" set...'.format(self.set_key))
         for step in self.order:
+            step.log.info('Running...')
             step.execute()
 
             # If the success is not positive, bail and stop running.
             if not step.success:
+                step.log.error('Step "{0}" failed.'.format(self.set_key))
                 self.success = False
                 break
 
