@@ -12,7 +12,11 @@ class DotDict(object):
     """
 
     def __init__(self, data):
-        self.data = data
+        # TODO: Make this more elegant
+        if isinstance(data, DotDict):
+            self.data = data.data
+        else:
+            self.data = data
 
     def __repr__(self):  # pragma: nocover
         return '<DotDict {}>'.format(self.data)
@@ -31,9 +35,11 @@ class DotDict(object):
 
     def __eq__(self, other):
         if isinstance(other, dict):
-            # If we are comparing to a dict, just check directly
             return self.data == other
-        return self.data == other.data
+        elif isinstance(other, DotDict):
+            return self.data == other.data
+        else:
+            return False
 
     # So that we can still access as dicts
     __getitem__ = __getattr__
