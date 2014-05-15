@@ -13,11 +13,14 @@ class Step(object):
 
     """
 
-    def __init__(self, config):
+    def __init__(self, key, config):
+        self.key = key
         self.config = DotDict(config)
         self.success = None
 
-        self.log = logbook.Logger(self.__class__.__name__)
+        self.log = logbook.Logger(
+            '{0}({1})'.format(self.__class__.__name__, self.key)
+        )
 
         # Schema is defined here so that subclasses can change the base schema
         # without it affecting all other classes.

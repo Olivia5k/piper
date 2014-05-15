@@ -151,7 +151,7 @@ class Piper(object):
         for step_key, step_config in self.config.steps.items():
             cls = self.classes[step_config['class']]
 
-            step = cls(step_config)
+            step = cls(step_key, step_config)
             step.log.debug('Validating config...')
             step.validate()
             step.log.info('Step configured.')
