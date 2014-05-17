@@ -13,6 +13,7 @@ def main():
     try:
         piper.setup()
         piper.execute()
+        piper.teardown()
     except jsonschema.exceptions.ValidationError as e:
         print(e)
         raise

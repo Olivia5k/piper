@@ -245,11 +245,21 @@ class TestPiperExecute(object):
         assert self.piper.success is False
 
 
-class TestPiperSetupEnv(object):
+class TestPiperSetupEnv(PiperTestBase):
     def setup_method(self, method):
-        self.piper = Piper(mock.MagicMock(), mock.MagicMock())
+        super(TestPiperSetupEnv, self).setup_method(method)
         self.piper.env = mock.MagicMock()
 
     def test_setup_env(self):
         self.piper.setup_env()
         self.piper.env.setup.assert_called_once_with()
+
+
+class TestPiperTeardownEnv(PiperTestBase):
+    def setup_method(self, method):
+        super(TestPiperTeardownEnv, self).setup_method(method)
+        self.piper.env = mock.MagicMock()
+
+    def test_teardown_env(self):
+        self.piper.teardown_env()
+        self.piper.env.teardown.assert_called_once_with()

@@ -218,4 +218,5 @@ class Piper(object):
 
         """
 
-        pass
+        self.env.log.info('Tearing down env...')
+        self.env.teardown()
