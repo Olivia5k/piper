@@ -4,7 +4,7 @@ envs:
   local:
     version: '0.0.1'
     class: 'piper.env.TempDirEnv'
-    delete_when_done: false
+    delete_when_done: true
 
 steps:
   test:
