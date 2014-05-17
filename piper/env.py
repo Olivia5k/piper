@@ -6,6 +6,7 @@ import logbook
 import jsonschema
 
 from piper.utils import DotDict
+from piper.process import Process
 
 
 class Env(object):
@@ -81,4 +82,8 @@ class TempDirEnv(Env):
             )
             os.chdir(self.dir)
 
-        step.execute()
+        cmd = step.get_command()
+        proc = Process(cmd)
+        proc.run()
+
+        return proc

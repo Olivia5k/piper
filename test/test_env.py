@@ -66,13 +66,20 @@ class TestTempDirEnvExecute(object):
         self.env.dir = '/'
         self.step = mock.MagicMock()
 
+    @mock.patch('piper.env.Process')
     @mock.patch('os.getcwd')
-    def test_execute(self, getcwd):
+    def test_execute_plain(self, getcwd, proc):
         getcwd.return_value = self.env.dir
-        self.env.execute(self.step)
+        ret = self.env.execute(self.step)
+
+        gc = self.step.get_command
+        procobj = proc.return_value
 
         getcwd.assert_called_once_with()
-        self.step.execute.assert_called_once_with()
+        gc.assert_called_once_with()
+        proc.assert_called_once_with(gc.return_value)
+        procobj.run.assert_called_once_with()
+        assert ret is procobj
 
     @mock.patch('os.chdir')
     @mock.patch('os.getcwd')
@@ -80,4 +87,5 @@ class TestTempDirEnvExecute(object):
         getcwd.return_value = '/space/police'
 
         self.env.execute(self.step)
-        self.step.execute.assert_called_once_with()
+        getcwd.assert_called_once_with()
+        chdir.assert_called_once_with(self.env.dir)
