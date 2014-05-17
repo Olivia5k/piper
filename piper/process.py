@@ -36,9 +36,13 @@ class Process(object):
         while not self.proc.poll():
             # TODO: Gracefully handle stderr as well
             line = self.proc.stdout.readline()
+
+            if not line:
+                break
+
             self.log.info(line.decode('utf-8').rstrip())
 
-        exit = self.proc.returncode
+        exit = self.proc.wait()
         self.log.info('Exitcode {0}'.format(exit))
 
         self.success = exit == 0
