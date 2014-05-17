@@ -36,6 +36,24 @@ class TestDotDict(object):
         dd2 = DotDict(dd1)
         assert dd1.data == dd2.data
 
+    def test_equality_to_dict(self):
+        data = {'fortune': 'fame'}
+        dd = DotDict(data)
+
+        assert dd.__eq__(data) is True
+        assert dd.__eq__({}) is False
+
+    def test_equality_to_dotdict(self):
+        data = {'fame': 'fortune'}
+        dd = DotDict(data)
+
+        assert dd.__eq__(DotDict(data)) is True
+        assert dd.__eq__(DotDict({})) is False
+
+    def test_equality_to_others(self):
+        dd = DotDict({})
+        assert dd.__eq__(pytest.raises) is False
+
 
 class TestDynamicLoad(object):
     def test_proper_load(self):
