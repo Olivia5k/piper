@@ -234,7 +234,10 @@ class TestPiperExecute(object):
 
     def test_execution_stops_by_failed_step(self):
         self.piper.order[1].success = False
-
+        self.piper.env.execute.side_effect = (
+            mock.MagicMock(),
+            mock.MagicMock(success=False),
+        )
         self.piper.execute()
 
         calls = [mock.call(step) for step in self.piper.order[:2]]

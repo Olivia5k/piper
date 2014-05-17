@@ -191,10 +191,10 @@ class Piper(object):
         self.log.info('Running complete "{0}" set...'.format(self.set_key))
         for step in self.order:
             step.log.info('Running...')
-            self.env.execute(step)
+            proc = self.env.execute(step)
 
             # If the success is not positive, bail and stop running.
-            if not step.success:
+            if not proc.success:
                 step.log.error('Step "{0}" failed.'.format(self.set_key))
                 self.success = False
                 break
