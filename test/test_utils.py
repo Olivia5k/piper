@@ -30,6 +30,12 @@ class TestDotDict(object):
         dd = DotDict({'highway': {'danger': {'zone': True}}})
         assert dd.highway.danger.zone is True
 
+    def test_make_dotdict_out_of_dotdict_does_not_nest(self):
+        data = {'another': {'angel': 'down'}}
+        dd1 = DotDict(data)
+        dd2 = DotDict(dd1)
+        assert dd1.data == dd2.data
+
 
 class TestDynamicLoad(object):
     def test_proper_load(self):
