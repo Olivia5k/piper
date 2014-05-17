@@ -222,13 +222,13 @@ class TestPiperExecute(object):
     def setup_method(self, method):
         self.piper = Piper(mock.MagicMock(), mock.MagicMock())
         self.piper.order = [mock.MagicMock() for _ in range(3)]
+        self.piper.env = mock.MagicMock()
 
     def test_all_successful(self):
         self.piper.execute()
 
-        for step in self.piper.order:
-            step.execute.assert_called_once_with()
-
+        calls = [mock.call(step) for step in self.piper.order]
+        assert self.piper.env.execute.call_args_list == calls
         assert self.piper.success is True
 
     def test_execution_stops_by_failed_step(self):
@@ -236,11 +236,8 @@ class TestPiperExecute(object):
 
         self.piper.execute()
 
-        order = self.piper.order
-        order[0].execute.assert_called_once_with()
-        order[1].execute.assert_called_once_with()
-        assert order[2].execute.call_count is 0
-
+        calls = [mock.call(step) for step in self.piper.order[:2]]
+        assert self.piper.env.execute.call_args_list == calls
         assert self.piper.success is False
 
 

@@ -189,7 +189,7 @@ class Piper(object):
         self.log.info('Running complete "{0}" set...'.format(self.set_key))
         for step in self.order:
             step.log.info('Running...')
-            step.execute()
+            self.env.execute(step)
 
             # If the success is not positive, bail and stop running.
             if not step.success:
