@@ -242,3 +242,13 @@ class TestPiperExecute(object):
         assert order[2].execute.call_count is 0
 
         assert self.piper.success is False
+
+
+class TestPiperSetupEnv(object):
+    def setup_method(self, method):
+        self.piper = Piper(mock.MagicMock(), mock.MagicMock())
+        self.piper.env = mock.MagicMock()
+
+    def test_setup_env(self):
+        self.piper.setup_env()
+        self.piper.env.setup.assert_called_once_with()

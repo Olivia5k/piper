@@ -168,6 +168,15 @@ class Piper(object):
 
         self.log.info('Set order configured.')
 
+    def setup_env(self):
+        """
+        Execute setup steps of the env
+
+        """
+
+        self.env.log.info('Setting up env...')
+        self.env.setup()
+
     def execute(self):
         """
         Runs the steps and determines whether to continue or not.
