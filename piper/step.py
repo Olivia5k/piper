@@ -55,15 +55,7 @@ class Step(object):
 
         """
 
-        self.pre()
         self.run()
-        self.post()
-
-    def pre(self):  # pragma: nocover
-        pass
 
     def run(self):  # pragma: nocover
         self.success = True
-
-    def post(self):  # pragma: nocover
-        pass

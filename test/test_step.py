@@ -8,15 +8,11 @@ class TestStepExecute(object):
         self.step = Step('key', {})
 
     def test_execute(self):
-        self.step.pre = mock.MagicMock()
         self.step.run = mock.MagicMock()
-        self.step.post = mock.MagicMock()
 
         self.step.execute()
 
-        self.step.pre.assert_called_once_with()
         self.step.run.assert_called_once_with()
-        self.step.post.assert_called_once_with()
 
 
 class TestStepValidate(object):
