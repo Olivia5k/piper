@@ -14,6 +14,17 @@ class TestEnvExecute(object):
             self.env.execute(mock.MagicMock())
 
 
+class TestEnvValidate(object):
+    def setup_method(self, method):
+        self.env = Env({})
+        self.env.config = mock.MagicMock()
+
+    @mock.patch('jsonschema.validate')
+    def test_validate(self, jv):
+        self.env.validate()
+        jv.assert_called_once_with(self.env.config.data, self.env.schema)
+
+
 class TestTempDirEnvSetup(object):
     def setup_method(self, method):
         self.env = TempDirEnv({})
