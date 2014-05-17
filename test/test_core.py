@@ -42,6 +42,7 @@ class TestPiperSetup(PiperTestBase):
             'configure_env',
             'configure_steps',
             'configure_set',
+            'setup_env',
         )
 
         super(TestPiperSetup, self).setup_method(method)

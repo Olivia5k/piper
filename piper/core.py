@@ -83,6 +83,8 @@ class Piper(object):
         self.configure_steps()
         self.configure_set()
 
+        self.setup_env()
+
     def load_config(self):
         """
         Parses the configuration file and dies in flames if there are errors.
