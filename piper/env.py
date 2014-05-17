@@ -40,7 +40,13 @@ class Env(object):
         pass
 
     def execute(self, step):
-        raise NotImplementedError()
+        cmd = step.get_command()
+
+        proc = Process(cmd)
+        proc.setup()
+        proc.run()
+
+        return proc
 
     def validate(self):
         jsonschema.validate(self.config.data, self.schema)
@@ -97,9 +103,5 @@ class TempDirEnv(Env):
             )
             os.chdir(self.cwd)
 
-        cmd = step.get_command()
-        proc = Process(cmd)
-        proc.setup()
-        proc.run()
-
-        return proc
+        # Execute the base method
+        return super(TempDirEnv, self).execute(step)

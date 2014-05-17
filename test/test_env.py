@@ -8,10 +8,19 @@ from piper.env import TempDirEnv
 class TestEnvExecute(object):
     def setup_method(self, method):
         self.env = Env({})
+        self.step = mock.MagicMock()
 
-    def test_execute_raises_notimplemented(self):
-        with pytest.raises(NotImplementedError):
-            self.env.execute(mock.MagicMock())
+    @mock.patch('piper.env.Process')
+    def test_execute_plain(self, proc):
+        ret = self.env.execute(self.step)
+
+        gc = self.step.get_command
+        procobj = proc.return_value
+
+        gc.assert_called_once_with()
+        proc.assert_called_once_with(gc.return_value)
+        procobj.run.assert_called_once_with()
+        assert ret is procobj
 
 
 class TestEnvValidate(object):
