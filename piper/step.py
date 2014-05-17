@@ -6,9 +6,9 @@ from piper.utils import DotDict
 
 class Step(object):
     """
-    An execution step.
+    Definition of an execution step.
 
-    This base implementation will execute whatever command line is set in the
+    This base implementation will return the command line set in the
     configuration.
 
     """
@@ -47,7 +47,7 @@ class Step(object):
     def validate(self):
         jsonschema.validate(self.config.data, self.schema)
 
-    def execute(self):
+    def get_command(self):
         """
         The main entry point.
 
@@ -55,7 +55,4 @@ class Step(object):
 
         """
 
-        self.run()
-
-    def run(self):  # pragma: nocover
-        self.success = True
+        return self.config.command

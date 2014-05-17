@@ -5,14 +5,12 @@ import mock
 
 class TestStepExecute(object):
     def setup_method(self, method):
-        self.step = Step('key', {})
+        self.command = '/usr/bin/empathy'
+        self.step = Step('key', {'command': self.command})
 
-    def test_execute(self):
-        self.step.run = mock.MagicMock()
-
-        self.step.execute()
-
-        self.step.run.assert_called_once_with()
+    def test_get_command(self):
+        ret = self.step.get_command()
+        assert ret == self.command
 
 
 class TestStepValidate(object):
