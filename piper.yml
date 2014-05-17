@@ -3,8 +3,7 @@ version: '0.0.1-alpha1'
 envs:
   local:
     version: '0.0.1'
-    class: 'piper.env.TempDirEnv'
-    delete_when_done: true
+    class: 'piper.env.Env'
 
 steps:
   test:
