@@ -63,27 +63,43 @@ class TempDirEnv(Env):
         }
 
     def setup(self):
-        self.dir = tempfile.mkdtemp()
+        self.dir = tempfile.mkdtemp(prefix='piper-')
+        self.log.info("Created temporary dir '{0}'".format(self.dir))
+
+        self.cwd = os.path.join(self.dir, os.getcwd().split('/')[-1])
+
+        self.log.info("Copying repo to '{0}'...".format(self.cwd))
+
+        try:
+            shutil.copytree(os.getcwd(), self.cwd)
+        except Exception:
+            self.log.warning("shutil.copytree whined about something...")
+
+        self.log.info("Copying done.")
 
         os.chdir(self.dir)
-        self.log.info("Working directory set to '{0}'".format(self.dir))
+        self.log.info("Working directory set to '{0}'".format(self.cwd))
 
     def teardown(self):
         if self.config.delete_when_done:
+            self.log.info("Removing '{0}'".format(self.dir))
             shutil.rmtree(self.dir)
+        else:
+            self.log.info("Keeping '{0}'".format(self.dir))
 
     def execute(self, step):
         cwd = os.getcwd()
-        if cwd != self.dir:
+        if cwd != self.cwd:
             self.log.warning(
                 "Directory changed to '{0}'. Resetting to '{1}'.".format(
-                    cwd, self.dir
+                    cwd, self.cwd
                 )
             )
-            os.chdir(self.dir)
+            os.chdir(self.cwd)
 
         cmd = step.get_command()
         proc = Process(cmd)
+        proc.setup()
         proc.run()
 
         return proc

@@ -29,13 +29,14 @@ class TestTempDirEnvSetup(object):
     def setup_method(self, method):
         self.env = TempDirEnv({})
 
+    @mock.patch('shutil.copytree')
     @mock.patch('os.chdir')
     @mock.patch('tempfile.mkdtemp')
-    def test_setup(self, mkdtemp, chdir):
+    def test_setup(self, mkdtemp, chdir, copy):
         mkdtemp.return_value = '/'
         self.env.setup()
 
-        mkdtemp.assert_called_once_with()
+        mkdtemp.assert_called_once_with(prefix='piper-')
         chdir.assert_called_once_with(mkdtemp.return_value)
         assert self.env.dir == mkdtemp.return_value
 
@@ -43,6 +44,7 @@ class TestTempDirEnvSetup(object):
 class TestTempDirEnvTeardown(object):
     def setup_method(self, method):
         self.env = TempDirEnv({})
+        self.env.dir = '/dir'
 
     @mock.patch('shutil.rmtree')
     def test_teardown_default(self, rmtree):
@@ -64,12 +66,13 @@ class TestTempDirEnvExecute(object):
     def setup_method(self, method):
         self.env = TempDirEnv({})
         self.env.dir = '/'
+        self.env.cwd = '/repo'
         self.step = mock.MagicMock()
 
     @mock.patch('piper.env.Process')
     @mock.patch('os.getcwd')
     def test_execute_plain(self, getcwd, proc):
-        getcwd.return_value = self.env.dir
+        getcwd.return_value = self.env.cwd
         ret = self.env.execute(self.step)
 
         gc = self.step.get_command
@@ -81,11 +84,12 @@ class TestTempDirEnvExecute(object):
         procobj.run.assert_called_once_with()
         assert ret is procobj
 
+    @mock.patch('piper.env.Process')
     @mock.patch('os.chdir')
     @mock.patch('os.getcwd')
-    def test_execute_cwd_changes_back(self, getcwd, chdir):
+    def test_execute_cwd_changes_back(self, getcwd, chdir, proc):
         getcwd.return_value = '/space/police'
 
         self.env.execute(self.step)
         getcwd.assert_called_once_with()
-        chdir.assert_called_once_with(self.env.dir)
+        chdir.assert_called_once_with(self.env.cwd)
