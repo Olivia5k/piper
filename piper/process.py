@@ -24,7 +24,7 @@ class Process(object):
 
         self.log.info('Spawning handler for {0}...'.format(self.cmd))
 
-        self.proc = sub.Popen(
+        self.popen = sub.Popen(
             self.cmd.split(),
             stdout=sub.PIPE,
             stderr=sub.PIPE,
@@ -33,18 +33,18 @@ class Process(object):
     def run(self):
         self.log.info('Executing {0}'.format(self.cmd))
 
-        while not self.proc.poll():
+        while not self.popen.poll():
             # TODO: Gracefully handle stderr as well
-            line = self.proc.stdout.readline()
+            line = self.popen.stdout.readline()
 
             if not line:
                 break
 
             self.log.info(line.decode('utf-8').rstrip())
 
-        exit = self.proc.wait()
+        exit = self.popen.wait()
         self.log.info('Exitcode {0}'.format(exit))
 
         self.success = exit == 0
         if not self.success:
-            self.log.error(self.proc.stderr.read())
+            self.log.error(self.popen.stderr.read())
