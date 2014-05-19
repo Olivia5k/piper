@@ -13,7 +13,7 @@ class Piper(object):
     """
     The main pipeline runner.
 
-    This class loads the configurations, sets up all other components,
+    This class loads the configurations, jobs up all other components,
     executes them in whatever order they are supposed to happen in, collects
     data about the state of the pipeline and persists it, and finally tears
     down the components that needs tearing down.
@@ -24,7 +24,7 @@ class Piper(object):
         "$schema": "http://json-schema.org/draft-04/schema",
         'type': 'object',
         'additionalProperties': False,
-        'required': ['version', 'envs', 'steps', 'sets'],
+        'required': ['version', 'envs', 'steps', 'jobs'],
         'properties': {
             'version': {
                 'description': 'Semantic version string for this config.',
@@ -41,7 +41,7 @@ class Piper(object):
                 'description': 'Definitions of executable build steps.',
                 'type': 'object',
             },
-            'sets': {
+            'jobs': {
                 'description': 'Runnable collections of steps.',
                 'type': 'object',
                 'additionalProperties': {
@@ -52,9 +52,9 @@ class Piper(object):
         },
     }
 
-    def __init__(self, env_key, set_key):
+    def __init__(self, env_key, job_key):
         self.env_key = env_key
-        self.set_key = set_key
+        self.job_key = job_key
 
         self.raw_config = None  # Dict data
         self.config = None  # DotDict object
@@ -81,7 +81,7 @@ class Piper(object):
 
         self.configure_env()
         self.configure_steps()
-        self.configure_set()
+        self.configure_job()
 
         self.setup_env()
 
@@ -159,13 +159,13 @@ class Piper(object):
             step.log.info('Step configured.')
             self.steps[step_key] = step
 
-    def configure_set(self):
+    def configure_job(self):
         """
         Places steps in proper order according to the chosen set.
 
         """
 
-        for step_key in self.config.sets[self.set_key]:
+        for step_key in self.config.jobs[self.job_key]:
             self.order.append(self.steps[step_key])
 
         self.log.info('Set order configured.')
@@ -188,14 +188,14 @@ class Piper(object):
 
         """
 
-        self.log.info('Running complete "{0}" set...'.format(self.set_key))
+        self.log.info('Running complete "{0}" set...'.format(self.job_key))
         for step in self.order:
             step.log.info('Running...')
             proc = self.env.execute(step)
 
             # If the success is not positive, bail and stop running.
             if not proc.success:
-                step.log.error('Step "{0}" failed.'.format(self.set_key))
+                step.log.error('Step "{0}" failed.'.format(self.job_key))
                 self.success = False
                 break
 

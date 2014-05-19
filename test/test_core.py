@@ -13,7 +13,7 @@ class PiperTestBase(object):
         self.piper = Piper(mock.MagicMock(), mock.MagicMock())
         self.base_config = {
             'version': '0.0.1-alpha1',
-            'sets': {'test': ['test'], 'build': ['test', 'build']},
+            'jobs': {'test': ['test'], 'build': ['test', 'build']},
             'envs': {
                 'local': {
                     'class': 'piper.env.TempDirEnv',
@@ -41,7 +41,7 @@ class TestPiperSetup(PiperTestBase):
             'load_classes',
             'configure_env',
             'configure_steps',
-            'configure_set',
+            'configure_job',
             'setup_env',
         )
 
@@ -119,8 +119,8 @@ class TestPiperValidateConfig(PiperTestBase):
     def test_no_steps_specified(self):
         self.check_missing_key('steps')
 
-    def test_no_sets_specified(self):
-        self.check_missing_key('sets')
+    def test_no_jobs_specified(self):
+        self.check_missing_key('jobs')
 
 
 class TestPiperLoadClasses(PiperTestBase):
@@ -141,7 +141,7 @@ class TestPiperLoadClasses(PiperTestBase):
         assert self.piper.classes[self.env] is dl.return_value
 
 
-class TestPiperLoadEnv(object):
+class TestPiperConfigureEnv(object):
     def setup_method(self, method):
         self.env_key = 'local'
         self.cls_key = 'unisonic.KingForADay'
@@ -164,7 +164,7 @@ class TestPiperLoadEnv(object):
         self.cls.return_value.validate.assert_called_once_with()
 
 
-class TestPiperLoadSteps(object):
+class TestPiperConfigureSteps(object):
     def setup_method(self, method):
         self.step_key = 'local'
         self.config = {
@@ -196,24 +196,24 @@ class TestPiperLoadSteps(object):
             cls.return_value.validate.assert_called_once_with()
 
 
-class TestPiperLoadSet(object):
+class TestPiperConfigureJob(object):
     def setup_method(self, method):
-        self.set_key = 'mmmbop'
+        self.job_key = 'mmmbop'
         self.step_keys = ('bidubidappa', 'dubop')
         self.steps = (mock.MagicMock(), mock.MagicMock())
 
         self.config = {
-            'sets': {
-                self.set_key: self.step_keys,
+            'jobs': {
+                self.job_key: self.step_keys,
             },
         }
 
-        self.piper = Piper(mock.MagicMock(), self.set_key)
+        self.piper = Piper(mock.MagicMock(), self.job_key)
         self.piper.steps = dict(zip(self.step_keys, self.steps))
         self.piper.config = DotDict(self.config)
 
-    def test_configure_set(self):
-        self.piper.configure_set()
+    def test_configure_job(self):
+        self.piper.configure_job()
 
         for x, _ in enumerate(self.step_keys):
             assert self.piper.order[x] is self.steps[x]

@@ -13,7 +13,7 @@ steps:
     class: 'piper.step.Step'
     command: '/usr/bin/env python setup.py sdist'
 
-sets:
+jobs:
   test:
   - 'test'
   build:

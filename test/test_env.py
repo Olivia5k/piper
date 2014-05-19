@@ -1,4 +1,3 @@
-import pytest
 import mock
 
 from piper.env import Env
