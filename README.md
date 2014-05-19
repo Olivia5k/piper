@@ -21,7 +21,7 @@ into increasingly opinionated holes, a couple of thoughts started to form:
 * The system needs to be runnable locally in the same manner as it would happen
   on any build agent, at least in a dry-run mode.
 * Inheritable templates are not the way to go, not at scale.
-* [It can't be that hard][naivete] to build a pipeline - the difficulty of
+* [It can't be that hard][hard] to build a pipeline - the difficulty of
   the problem is overstated.
 
 ## Design
@@ -36,7 +36,7 @@ The main executor of the `piper` pipeline is the `Piper()` class. It's
 a singleton (shut up) that reads the configuration and uses that configuration
 to set and host a couple of other classes:
 
-* `Env()`: Sets and tears the execution env. The env can be a temporary
+* `Env()`: Creates and tears the execution env. The env can be a temporary
   directory, an AWS machine, a schroot or something of the sort. Can optionally
   provide a wrapper method for `Step()` that all execution will run through,
   e.g. `schroot -c 'squeeze-amd64' -- {0}` to run something in a schroot.
@@ -50,5 +50,5 @@ a `PythonStep()` class that builds Python projects, a `IRCNotifier()` class
 that does just that, etc.
 
 
-[naivete]: http://thiderman.org/posts/naivete/
+[hard]: https://github.com/thiderman/talk-hard
 [yaml]: http://www.yaml.org/
