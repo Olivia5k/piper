@@ -17,10 +17,17 @@ This is a project inspired by working with different build systems full-time
 for a bit longer than a year. After trying to fit increasingly blob shaped pegs
 into increasingly opinionated holes, a couple of thoughts started to form:
 
-* Storing configuration outside of the repository is ridiculous.
+* Storing configuration anywhere but inside in the repository is a bad idea.
+* Most modern build systems have too many concerns they probably should not
+  have. The UNIX principle or anything like it was forgotten long ago. To this
+  end, all build steps should be command lines and not builtin wrappers in
+  whatever language the system is built in.
 * The system needs to be runnable locally in the same manner as it would happen
-  on any build agent, at least in a dry-run mode.
+  on any build agent, with actual execution if possible, or else in a dry-run
+  mode.
 * Inheritable templates are not the way to go, not at scale.
+* Why did we leave the terminal? Wouldn't a curses interface be fantastic if
+  done at least remotely right?
 * [It can't be that hard][hard] to build a pipeline - the difficulty of
   the problem is overstated.
 
