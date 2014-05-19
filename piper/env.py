@@ -87,11 +87,12 @@ class TempDirEnv(Env):
         self.log.info("Working directory set to '{0}'".format(self.cwd))
 
     def teardown(self):
+        verb = 'Keeping'
         if self.config.delete_when_done:
-            self.log.info("Removing '{0}'".format(self.dir))
+            verb = 'Removing'
             shutil.rmtree(self.dir)
-        else:
-            self.log.info("Keeping '{0}'".format(self.dir))
+
+        self.log.info("{1} '{0}'".format(self.dir, verb))
 
     def execute(self, step):
         cwd = os.getcwd()
