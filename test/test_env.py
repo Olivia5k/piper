@@ -7,7 +7,7 @@ from piper.env import TempDirEnv
 class TestEnvExecute(object):
     def setup_method(self, method):
         self.env = Env({})
-        self.step = mock.MagicMock()
+        self.step = mock.Mock()
 
     @mock.patch('piper.env.Process')
     def test_execute_plain(self, proc):
@@ -25,12 +25,16 @@ class TestEnvExecute(object):
 class TestEnvValidate(object):
     def setup_method(self, method):
         self.env = Env({})
-        self.env.config = mock.MagicMock()
+        self.env.config = mock.Mock()
 
     @mock.patch('jsonschema.validate')
     def test_validate(self, jv):
         self.env.validate()
         jv.assert_called_once_with(self.env.config.data, self.env.schema)
+
+
+class TestEnvInit(object):
+    pass
 
 
 class TestTempDirEnvSetup(object):
@@ -56,7 +60,7 @@ class TestTempDirEnvTeardown(object):
 
     @mock.patch('shutil.rmtree')
     def test_teardown_default(self, rmtree):
-        self.env.dir = mock.MagicMock()
+        self.env.dir = mock.Mock()
         self.env.config.delete_when_done = True
         self.env.teardown()
 
@@ -75,7 +79,7 @@ class TestTempDirEnvExecute(object):
         self.env = TempDirEnv({})
         self.env.dir = '/'
         self.env.cwd = '/repo'
-        self.step = mock.MagicMock()
+        self.step = mock.Mock()
 
     @mock.patch('piper.env.Process')
     @mock.patch('os.getcwd')

@@ -10,7 +10,7 @@ from test.utils import builtin
 
 class PiperTestBase(object):
     def setup_method(self, method):
-        self.piper = Piper(mock.MagicMock(), mock.MagicMock())
+        self.piper = Piper(mock.Mock(), mock.Mock())
         self.base_config = {
             'version': '0.0.1-alpha1',
             'jobs': {'test': ['test'], 'build': ['test', 'build']},
@@ -49,7 +49,7 @@ class TestPiperSetup(PiperTestBase):
 
     def test_setup_calls(self):
         for method in self.methods:
-            setattr(self.piper, method, mock.MagicMock())
+            setattr(self.piper, method, mock.Mock())
 
         self.piper.setup()
 
@@ -145,9 +145,9 @@ class TestPiperConfigureEnv(object):
     def setup_method(self, method):
         self.env_key = 'local'
         self.cls_key = 'unisonic.KingForADay'
-        self.cls = mock.MagicMock()
+        self.cls = mock.Mock()
 
-        self.piper = Piper(self.env_key, mock.MagicMock())
+        self.piper = Piper(self.env_key, mock.Mock())
         self.piper.classes = {self.cls_key: self.cls}
         self.piper.config = DotDict({
             'envs': {
@@ -178,10 +178,10 @@ class TestPiperConfigureSteps(object):
             },
         }
 
-        self.piper = Piper(self.step_key, mock.MagicMock())
+        self.piper = Piper(self.step_key, mock.Mock())
         for key in self.config['steps']:
             cls = self.config['steps'][key]['class']
-            self.piper.classes[cls] = mock.MagicMock()
+            self.piper.classes[cls] = mock.Mock()
 
         self.piper.config = DotDict(self.config)
 
@@ -200,7 +200,7 @@ class TestPiperConfigureJob(object):
     def setup_method(self, method):
         self.job_key = 'mmmbop'
         self.step_keys = ('bidubidappa', 'dubop')
-        self.steps = (mock.MagicMock(), mock.MagicMock())
+        self.steps = (mock.Mock(), mock.Mock())
 
         self.config = {
             'jobs': {
@@ -208,7 +208,7 @@ class TestPiperConfigureJob(object):
             },
         }
 
-        self.piper = Piper(mock.MagicMock(), self.job_key)
+        self.piper = Piper(mock.Mock(), self.job_key)
         self.piper.steps = dict(zip(self.step_keys, self.steps))
         self.piper.config = DotDict(self.config)
 
@@ -221,9 +221,9 @@ class TestPiperConfigureJob(object):
 
 class TestPiperExecute(object):
     def setup_method(self, method):
-        self.piper = Piper(mock.MagicMock(), mock.MagicMock())
-        self.piper.order = [mock.MagicMock() for _ in range(3)]
-        self.piper.env = mock.MagicMock()
+        self.piper = Piper(mock.Mock(), mock.Mock())
+        self.piper.order = [mock.Mock() for _ in range(3)]
+        self.piper.env = mock.Mock()
 
     def test_all_successful(self):
         self.piper.execute()
@@ -235,8 +235,8 @@ class TestPiperExecute(object):
     def test_execution_stops_by_failed_step(self):
         self.piper.order[1].success = False
         self.piper.env.execute.side_effect = (
-            mock.MagicMock(),
-            mock.MagicMock(success=False),
+            mock.Mock(),
+            mock.Mock(success=False),
         )
         self.piper.execute()
 
@@ -248,7 +248,7 @@ class TestPiperExecute(object):
 class TestPiperSetupEnv(PiperTestBase):
     def setup_method(self, method):
         super(TestPiperSetupEnv, self).setup_method(method)
-        self.piper.env = mock.MagicMock()
+        self.piper.env = mock.Mock()
 
     def test_setup_env(self):
         self.piper.setup_env()
@@ -258,7 +258,7 @@ class TestPiperSetupEnv(PiperTestBase):
 class TestPiperTeardownEnv(PiperTestBase):
     def setup_method(self, method):
         super(TestPiperTeardownEnv, self).setup_method(method)
-        self.piper.env = mock.MagicMock()
+        self.piper.env = mock.Mock()
 
     def test_teardown_env(self):
         self.piper.teardown_env()
