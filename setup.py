@@ -6,6 +6,7 @@ install_requires = (
     'Logbook==0.6.0',
     'PyYAML==3.11',
     'jsonschema==2.3.0',
+    'blessings==1.5.1',
 )
 
 tests_require = (
