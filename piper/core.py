@@ -212,6 +212,9 @@ class Piper(object):
 
         pass
 
+    def teardown(self):
+        self.teardown_env()
+
     def teardown_env(self):
         """
         Execute teardown step of the env
