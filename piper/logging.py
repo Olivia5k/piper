@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+import re
 import sys
 import hashlib
 import logbook
@@ -21,6 +22,9 @@ COLORS = (
     223, 224, 225, 226, 227, 228
 )
 COLOR_LEN = len(COLORS)
+
+# Any consecutive string containing a slash
+PATH_RXP = re.compile(r'(\S*/[\S/]+)')
 
 DEFAULT_FORMAT_STRING = (
     '{t.bold}{t.black}['
@@ -53,6 +57,7 @@ class BlessingsStringFormatter(logbook.StringFormatter):
         super(BlessingsStringFormatter, self).__init__(format_string)
 
     def format_record(self, record, handler):
+        record = self.prepare_record(record)
         kwargs = {
             'record': record,
             'handler': handler,
@@ -103,6 +108,24 @@ class BlessingsStringFormatter(logbook.StringFormatter):
             self.md5_cache[rc.channel] = color
 
         return color
+
+    def prepare_record(self, rc):
+        """
+        Manipulate the log message
+
+        """
+
+        # Colorize paths
+        match = PATH_RXP.findall(rc.message)
+        if match:
+            for path in match:
+                rc.message = rc.message.replace(
+                    path,
+                    self.terminal.bold + self.terminal.blue + path +
+                    self.terminal.normal
+                )
+
+        return rc
 
 
 handler = logbook.StreamHandler(sys.stdout)
