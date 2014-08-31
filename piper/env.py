@@ -73,14 +73,9 @@ class TempDirEnv(Env):
         self.log.info("Created temporary dir '{0}'".format(self.dir))
 
         self.cwd = os.path.join(self.dir, os.getcwd().split('/')[-1])
-
         self.log.info("Copying repo to '{0}'...".format(self.cwd))
 
-        try:
-            shutil.copytree(os.getcwd(), self.cwd)
-        except Exception:
-            self.log.warning("shutil.copytree whined about something...")
-
+        shutil.copytree(os.getcwd(), self.cwd)
         self.log.info("Copying done.")
 
         os.chdir(self.dir)

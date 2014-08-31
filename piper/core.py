@@ -215,8 +215,6 @@ class Piper(object):
 
         """
 
-        pass
-
     def teardown(self):
         self.teardown_env()
 

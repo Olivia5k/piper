@@ -16,6 +16,7 @@ def main():
             piper.setup()
             piper.execute()
             piper.teardown()
-        except jsonschema.exceptions.ValidationError as e:
+        # TODO: Print nice error messages upon errors
+        except jsonschema.exceptions.ValidationError as e:  # pragma: nocover
             print(e)
             raise

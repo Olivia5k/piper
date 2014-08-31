@@ -255,10 +255,15 @@ class TestPiperSetupEnv(PiperTestBase):
         self.piper.env.setup.assert_called_once_with()
 
 
-class TestPiperTeardownEnv(PiperTestBase):
+class TestPiperTeardown(PiperTestBase):
     def setup_method(self, method):
-        super(TestPiperTeardownEnv, self).setup_method(method)
+        super(TestPiperTeardown, self).setup_method(method)
         self.piper.env = mock.Mock()
+
+    def test_teardown(self):
+        self.piper.teardown_env = mock.Mock()
+        self.piper.teardown()
+        self.piper.teardown_env.assert_called_once_with()
 
     def test_teardown_env(self):
         self.piper.teardown_env()
