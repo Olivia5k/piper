@@ -103,11 +103,14 @@ class BlessingsStringFormatter(logbook.StringFormatter):
         color = self.md5_cache.get(rc.channel)
         if not color:
             md5 = hashlib.md5(rc.channel.encode()).hexdigest()
-            index = COLORS[int(md5, 16) % COLOR_LEN]
+            index = self.get_color(md5)
             color = self.terminal.color(index)
-            self.md5_cache[rc.channel] = color
+            self.md5_cache.update((rc.channel, color))
 
         return color
+
+    def get_color(self, md5):  # pragma: nocover
+        return COLORS[int(md5, 16) % COLOR_LEN]
 
     def prepare_record(self, rc):
         """
