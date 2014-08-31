@@ -18,6 +18,7 @@ class Step(object):
         self.key = key
         self.config = DotDict(config)
         self.success = None
+        self.log = None
 
         # Schema is defined here so that subclasses can change the base schema
         # without it affecting all other classes.
