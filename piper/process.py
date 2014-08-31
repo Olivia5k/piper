@@ -12,9 +12,9 @@ class Process(object):
     def __init__(self, cmd):
         self.cmd = cmd
 
-        self.proc = None
+        self.popen = None
         self.success = None
-        self.log = logbook.Logger(self.__class__.__name__)
+        self.log = logbook.Logger(self.cmd)
 
     def setup(self):
         """
@@ -22,7 +22,7 @@ class Process(object):
 
         """
 
-        self.log.info('Spawning handler for {0}...'.format(self.cmd))
+        self.log.debug('Spawning process handler')
 
         self.popen = sub.Popen(
             self.cmd.split(),
@@ -31,7 +31,7 @@ class Process(object):
         )
 
     def run(self):
-        self.log.info('Executing {0}'.format(self.cmd))
+        self.log.debug('Executing')
 
         while not self.popen.poll():
             # TODO: Gracefully handle stderr as well
@@ -43,7 +43,7 @@ class Process(object):
             self.log.info(line.decode('utf-8').rstrip())
 
         exit = self.popen.wait()
-        self.log.info('Exitcode {0}'.format(exit))
+        self.log.debug('Exitcode {0}'.format(exit))
 
         self.success = exit == 0
         if not self.success:
