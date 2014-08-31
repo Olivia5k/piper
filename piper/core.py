@@ -188,8 +188,11 @@ class Piper(object):
 
         """
 
+        total = len(self.order)
         self.log.info('Running complete "{0}" set...'.format(self.job_key))
-        for step in self.order:
+
+        for x, step in enumerate(self.order, start=1):
+            step.set_index(x, total)
             step.log.info('Running...')
             proc = self.env.execute(step)
 

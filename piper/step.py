@@ -14,13 +14,10 @@ class Step(object):
     """
 
     def __init__(self, key, config):
+        self.index = ('x', 'y')
         self.key = key
         self.config = DotDict(config)
         self.success = None
-
-        self.log = logbook.Logger(
-            '{0}({1})'.format(self.__class__.__name__, self.key)
-        )
 
         # Schema is defined here so that subclasses can change the base schema
         # without it affecting all other classes.
@@ -43,6 +40,17 @@ class Step(object):
                 },
             },
         }
+
+    def set_index(self, cur, tot):
+        """
+        Store the order of the step running and set up the logger accordingly.
+
+        """
+
+        self.index = (cur, tot)
+        self.log = logbook.Logger(
+            '{0}({1}/{2})'.format(self.key, self.index[0], self.index[1])
+        )
 
     def validate(self):
         jsonschema.validate(self.config.data, self.schema)
