@@ -105,7 +105,7 @@ class BlessingsStringFormatter(logbook.StringFormatter):
             md5 = hashlib.md5(rc.channel.encode()).hexdigest()
             index = self.get_color(md5)
             color = self.terminal.color(index)
-            self.md5_cache.update((rc.channel, color))
+            self.md5_cache.update({rc.channel: color})
 
         return color
 
