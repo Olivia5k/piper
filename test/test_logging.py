@@ -40,3 +40,30 @@ class TestBlessingsStringFormatterChannelColor(object):
 
         assert ret1 == ret2
         assert md5.call_count == 1
+
+
+class TestBlessingsStringFormatterFormatRecord(object):
+    def setup_method(self, method):
+        self.bsf = BSF()
+        self.bsf.prepare_record = mock.Mock()
+        self.bsf._formatter = mock.Mock()
+        self.bsf.terminal = mock.Mock()
+        self.bsf.level_color = mock.Mock()
+        self.bsf.channel_color = mock.Mock()
+
+        self.record = mock.Mock()
+        self.handler = mock.Mock()
+
+        self.kwargs = {
+            'record': self.bsf.prepare_record.return_value,
+            'handler': self.handler,
+            't': self.bsf.terminal,
+            'level_color': self.bsf.level_color.return_value,
+            'channel_color': self.bsf.channel_color.return_value,
+        }
+
+    def test_proper_kwargs(self):
+        self.bsf.format_record(self.record, self.handler)
+
+        assert self.bsf._formatter.format.call_count == 1
+        self.bsf._formatter.format.assert_called_once_with(**self.kwargs)

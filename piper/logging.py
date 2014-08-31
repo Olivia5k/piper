@@ -68,12 +68,15 @@ class BlessingsStringFormatter(logbook.StringFormatter):
 
         try:
             return self._formatter.format(**kwargs)
-        except UnicodeEncodeError:
+
+        # These handlers are tested as a part of logbook, so let's not muck
+        # around in trying to simulate those errors.
+        except UnicodeEncodeError:  # pragma: nocover
             # self._formatter is a str, but some of the record items
             # are unicode
             fmt = self._formatter.decode('ascii', 'replace')
             return fmt.format(**kwargs)
-        except UnicodeDecodeError:
+        except UnicodeDecodeError:  # pragma: nocover
             # self._formatter is unicode, but some of the record items
             # are non-ascii str
             fmt = self._formatter.encode('ascii', 'replace')
