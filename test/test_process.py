@@ -7,7 +7,7 @@ import mock
 
 class TestProcessSetup(object):
     def setup_method(self, method):
-        self.proc = Process('/usr/bin/empathy world hide')
+        self.proc = Process('/usr/bin/empathy world hide', 'key')
 
     @mock.patch('subprocess.Popen')
     def test_setup(self, popen):
@@ -29,7 +29,7 @@ class TestProcessRun(object):
             'wait': mock.Mock(),
         }
 
-        self.proc = Process('')
+        self.proc = Process('', 'key')
 
         # Lines should be read twice since we have two successful poll()s in
         # the default setup

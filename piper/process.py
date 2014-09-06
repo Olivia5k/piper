@@ -2,6 +2,8 @@ import subprocess as sub
 
 import logbook
 
+from piper.logging import SEPARATOR
+
 
 class Process(object):
     """
@@ -9,12 +11,12 @@ class Process(object):
 
     """
 
-    def __init__(self, cmd):
+    def __init__(self, cmd, parent_key):
         self.cmd = cmd
 
         self.popen = None
         self.success = None
-        self.log = logbook.Logger(self.cmd)
+        self.log = logbook.Logger(parent_key + SEPARATOR + self.cmd)
 
     def setup(self):
         """

@@ -31,10 +31,14 @@ DEFAULT_FORMAT_STRING = (
     '{t.cyan}{record.time:%Y-%m-%d %H:%M:%S.%f}'
     '{t.black}]{t.normal} '
     '{level_color}{record.level_name:>5} '
-    '{t.bold}{channel_color}{record.channel}'
+    '{t.bold}{colorized_channel}'
     '{t.bold}{t.black}:{t.normal} '
     '{record.message}'
 )
+
+# This separator is used to split multiple channels to colorize each one.
+# Dot was used at first, but that breaks command lines more than not.
+SEPARATOR = ': '
 
 
 class BlessingsStringFormatter(logbook.StringFormatter):
@@ -47,12 +51,13 @@ class BlessingsStringFormatter(logbook.StringFormatter):
 
     """
 
-    terminal = blessings.Terminal()
-    md5_cache = {}
-
     def __init__(self, format_string=None):
+        self.terminal = blessings.Terminal()
+        self.md5_cache = {}
+
         if not format_string:
             format_string = DEFAULT_FORMAT_STRING
+
         format_string += '{t.normal}'
         super(BlessingsStringFormatter, self).__init__(format_string)
 
@@ -63,7 +68,7 @@ class BlessingsStringFormatter(logbook.StringFormatter):
             'handler': handler,
             't': self.terminal,
             'level_color': self.level_color(record),
-            'channel_color': self.channel_color(record),
+            'colorized_channel': self.colorize_channel(record.channel),
         }
 
         try:
@@ -92,25 +97,29 @@ class BlessingsStringFormatter(logbook.StringFormatter):
             ret = self.terminal.white
         return ret
 
-    def channel_color(self, rc):
+    def colorize_channel(self, channel):
+        # Split the channel on the seprator and colorize each one differently
+        sep = self.terminal.black + SEPARATOR
+        return sep.join(map(self.colorize, channel.split(SEPARATOR)))
+
+    def colorize(self, string):
         """
-        Colorize the logging channel, providing visual cues to where the
-        message is from.
+        Colorize a string based on its hash.
 
         a color in the terminal colorspace is selected based on the integer
         value of md5sum of the channel name. Once calculated it is cached so
-        that the digestion only happens once per channel name.
+        that the digestion only happens once.
 
         """
 
-        color = self.md5_cache.get(rc.channel)
-        if not color:
-            md5 = hashlib.md5(rc.channel.encode()).hexdigest()
+        colorized = self.md5_cache.get(string)
+        if not colorized:
+            md5 = hashlib.md5(string.encode()).hexdigest()
             index = self.get_color(md5)
-            color = self.terminal.color(index)
-            self.md5_cache.update({rc.channel: color})
+            colorized = self.terminal.color(index) + string
+            self.md5_cache.update({string: colorized})
 
-        return color
+        return colorized
 
     def get_color(self, md5):  # pragma: nocover
         return COLORS[int(md5, 16) % COLOR_LEN]

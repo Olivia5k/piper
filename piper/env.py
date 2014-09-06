@@ -42,7 +42,7 @@ class Env(object):
     def execute(self, step):
         cmd = step.get_command()
 
-        proc = Process(cmd)
+        proc = Process(cmd, step.log_key)
         proc.setup()
         proc.run()
 

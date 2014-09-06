@@ -17,7 +17,7 @@ class TestEnvExecute(object):
         procobj = proc.return_value
 
         gc.assert_called_once_with()
-        proc.assert_called_once_with(gc.return_value)
+        proc.assert_called_once_with(gc.return_value, self.step.log_key)
         procobj.run.assert_called_once_with()
         assert ret is procobj
 
@@ -92,7 +92,7 @@ class TestTempDirEnvExecute(object):
 
         getcwd.assert_called_once_with()
         gc.assert_called_once_with()
-        proc.assert_called_once_with(gc.return_value)
+        proc.assert_called_once_with(gc.return_value, self.step.log_key)
         procobj.run.assert_called_once_with()
         assert ret is procobj
 

@@ -19,6 +19,7 @@ class Step(object):
         self.config = DotDict(config)
         self.success = None
         self.log = None
+        self.log = logbook.Logger(key)
 
         # Schema is defined here so that subclasses can change the base schema
         # without it affecting all other classes.
@@ -49,9 +50,10 @@ class Step(object):
         """
 
         self.index = (cur, tot)
-        self.log = logbook.Logger(
-            '{0}({1}/{2})'.format(self.key, self.index[0], self.index[1])
+        self.log_key = '{0}({1}/{2})'.format(
+            self.key, self.index[0], self.index[1]
         )
+        self.log = logbook.Logger(self.log_key)
 
     def validate(self):
         jsonschema.validate(self.config.data, self.schema)
