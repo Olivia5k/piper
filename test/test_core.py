@@ -245,6 +245,33 @@ class TestPiperConfigureJob(object):
         assert self.piper.order[0] is self.steps[0]
         assert self.piper.order[1] is self.steps[1]
 
+    def test_configure_job_with_multiple_dependencies(self):
+        """
+        Set so that we see that a step with multiple dependencies gets all of
+        them set.
+
+        """
+
+        # Add a new step and let it depend on the two earlier ones
+        key = 'schuwappa'
+        self.step_keys += (key,)
+        root = mock.Mock()
+        root.config.depends = self.step_keys[0:2]
+        self.steps += (root,)
+
+        self.piper = self.get_piper({
+            'jobs': {
+                self.job_key: (key,),
+            },
+        })
+
+        self.piper.configure_job()
+
+        assert len(self.piper.order) == 3
+        assert self.piper.order[0] is self.steps[0]
+        assert self.piper.order[1] is self.steps[1]
+        assert self.piper.order[2] is self.steps[2]
+
 
 class TestPiperExecute(object):
     def setup_method(self, method):

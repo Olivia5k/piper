@@ -4,6 +4,7 @@ import os
 import yaml
 import logbook
 import jsonschema
+import six
 
 from piper.utils import DotDict
 from piper.utils import dynamic_load
@@ -169,15 +170,26 @@ class Piper(object):
             step = self.steps[step_key]
             self.order.append(step)
 
-            if step.config.depends:
+            depends = step.config.depends
+            if depends:
+                # We can pass both lists and strings. Handle accordingly.
+                if isinstance(depends, six.string_types):
+                    targets = (depends,)
+                else:
+                    targets = depends
+
                 index = self.order.index(step)
-                dep = self.steps[step.config.depends]
+                for dep_key in targets:
+                    dep = self.steps[dep_key]
 
-                self.order.insert(index, dep)
+                    self.order.insert(index, dep)
+                    index += 1  # So that the next one gets the right order
 
-                self.log.info("Added dependency step '{0}' for '{1}'".format(
-                    step_key, step.config.depends
-                ))
+                    self.log.info(
+                        "Added dependency step '{0}' for '{1}'".format(
+                            dep_key, step_key
+                        )
+                    )
 
         self.log.info('Set order configured.')
         self.log.debug(str(self.order))
