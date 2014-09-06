@@ -147,7 +147,7 @@ class TestPiperConfigureEnv(object):
         self.cls_key = 'unisonic.KingForADay'
         self.cls = mock.Mock()
 
-        self.piper = Piper(self.env_key, mock.Mock())
+        self.piper = Piper(mock.Mock(), self.env_key)
         self.piper.classes = {self.cls_key: self.cls}
         self.piper.config = DotDict({
             'envs': {
@@ -178,7 +178,7 @@ class TestPiperConfigureSteps(object):
             },
         }
 
-        self.piper = Piper(self.step_key, mock.Mock())
+        self.piper = Piper(mock.Mock(), self.step_key)
         for key in self.config['steps']:
             cls = self.config['steps'][key]['class']
             self.piper.classes[cls] = mock.Mock()
@@ -212,7 +212,7 @@ class TestPiperConfigureJob(object):
         }
 
     def get_piper(self, config):
-        piper = Piper(mock.Mock(), self.job_key)
+        piper = Piper(self.job_key, mock.Mock())
         piper.steps = dict(zip(self.step_keys, self.steps))
         piper.config = DotDict(config)
         return piper

@@ -7,11 +7,11 @@ from piper.logging import handler
 
 def main():
     # TODO: dat argparse
-    env_key = sys.argv[1]
-    job_key = sys.argv[2]
+    job_key = sys.argv[1]
+    env_key = sys.argv[2]
 
     with handler.applicationbound():
-        piper = Piper(env_key, job_key)
+        piper = Piper(job_key, env_key)
         try:
             piper.setup()
             piper.execute()
