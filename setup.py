@@ -7,6 +7,7 @@ install_requires = (
     'PyYAML==3.11',
     'jsonschema==2.3.0',
     'blessings==1.5.1',
+    'six==1.7.3',
 )
 
 tests_require = (
