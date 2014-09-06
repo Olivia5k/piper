@@ -272,6 +272,34 @@ class TestPiperConfigureJob(object):
         assert self.piper.order[1] is self.steps[1]
         assert self.piper.order[2] is self.steps[2]
 
+    def test_configure_job_with_nested_dependencies(self):
+        """
+        See so that a dependency chain gets resolved properly.
+
+        """
+
+        # Add a new step and let that one depend on the second step, and let
+        # the second step depend on the first one. Whew.
+        key = 'schuwappa'
+        self.step_keys += (key,)
+        root = mock.Mock()
+        root.config.depends = self.step_keys[1]
+        self.steps[1].config.depends = self.step_keys[0]
+        self.steps += (root,)
+
+        self.piper = self.get_piper({
+            'jobs': {
+                self.job_key: (key,),
+            },
+        })
+
+        self.piper.configure_job()
+
+        assert len(self.piper.order) == 3
+        assert self.piper.order[0] is self.steps[0]
+        assert self.piper.order[1] is self.steps[1]
+        assert self.piper.order[2] is self.steps[2]
+
 
 class TestPiperExecute(object):
     def setup_method(self, method):

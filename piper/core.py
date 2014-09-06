@@ -170,29 +170,34 @@ class Piper(object):
             step = self.steps[step_key]
             self.order.append(step)
 
-            depends = step.config.depends
-            if depends:
-                # We can pass both lists and strings. Handle accordingly.
-                if isinstance(depends, six.string_types):
-                    targets = (depends,)
-                else:
-                    targets = depends
-
-                index = self.order.index(step)
-                for dep_key in targets:
-                    dep = self.steps[dep_key]
-
-                    self.order.insert(index, dep)
-                    index += 1  # So that the next one gets the right order
-
-                    self.log.info(
-                        "Added dependency step '{0}' for '{1}'".format(
-                            dep_key, step_key
-                        )
-                    )
+            if step.config.depends:
+                self.inject_step_dependency(step, step.config.depends)
 
         self.log.info('Set order configured.')
         self.log.debug(str(self.order))
+
+    def inject_step_dependency(self, step, depends):
+        # We can pass both lists and strings. Handle accordingly.
+        if isinstance(depends, six.string_types):
+            targets = (depends,)
+        else:
+            targets = depends
+
+        index = self.order.index(step)
+        for dep_key in targets:
+            dep = self.steps[dep_key]
+
+            self.order.insert(index, dep)
+            index += 1  # So that the next one gets the right order
+
+            self.log.info("Added dependency step '{0}' for '{1}'".format(
+                dep.key, step.key
+            ))
+
+            # If the injected step has dependencies as well, we need to
+            # recursively add those too.
+            if dep.config.depends:
+                self.inject_step_dependency(dep, dep.config.depends)
 
     def setup_env(self):
         """
