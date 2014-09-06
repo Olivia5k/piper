@@ -199,8 +199,8 @@ class TestPiperConfigureSteps(object):
 class TestPiperConfigureJob(object):
     def setup_method(self, method):
         self.job_key = 'mmmbop'
-        self.step_keys = ('bidubidappa', 'dubop')
-        self.steps = (mock.Mock(), mock.Mock())
+        self.step_keys = ('bidubidappa', 'dubop', 'schuwappa')
+        self.steps = (mock.Mock(), mock.Mock(), mock.Mock())
 
         for step in self.steps:
             step.config.depends = None
@@ -253,15 +253,11 @@ class TestPiperConfigureJob(object):
         """
 
         # Add a new step and let it depend on the two earlier ones
-        key = 'schuwappa'
-        self.step_keys += (key,)
-        root = mock.Mock()
-        root.config.depends = self.step_keys[0:2]
-        self.steps += (root,)
+        self.steps[2].config.depends = self.step_keys[0:2]
 
         self.piper = self.get_piper({
             'jobs': {
-                self.job_key: (key,),
+                self.job_key: (self.step_keys[2],),
             },
         })
 
@@ -280,16 +276,12 @@ class TestPiperConfigureJob(object):
 
         # Add a new step and let that one depend on the second step, and let
         # the second step depend on the first one. Whew.
-        key = 'schuwappa'
-        self.step_keys += (key,)
-        root = mock.Mock()
-        root.config.depends = self.step_keys[1]
+        self.steps[2].config.depends = self.step_keys[1]
         self.steps[1].config.depends = self.step_keys[0]
-        self.steps += (root,)
 
         self.piper = self.get_piper({
             'jobs': {
-                self.job_key: (key,),
+                self.job_key: (self.step_keys[2],),
             },
         })
 
