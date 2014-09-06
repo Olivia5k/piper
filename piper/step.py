@@ -51,7 +51,6 @@ class Step(object):
         self.key = key
         self.config = DotDict(config)
         self.success = None
-        self.log = None
         self.log = logbook.Logger(key)
 
     def set_index(self, cur, tot):
