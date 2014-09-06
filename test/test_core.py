@@ -252,9 +252,9 @@ class TestPiperConfigureJob(object):
 
         """
 
-        # Add a new step and let it depend on the two earlier ones
+        # Let the third step depend on the two earlier ones, and let the job
+        # configuration only specify the third step.
         self.steps[2].config.depends = self.step_keys[0:2]
-
         self.piper = self.get_piper({
             'jobs': {
                 self.job_key: (self.step_keys[2],),
@@ -274,11 +274,10 @@ class TestPiperConfigureJob(object):
 
         """
 
-        # Add a new step and let that one depend on the second step, and let
-        # the second step depend on the first one. Whew.
+        # Make the third step depend on the second step, and let the second
+        # step depend on the first one. Whew.
         self.steps[2].config.depends = self.step_keys[1]
         self.steps[1].config.depends = self.step_keys[0]
-
         self.piper = self.get_piper({
             'jobs': {
                 self.job_key: (self.step_keys[2],),
@@ -290,6 +289,29 @@ class TestPiperConfigureJob(object):
         assert len(self.piper.order) == 3
         assert self.piper.order[0] is self.steps[0]
         assert self.piper.order[1] is self.steps[1]
+        assert self.piper.order[2] is self.steps[2]
+
+    def test_configure_job_with_nested_dependencies_out_of_order(self):
+        """
+        See so that a dependency chain gets resolved properly, even when the
+        steps are defined in a different order.
+
+        """
+        # Make the third step depend on the first step, and let the first
+        # step depend on the second one. Whew x2.
+        self.steps[2].config.depends = self.step_keys[0]
+        self.steps[0].config.depends = self.step_keys[1]
+        self.piper = self.get_piper({
+            'jobs': {
+                self.job_key: (self.step_keys[2],),
+            },
+        })
+
+        self.piper.configure_job()
+
+        assert len(self.piper.order) == 3
+        assert self.piper.order[0] is self.steps[1]
+        assert self.piper.order[1] is self.steps[0]
         assert self.piper.order[2] is self.steps[2]
 
 
