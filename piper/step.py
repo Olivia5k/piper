@@ -14,19 +14,13 @@ class Step(object):
     """
 
     def __init__(self, key, config):
-        self.index = ('x', 'y')
-        self.key = key
-        self.config = DotDict(config)
-        self.success = None
-        self.log = None
-        self.log = logbook.Logger(key)
-
         # Schema is defined here so that subclasses can change the base schema
         # without it affecting all other classes.
         self.schema = {
             '$schema': 'http://json-schema.org/draft-04/schema',
             'type': 'object',
             'additionalProperties': False,
+            'required': ['version', 'class', 'command'],
             'properties': {
                 'version': {
                     'description': 'Semantic version string for this config.',
@@ -40,8 +34,25 @@ class Step(object):
                     'description': 'Command line to execute.',
                     'type': 'string',
                 },
+                'depends': {
+                    'description': 'Step required to run before this one.',
+                    'type': ['string', 'null'],
+                },
             },
         }
+
+        # Set missing optional keys to None in the config
+        opt = set(self.schema['properties']) - set(self.schema['required'])
+        for k in opt:
+            if k not in config:
+                config[k] = None
+
+        self.index = ('x', 'y')
+        self.key = key
+        self.config = DotDict(config)
+        self.success = None
+        self.log = None
+        self.log = logbook.Logger(key)
 
     def set_index(self, cur, tot):
         """
@@ -50,7 +61,7 @@ class Step(object):
         """
 
         self.index = (cur, tot)
-        self.log_key = '{0}({1}/{2})'.format(
+        self.log_key = '{0} ({1}/{2})'.format(
             self.key, self.index[0], self.index[1]
         )
         self.log = logbook.Logger(self.log_key)

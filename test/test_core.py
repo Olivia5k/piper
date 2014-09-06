@@ -202,21 +202,48 @@ class TestPiperConfigureJob(object):
         self.step_keys = ('bidubidappa', 'dubop')
         self.steps = (mock.Mock(), mock.Mock())
 
+        for step in self.steps:
+            step.config.depends = None
+
         self.config = {
             'jobs': {
                 self.job_key: self.step_keys,
             },
         }
 
-        self.piper = Piper(mock.Mock(), self.job_key)
-        self.piper.steps = dict(zip(self.step_keys, self.steps))
-        self.piper.config = DotDict(self.config)
+    def get_piper(self, config):
+        piper = Piper(mock.Mock(), self.job_key)
+        piper.steps = dict(zip(self.step_keys, self.steps))
+        piper.config = DotDict(config)
+        return piper
 
     def test_configure_job(self):
+        self.piper = self.get_piper(self.config)
         self.piper.configure_job()
 
         for x, _ in enumerate(self.step_keys):
             assert self.piper.order[x] is self.steps[x]
+
+    def test_configure_job_with_dependency(self):
+        """
+        Set so that we only have a list with the second item, and set so that
+        it depends on the first. This should add the first item to the ordered
+        list even though it's not otherwise specified.
+
+        """
+
+        self.steps[1].config.depends = self.step_keys[0]
+        self.piper = self.get_piper({
+            'jobs': {
+                self.job_key: self.step_keys[1:2],
+            },
+        })
+
+        self.piper.configure_job()
+
+        assert len(self.piper.order) == 2
+        assert self.piper.order[0] is self.steps[0]
+        assert self.piper.order[1] is self.steps[1]
 
 
 class TestPiperExecute(object):

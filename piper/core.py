@@ -166,9 +166,21 @@ class Piper(object):
         """
 
         for step_key in self.config.jobs[self.job_key]:
-            self.order.append(self.steps[step_key])
+            step = self.steps[step_key]
+            self.order.append(step)
+
+            if step.config.depends:
+                index = self.order.index(step)
+                dep = self.steps[step.config.depends]
+
+                self.order.insert(index, dep)
+
+                self.log.info("Added dependency step '{0}' for '{1}'".format(
+                    step_key, step.config.depends
+                ))
 
         self.log.info('Set order configured.')
+        self.log.debug(str(self.order))
 
     def setup_env(self):
         """

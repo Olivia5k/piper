@@ -34,3 +34,9 @@ class TestStepSetIndex(object):
         assert self.step.index[0] == index
         assert self.step.index[1] == total
         assert self.step.log is not None
+
+
+class TestStepInit(object):
+    def test_missing_optional_keys_are_added(self):
+        step = Step('key', {})
+        assert 'depends' in step.config.data
