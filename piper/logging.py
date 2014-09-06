@@ -87,7 +87,7 @@ class BlessingsStringFormatter(logbook.StringFormatter):
             fmt = self._formatter.encode('ascii', 'replace')
             return fmt.format(**kwargs)
 
-    def level_color(self, rc):
+    def level_color(self, rc):  # pragma: nocover
         ret = ''
         if rc.level_name in ('ERROR', 'CRITICAL'):
             ret = self.terminal.red + self.terminal.bold
@@ -124,7 +124,7 @@ class BlessingsStringFormatter(logbook.StringFormatter):
     def get_color(self, md5):  # pragma: nocover
         return COLORS[int(md5, 16) % COLOR_LEN]
 
-    def prepare_record(self, rc):
+    def prepare_record(self, rc):  # pragma: nocover
         """
         Manipulate the log message
 
