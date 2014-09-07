@@ -1,6 +1,8 @@
 import sys
 import os
+import datetime
 
+import ago
 import yaml
 import logbook
 import jsonschema
@@ -58,6 +60,8 @@ class Piper(object):
         self.job_key = self.ns.job
         self.env_key = self.ns.env
 
+        self.start = datetime.datetime.now()
+
         self.raw_config = None  # Dict data
         self.config = None  # DotDict object
 
@@ -79,6 +83,16 @@ class Piper(object):
         self.setup()
         self.execute()
         self.teardown()
+
+        self.end = datetime.datetime.now()
+
+        self.log.info(
+            ago.human(
+                self.end - self.start,
+                precision=5,
+                past_tense='Job finished in {}'
+            )
+        )
 
     def setup(self):
         """
