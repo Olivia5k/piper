@@ -1,22 +1,36 @@
 import sys
+import argparse
 
-import jsonschema
 from piper.core import Piper
 from piper.logging import handler
 
 
-def main():
-    # TODO: dat argparse
-    job_key = sys.argv[1]
-    env_key = sys.argv[2]
+def build_parser():
+    parser = argparse.ArgumentParser('piper')
 
+    parser.add_argument(
+        'job',
+        nargs='?',
+        default='build',
+        help='The job to execute',
+    )
+
+    parser.add_argument(
+        'env',
+        nargs='?',
+        default='local',
+        help='The environment to execute in'
+    )
+
+    return parser
+
+
+def main():
     with handler.applicationbound():
-        piper = Piper(job_key, env_key)
-        try:
-            piper.setup()
-            piper.execute()
-            piper.teardown()
-        # TODO: Print nice error messages upon errors
-        except jsonschema.exceptions.ValidationError as e:  # pragma: nocover
-            print(e)
-            raise
+        parser = build_parser()
+        ns = parser.parse_args(sys.argv[1:])
+
+        piper = Piper(ns.job, ns.env)
+        piper.setup()
+        piper.execute()
+        piper.teardown()

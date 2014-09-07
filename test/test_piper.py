@@ -9,6 +9,6 @@ class TestPiper(object):
     def test_main_entry_point(self, argv, Piper):
         piper.main()
 
-        Piper.assert_called_once_with(argv[1], argv[2])
+        assert Piper.call_count == 1
         Piper.return_value.setup.assert_called_once_with()
         Piper.return_value.execute.assert_called_once_with()
