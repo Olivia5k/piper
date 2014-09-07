@@ -3,7 +3,7 @@ from setuptools import setup
 from setuptools.command.test import test as TestCommand
 
 install_requires = (
-    'Logbook==0.6.0',
+    'Logbook==0.7.0',
     'PyYAML==3.11',
     'jsonschema==2.3.0',
     'blessings==1.5.1',
