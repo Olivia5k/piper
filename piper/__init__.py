@@ -3,7 +3,7 @@ import argparse
 import logbook
 
 from piper.core import Piper
-from piper.logging import handler
+from piper.logging import get_handler
 
 
 def build_parser():
@@ -50,6 +50,7 @@ def main():
         # be set when running them.
         pass
 
+    handler = get_handler()
     with handler.applicationbound():
         parser = build_parser()
         ns = parser.parse_args(sys.argv[1:])
