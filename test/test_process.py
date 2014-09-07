@@ -44,7 +44,7 @@ class TestProcessRun(object):
             self.readline_calls
 
         self.mocks['wait'].assert_called_once_with()
-        self.proc.success is True
+        assert self.proc.success is True
 
     def test_run_failure(self):
         self.proc.popen = mock.Mock(**self.mocks)
@@ -54,7 +54,7 @@ class TestProcessRun(object):
         assert self.mocks['stdout'].readline.call_args_list == \
             self.readline_calls
         self.mocks['wait'].assert_called_once_with()
-        self.proc.success is False
+        assert self.proc.success is False
 
         # Stderr should've been dumped
         self.mocks['stderr'].read.assert_called_once_with()
@@ -73,3 +73,11 @@ class TestProcessRun(object):
         self.proc.run()
 
         assert self.mocks['stdout'].readline.call_count == 4
+
+    def test_dry_run_does_not_execute(self):
+        self.proc.popen = mock.Mock()
+        self.proc.ns.dry_run = True
+        self.proc.run()
+
+        assert self.proc.popen.poll.call_count == 0
+        assert self.proc.success is True

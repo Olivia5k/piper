@@ -53,7 +53,7 @@ class Step(object):
         self.success = None
         self.log = logbook.Logger(key)
 
-    def __repr__(self):
+    def __repr__(self):  # pragma: nocover
         return "<{0} {1}>".format(self.__class__.__name__, self.key)
 
     def set_index(self, cur, tot):

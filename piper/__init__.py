@@ -40,10 +40,15 @@ def build_parser():
 
 
 def main():
-    # Remove the default logbook.StderrHandler so that we can actually hide
-    # debug output when debug is false. If we don't remove it, it will always
-    # print to stderr anyway.
-    logbook.default_handler.pop_application()
+    try:
+        # Remove the default logbook.StderrHandler so that we can actually hide
+        # debug output when debug is False. If we don't remove it, it will
+        # always print to stderr anyway.
+        logbook.default_handler.pop_application()
+    except AssertionError:
+        # Also, this can die during tests because the handler does not seem to
+        # be set when running them.
+        pass
 
     with handler.applicationbound():
         parser = build_parser()
