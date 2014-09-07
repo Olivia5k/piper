@@ -92,7 +92,7 @@ class Piper(object):
             ago.human(
                 self.end - self.start,
                 precision=5,
-                past_tense='Job finished in {}'
+                past_tense='Job finished in {0}'
             )
         )
 
