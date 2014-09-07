@@ -186,8 +186,8 @@ class Piper(object):
             if step.config.depends:
                 self.inject_step_dependency(step, step.config.depends)
 
-        self.log.info('Set order configured.')
-        self.log.debug(str(self.order))
+        self.log.info('Step order configured.')
+        self.log.debug('Steps: ' + ', '.join(map(repr, self.order)))
 
     def inject_step_dependency(self, step, depends):
         # We can pass both lists and strings. Handle accordingly.
@@ -203,9 +203,7 @@ class Piper(object):
             self.order.insert(index, dep)
             index += 1  # So that the next one gets the right order
 
-            self.log.info("Added dependency step '{0}' for '{1}'".format(
-                dep.key, step.key
-            ))
+            self.log.info('Adding {0} as {1} dependency...'.format(dep, step))
 
             # If the injected step has dependencies as well, we need to
             # recursively add those too.
@@ -231,7 +229,7 @@ class Piper(object):
         """
 
         total = len(self.order)
-        self.log.info('Running complete "{0}" set...'.format(self.job_key))
+        self.log.info('Running {0}...'.format(self.job_key))
 
         for x, step in enumerate(self.order, start=1):
             step.set_index(x, total)
