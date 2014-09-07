@@ -180,7 +180,10 @@ class TestPiperConfigureEnv(object):
     def test_configure_env(self):
         self.piper.configure_env()
 
-        self.cls.assert_called_once_with(self.piper.config.envs[self.env_key])
+        self.cls.assert_called_once_with(
+            self.piper.ns,
+            self.piper.config.envs[self.env_key]
+        )
         self.cls.return_value.validate.assert_called_once_with()
 
 

@@ -6,7 +6,7 @@ from piper.env import TempDirEnv
 
 class TestEnvExecute(object):
     def setup_method(self, method):
-        self.env = Env({})
+        self.env = Env(mock.Mock(), {})
         self.step = mock.Mock()
 
     @mock.patch('piper.env.Process')
@@ -17,14 +17,18 @@ class TestEnvExecute(object):
         procobj = proc.return_value
 
         gc.assert_called_once_with()
-        proc.assert_called_once_with(gc.return_value, self.step.log_key)
+        proc.assert_called_once_with(
+            self.env.ns,
+            gc.return_value,
+            self.step.log_key
+        )
         procobj.run.assert_called_once_with()
         assert ret is procobj
 
 
 class TestEnvValidate(object):
     def setup_method(self, method):
-        self.env = Env({})
+        self.env = Env(mock.Mock(), {})
         self.env.config = mock.Mock()
 
     @mock.patch('jsonschema.validate')
@@ -33,13 +37,9 @@ class TestEnvValidate(object):
         jv.assert_called_once_with(self.env.config.data, self.env.schema)
 
 
-class TestEnvInit(object):
-    pass
-
-
 class TestTempDirEnvSetup(object):
     def setup_method(self, method):
-        self.env = TempDirEnv({})
+        self.env = TempDirEnv(mock.Mock(), {})
 
     @mock.patch('shutil.copytree')
     @mock.patch('os.chdir')
@@ -55,7 +55,7 @@ class TestTempDirEnvSetup(object):
 
 class TestTempDirEnvTeardown(object):
     def setup_method(self, method):
-        self.env = TempDirEnv({})
+        self.env = TempDirEnv(mock.Mock(), {})
         self.env.dir = '/dir'
 
     @mock.patch('shutil.rmtree')
@@ -76,7 +76,7 @@ class TestTempDirEnvTeardown(object):
 
 class TestTempDirEnvExecute(object):
     def setup_method(self, method):
-        self.env = TempDirEnv({})
+        self.env = TempDirEnv(mock.Mock(), {})
         self.env.dir = '/'
         self.env.cwd = '/repo'
         self.step = mock.Mock()
@@ -92,7 +92,11 @@ class TestTempDirEnvExecute(object):
 
         getcwd.assert_called_once_with()
         gc.assert_called_once_with()
-        proc.assert_called_once_with(gc.return_value, self.step.log_key)
+        proc.assert_called_once_with(
+            self.env.ns,
+            gc.return_value,
+            self.step.log_key
+        )
         procobj.run.assert_called_once_with()
         assert ret is procobj
 

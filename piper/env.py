@@ -10,7 +10,8 @@ from piper.process import Process
 
 
 class Env(object):
-    def __init__(self, config):
+    def __init__(self, ns, config):
+        self.ns = ns
         self.config = DotDict(config)
 
         self.log = logbook.Logger(self.__class__.__name__)
@@ -42,7 +43,7 @@ class Env(object):
     def execute(self, step):
         cmd = step.get_command()
 
-        proc = Process(cmd, step.log_key)
+        proc = Process(self.ns, cmd, step.log_key)
         proc.setup()
         proc.run()
 
@@ -62,8 +63,8 @@ class TempDirEnv(Env):
 
     """
 
-    def __init__(self, config):
-        super(TempDirEnv, self).__init__(config)
+    def __init__(self, ns, config):
+        super(TempDirEnv, self).__init__(ns, config)
         self.schema['properties']['delete_when_done'] = {
             'type': 'boolean'
         }

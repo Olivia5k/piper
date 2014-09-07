@@ -153,7 +153,7 @@ class Piper(object):
         env_config = self.config.envs[self.env_key]
         cls = self.classes[env_config['class']]
 
-        self.env = cls(env_config)
+        self.env = cls(self.ns, env_config)
         self.log.debug('Validating env config...')
         self.env.validate()
         self.env.log.info('Environment configured.')

@@ -19,7 +19,14 @@ def build_parser():
         'env',
         nargs='?',
         default='local',
-        help='The environment to execute in'
+        help='The environment to execute in',
+    )
+
+    parser.add_argument(
+        '--dry-run',
+        '-n',
+        action='store_true',
+        help="Only print execution commands, don't actually do anything",
     )
 
     return parser

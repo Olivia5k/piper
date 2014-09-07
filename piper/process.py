@@ -11,7 +11,8 @@ class Process(object):
 
     """
 
-    def __init__(self, cmd, parent_key):
+    def __init__(self, ns, cmd, parent_key):
+        self.ns = ns
         self.cmd = cmd
 
         self.popen = None
@@ -34,6 +35,11 @@ class Process(object):
 
     def run(self):
         self.log.debug('Executing')
+
+        if self.ns.dry_run is True:
+            self.log.info('Not executing dry run.')
+            self.success = True
+            return
 
         while not self.popen.poll():
             # TODO: Gracefully handle stderr as well
