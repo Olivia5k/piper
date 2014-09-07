@@ -10,5 +10,4 @@ class TestPiper(object):
         piper.main()
 
         assert Piper.call_count == 1
-        Piper.return_value.setup.assert_called_once_with()
-        Piper.return_value.execute.assert_called_once_with()
+        Piper.return_value.run.assert_called_once_with()

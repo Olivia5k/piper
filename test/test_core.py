@@ -57,6 +57,26 @@ class TestPiperSetup(PiperTestBase):
             getattr(self.piper, method).assert_called_once_with()
 
 
+class TestPiperRun(PiperTestBase):
+    def setup_method(self, method):
+        self.methods = (
+            'setup',
+            'execute',
+            'teardown',
+        )
+
+        super(TestPiperRun, self).setup_method(method)
+
+    def test_run_calls(self):
+        for method in self.methods:
+            setattr(self.piper, method, mock.Mock())
+
+        self.piper.run()
+
+        for method in self.methods:
+            getattr(self.piper, method).assert_called_once_with()
+
+
 class TestPiperLoadConfig(PiperTestBase):
     def setup_method(self, method):
         self.data = 'lel: 10\ntest: wizard\n\n'

@@ -30,7 +30,4 @@ def main():
         parser = build_parser()
         ns = parser.parse_args(sys.argv[1:])
 
-        piper = Piper(ns.job, ns.env)
-        piper.setup()
-        piper.execute()
-        piper.teardown()
+        Piper(ns.job, ns.env).run()

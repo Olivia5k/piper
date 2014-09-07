@@ -67,6 +67,18 @@ class Piper(object):
 
         self.log = logbook.Logger(self.__class__.__name__)
 
+    def run(self):
+        """
+        Main entry point
+
+        This is run when starting the script from the command line.
+
+        """
+
+        self.setup()
+        self.execute()
+        self.teardown()
+
     def setup(self):
         """
         Performs all setup steps
