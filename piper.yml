@@ -7,13 +7,13 @@ envs:
 
 steps:
   test:
-    version: '0.0.1'
+    version: '0.0.2'
     class: 'piper.step.Step'
-    command: '/usr/bin/env python setup.py test'
+    command: 'tox'
   build:
-    version: '0.0.1'
+    version: '0.0.2'
     class: 'piper.step.Step'
-    command: '/usr/bin/env python setup.py sdist'
+    command: 'python setup.py sdist'
     depends: 'test'
 
 jobs:
