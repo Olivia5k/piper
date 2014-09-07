@@ -30,8 +30,11 @@ class Piper(object):
         'required': ['version', 'envs', 'steps', 'jobs'],
         'properties': {
             'version': {
-                'description': 'Semantic version string for this config.',
-                'type': 'string',
+                'description':
+                    'Versioning setup for this project. This sets up what '
+                    'commands to run to determine the version of the job '
+                    'being executed',
+                'type': 'object',
             },
             'envs': {
                 'description': 'The env configuration for this build.',
@@ -88,13 +91,12 @@ class Piper(object):
 
         self.end = datetime.datetime.now()
 
-        self.log.info(
-            ago.human(
-                self.end - self.start,
-                precision=5,
-                past_tense='Job finished in {0}'
-            )
+        ts = ago.human(
+            self.end - self.start,
+            precision=5,
+            past_tense='finished in {0}'
         )
+        self.log.info('{0} {1}'.format(self.version, ts))
 
     def setup(self):
         """
@@ -109,6 +111,7 @@ class Piper(object):
         self.validate_config()
         self.load_classes()
 
+        self.set_version()
         self.configure_env()
         self.configure_steps()
         self.configure_job()
@@ -144,9 +147,12 @@ class Piper(object):
         jsonschema.validate(self.config.data, self.schema)
 
     def load_classes(self):
-        self.log.debug("Loading classes for steps and envs...")
+        self.log.debug("Loading classes for versions, steps and envs...")
 
         classes = set()
+
+        classes.add(self.config.version['class'])
+
         for env in self.config.envs.values():
             classes.add(env['class'])
 
@@ -158,6 +164,20 @@ class Piper(object):
             self.classes[cls] = dynamic_load(cls)
 
         self.log.debug("Class loading done.")
+
+    def set_version(self):
+        """
+        Set the version for this job
+
+        """
+
+        self.log.debug('Determining version...')
+        ver_config = self.config.version
+        cls = self.classes[ver_config['class']]
+
+        self.version = cls(self.ns, ver_config)
+        self.version.validate()
+        self.log.info(str(self.version))
 
     def configure_env(self):
         """

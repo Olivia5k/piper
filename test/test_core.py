@@ -12,7 +12,10 @@ class PiperTestBase(object):
     def setup_method(self, method):
         self.piper = Piper(mock.Mock())
         self.base_config = {
-            'version': '0.0.1-alpha1',
+            'version': {
+                'class': 'piper.version.Version',
+                'version': '0.0.1-alpha1',
+            },
             'jobs': {'test': ['test'], 'build': ['test', 'build']},
             'envs': {
                 'local': {
@@ -39,6 +42,7 @@ class TestPiperSetup(PiperTestBase):
             'load_config',
             'validate_config',
             'load_classes',
+            'set_version',
             'configure_env',
             'configure_steps',
             'configure_job',
@@ -66,6 +70,7 @@ class TestPiperRun(PiperTestBase):
         )
 
         super(TestPiperRun, self).setup_method(method)
+        self.piper.version = mock.Mock()
 
     def test_run_calls(self):
         for method in self.methods:
@@ -148,6 +153,7 @@ class TestPiperLoadClasses(PiperTestBase):
         super(TestPiperLoadClasses, self).setup_method(method)
         self.piper.config = DotDict(self.base_config)
 
+        self.version = 'piper.version.Version'
         self.step = 'piper.step.Step'
         self.env = 'piper.env.TempDirEnv'
 
@@ -155,10 +161,39 @@ class TestPiperLoadClasses(PiperTestBase):
     def test_load_classes(self, dl):
         self.piper.load_classes()
 
-        calls = (mock.call(self.step), mock.call(self.env))
+        calls = (
+            mock.call(self.version),
+            mock.call(self.step),
+            mock.call(self.env)
+        )
         assert dl.has_calls(calls, any_order=True)
+        assert self.piper.classes[self.version] is dl.return_value
         assert self.piper.classes[self.step] is dl.return_value
         assert self.piper.classes[self.env] is dl.return_value
+
+
+class TestPiperSetVersion(object):
+    def setup_method(self, method):
+        self.version = '0.0.0.0.0.0.0.0.1-beta'
+        self.cls = mock.Mock()
+        self.cls_key = 'mandowar.FearOfTheDark'
+
+        self.piper = Piper(mock.Mock())
+        self.piper.classes = {self.cls_key: self.cls}
+        self.piper.config = DotDict({
+            'version': {
+                'class': self.cls_key,
+            },
+        })
+
+    def test_set_version(self):
+        self.piper.set_version()
+
+        self.cls.assert_called_once_with(
+            self.piper.ns,
+            self.piper.config.version
+        )
+        self.cls.return_value.validate.assert_called_once_with()
 
 
 class TestPiperConfigureEnv(object):

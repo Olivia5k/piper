@@ -1,4 +1,6 @@
-version: '0.0.1-alpha1'
+version:
+  class: 'piper.version.StaticVersion'
+  version: '0.0.1'
 
 envs:
   local:
