@@ -25,6 +25,8 @@ COLOR_LEN = len(COLORS)
 
 # Any consecutive string containing a slash
 PATH_RXP = re.compile(r'(\S*/[\S/]+)')
+# The end of "foo (x/y)"
+COUNTER_RXP = re.compile(r'(\s*\(\d+/\d+\))$')
 
 DEFAULT_FORMAT_STRING = (
     '{t.bold}{t.black}['
@@ -114,7 +116,12 @@ class BlessingsStringFormatter(logbook.StringFormatter):
 
         colorized = self.md5_cache.get(string)
         if not colorized:
-            md5 = hashlib.md5(string.encode()).hexdigest()
+            # Don't use the ' (x/y)' part when calculating colors. This makes
+            # sure that the 'foo' step is always in one color regardless if it
+            # is (1/12) or (33/100).
+            target = COUNTER_RXP.sub('', string)
+
+            md5 = hashlib.md5(target.encode()).hexdigest()
             index = self.get_color(md5)
             colorized = self.terminal.color(index) + string
             self.md5_cache.update({string: colorized})
