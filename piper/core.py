@@ -53,9 +53,10 @@ class Piper(object):
         },
     }
 
-    def __init__(self, job_key, env_key):
-        self.job_key = job_key
-        self.env_key = env_key
+    def __init__(self, ns):
+        self.ns = ns
+        self.job_key = self.ns.job
+        self.env_key = self.ns.env
 
         self.raw_config = None  # Dict data
         self.config = None  # DotDict object

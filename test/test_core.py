@@ -10,7 +10,7 @@ from test.utils import builtin
 
 class PiperTestBase(object):
     def setup_method(self, method):
-        self.piper = Piper(mock.Mock(), mock.Mock())
+        self.piper = Piper(mock.Mock())
         self.base_config = {
             'version': '0.0.1-alpha1',
             'jobs': {'test': ['test'], 'build': ['test', 'build']},
@@ -167,7 +167,7 @@ class TestPiperConfigureEnv(object):
         self.cls_key = 'unisonic.KingForADay'
         self.cls = mock.Mock()
 
-        self.piper = Piper(mock.Mock(), self.env_key)
+        self.piper = Piper(mock.Mock(env=self.env_key))
         self.piper.classes = {self.cls_key: self.cls}
         self.piper.config = DotDict({
             'envs': {
@@ -198,7 +198,7 @@ class TestPiperConfigureSteps(object):
             },
         }
 
-        self.piper = Piper(mock.Mock(), self.step_key)
+        self.piper = Piper(mock.Mock(job=self.step_key))
         for key in self.config['steps']:
             cls = self.config['steps'][key]['class']
             self.piper.classes[cls] = mock.Mock()
@@ -232,7 +232,7 @@ class TestPiperConfigureJob(object):
         }
 
     def get_piper(self, config):
-        piper = Piper(self.job_key, mock.Mock())
+        piper = Piper(mock.Mock(job=self.job_key))
         piper.steps = dict(zip(self.step_keys, self.steps))
         piper.config = DotDict(config)
         return piper
@@ -337,7 +337,7 @@ class TestPiperConfigureJob(object):
 
 class TestPiperExecute(object):
     def setup_method(self, method):
-        self.piper = Piper(mock.Mock(), mock.Mock())
+        self.piper = Piper(mock.Mock())
         self.piper.order = [mock.Mock() for _ in range(3)]
         self.piper.env = mock.Mock()
 
