@@ -28,8 +28,8 @@ PATH_RXP = re.compile(r'(\S*/[\S/]+)')
 
 DEFAULT_FORMAT_STRING = (
     '{t.bold}{t.black}['
-    '{t.cyan}{record.time:%Y-%m-%d %H:%M:%S.%f}'
-    '{t.black}]{t.normal} '
+    '{t.normal}{t.cyan}{record.time:%Y-%m-%d %H:%M:%S.%f}'
+    '{t.bold}{t.black}]{t.normal} '
     '{level_color}{record.level_name:>5} '
     '{t.bold}{colorized_channel}'
     '{t.bold}{t.black}:{t.normal} '
