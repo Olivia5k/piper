@@ -80,6 +80,8 @@ class Piper(object):
 
         """
 
+        self.log.info('Setting up {0}...'.format(self.job_key))
+
         self.setup()
         self.execute()
         self.teardown()
@@ -135,14 +137,14 @@ class Piper(object):
                 return sys.exit(126)
 
         self.config = DotDict(self.raw_config)
-        self.log.info('Configuration file loaded.')
+        self.log.debug('Configuration file loaded.')
 
     def validate_config(self):
-        self.log.info('Validating root config...')
+        self.log.debug('Validating root config...')
         jsonschema.validate(self.config.data, self.schema)
 
     def load_classes(self):
-        self.log.info("Loading classes for steps and envs...")
+        self.log.debug("Loading classes for steps and envs...")
 
         classes = set()
         for env in self.config.envs.values():
@@ -155,7 +157,7 @@ class Piper(object):
             self.log.debug("Loading class '{0}()'".format(cls))
             self.classes[cls] = dynamic_load(cls)
 
-        self.log.info("Class loading done.")
+        self.log.debug("Class loading done.")
 
     def configure_env(self):
         """
@@ -163,14 +165,14 @@ class Piper(object):
 
         """
 
-        self.log.info('Loading environment...')
+        self.log.debug('Loading environment...')
         env_config = self.config.envs[self.env_key]
         cls = self.classes[env_config['class']]
 
         self.env = cls(self.ns, env_config)
         self.log.debug('Validating env config...')
         self.env.validate()
-        self.env.log.info('Environment configured.')
+        self.env.log.debug('Environment configured.')
 
     def configure_steps(self):
         """
@@ -184,7 +186,7 @@ class Piper(object):
             step = cls(step_key, step_config)
             step.log.debug('Validating config...')
             step.validate()
-            step.log.info('Step configured.')
+            step.log.debug('Step configured.')
             self.steps[step_key] = step
 
     def configure_job(self):
@@ -200,8 +202,8 @@ class Piper(object):
             if step.config.depends:
                 self.inject_step_dependency(step, step.config.depends)
 
-        self.log.info('Step order configured.')
-        self.log.debug('Steps: ' + ', '.join(map(repr, self.order)))
+        self.log.debug('Step order configured.')
+        self.log.info('Steps: ' + ', '.join(map(repr, self.order)))
 
     def inject_step_dependency(self, step, depends):
         # We can pass both lists and strings. Handle accordingly.
@@ -217,7 +219,7 @@ class Piper(object):
             self.order.insert(index, dep)
             index += 1  # So that the next one gets the right order
 
-            self.log.info('Adding {0} as {1} dependency...'.format(dep, step))
+            self.log.debug('Adding {0} as {1} dependency...'.format(dep, step))
 
             # If the injected step has dependencies as well, we need to
             # recursively add those too.
@@ -230,7 +232,7 @@ class Piper(object):
 
         """
 
-        self.env.log.info('Setting up env...')
+        self.env.log.debug('Setting up env...')
         self.env.setup()
 
     def execute(self):
@@ -278,5 +280,5 @@ class Piper(object):
 
         """
 
-        self.env.log.info('Tearing down env...')
+        self.env.log.debug('Tearing down env...')
         self.env.teardown()
