@@ -143,5 +143,5 @@ class BlessingsStringFormatter(logbook.StringFormatter):
         return rc
 
 
-handler = logbook.StreamHandler(sys.stdout)
+handler = logbook.StreamHandler(sys.stdout, level=logbook.INFO)
 handler.formatter = BlessingsStringFormatter()
