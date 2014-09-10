@@ -53,9 +53,16 @@ class TestCommandLineStepGetCommand(object):
 
 class TestCommandLineStepValidate(object):
     def setup_method(self, method):
-        self.step = CommandLineStep('key', {'command': 'command'})
+        self.step = CommandLineStep('key', {
+            'class': 'piper.step.CommandLineStep',
+            'command': 'command'
+        })
 
     @mock.patch('jsonschema.validate')
-    def test_validate(self, jv):
+    def test_validate_called(self, jv):
         self.step.validate()
         jv.assert_called_once_with(self.step.config.data, self.step.schema)
+
+    def test_validation(self):
+        # If no exception, is win
+        self.step.validate()
