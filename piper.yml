@@ -9,12 +9,10 @@ envs:
 
 steps:
   test:
-    version: '0.0.2'
-    class: 'piper.step.Step'
+    class: 'piper.step.CommandLineStep'
     command: 'tox'
   build:
-    version: '0.0.2'
-    class: 'piper.step.Step'
+    class: 'piper.step.CommandLineStep'
     command: 'python setup.py sdist'
     depends: 'test'
 
