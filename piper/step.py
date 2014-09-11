@@ -1,27 +1,19 @@
 import logbook
-import jsonschema
 
-from piper.utils import DotDict
+from piper.abc import DynamicItem
 
 
-class StepBase(object):
+class StepBase(DynamicItem):
     """
     Abstract base class of an execution step.
 
     """
 
-    def __init__(self, key, config):
-        # Schema is defined here so that subclasses can change the base schema
-        # without it affecting all other classes.
-        # Set missing optional keys to None in the config
-        opt = set(self.schema['properties']) - set(self.schema['required'])
-        for k in opt:
-            if k not in config:
-                config[k] = None
+    def __init__(self, ns, config, key):
+        super(StepBase, self).__init__(ns, config)
 
         self.index = ('x', 'y')
         self.key = key
-        self.config = DotDict(config)
         self.success = None
         self.log = logbook.Logger(key)
 
@@ -31,21 +23,10 @@ class StepBase(object):
     @property
     def schema(self):
         if not hasattr(self, '_schema'):
-            self._schema = {
-                '$schema': 'http://json-schema.org/draft-04/schema',
-                'type': 'object',
-                'additionalProperties': False,
-                'required': ['class'],
-                'properties': {
-                    'class': {
-                        'description': 'Python class to load for this env',
-                        'type': 'string',
-                    },
-                    'depends': {
-                        'description': 'Step required to run before this one.',
-                        'type': ['string', 'null'],
-                    },
-                },
+            self._schema = super(StepBase, self).schema
+            self._schema['properties']['depends'] = {
+                'description': 'Step required to run before this one.',
+                'type': ['string', 'null'],
             }
 
         return self._schema
@@ -61,9 +42,6 @@ class StepBase(object):
             self.key, self.index[0], self.index[1]
         )
         self.log = logbook.Logger(self.log_key)
-
-    def validate(self):
-        jsonschema.validate(self.config.data, self.schema)
 
     def get_command(self):
         """

@@ -5,20 +5,19 @@ import mock
 import pytest
 
 
-class TestStepBaseValidate(object):
+class StepTestBase(object):
     def setup_method(self, method):
-        self.step = StepBase('key', {})
+        self.step = StepBase(mock.Mock(), {}, 'key')
 
+
+class TestStepBaseValidate(StepTestBase):
     @mock.patch('jsonschema.validate')
     def test_validate(self, jv):
         self.step.validate()
         jv.assert_called_once_with(self.step.config.data, self.step.schema)
 
 
-class TestStepBaseSetIndex(object):
-    def setup_method(self, method):
-        self.step = StepBase('key', {})
-
+class TestStepBaseSetIndex(StepTestBase):
     def test_set_index(self):
         index, total = mock.Mock(), mock.Mock()
         self.step.set_index(index, total)
@@ -28,23 +27,25 @@ class TestStepBaseSetIndex(object):
         assert self.step.log is not None
 
 
-class TestStepBaseInit(object):
+class TestStepBaseInit(StepTestBase):
     def test_missing_optional_keys_are_added(self):
-        step = StepBase('key', {})
-        assert 'depends' in step.config.data
+        assert 'depends' in self.step.config.data
 
 
-class TestStepBaseGetCommand(object):
+class TestStepBaseGetCommand(StepTestBase):
     def test_get_command_raises_notimplementederror(self):
-        step = StepBase('key', {})
         with pytest.raises(NotImplementedError):
-            step.get_command()
+            self.step.get_command()
 
 
 class TestCommandLineStepGetCommand(object):
     def setup_method(self, method):
         self.command = '/usr/bin/empathy'
-        self.step = CommandLineStep('key', {'command': self.command})
+        self.step = CommandLineStep(
+            mock.Mock(),
+            {'command': self.command},
+            'key',
+        )
 
     def test_get_command(self):
         ret = self.step.get_command()
@@ -53,10 +54,11 @@ class TestCommandLineStepGetCommand(object):
 
 class TestCommandLineStepValidate(object):
     def setup_method(self, method):
-        self.step = CommandLineStep('key', {
+        config = {
             'class': 'piper.step.CommandLineStep',
             'command': 'command'
-        })
+        }
+        self.step = CommandLineStep(mock.Mock(), config, 'key')
 
     @mock.patch('jsonschema.validate')
     def test_validate_called(self, jv):
