@@ -9,30 +9,29 @@ from piper.utils import DotDict
 from piper.process import Process
 
 
-class Env(object):
+class EnvBase(object):
     def __init__(self, ns, config):
         self.ns = ns
         self.config = DotDict(config)
-
         self.log = logbook.Logger(self.__class__.__name__)
 
-        # Schema is defined here so that subclasses can change the base schema
-        # without it affecting all other classes.
-        self.schema = {
-            '$schema': 'http://json-schema.org/draft-04/schema',
-            'type': 'object',
-            'additionalProperties': False,
-            'properties': {
-                'version': {
-                    'description': 'Semantic version string for this config.',
-                    'type': 'string',
+    @property
+    def schema(self):
+        if not hasattr(self, '_schema'):
+            self._schema = {
+                '$schema': 'http://json-schema.org/draft-04/schema',
+                'type': 'object',
+                'additionalProperties': False,
+                'required': ['class'],
+                'properties': {
+                    'class': {
+                        'description': 'Python class to load for this env',
+                        'type': 'string',
+                    },
                 },
-                'class': {
-                    'description': 'Python class to load for this env',
-                    'type': 'string',
-                },
-            },
-        }
+            }
+
+        return self._schema
 
     def setup(self):  # pragma: nocover
         pass
@@ -53,7 +52,7 @@ class Env(object):
         jsonschema.validate(self.config.data, self.schema)
 
 
-class TempDirEnv(Env):
+class TempDirEnv(EnvBase):
     """
     Example implementation of an env, probably useful as well
 
@@ -63,11 +62,18 @@ class TempDirEnv(Env):
 
     """
 
-    def __init__(self, ns, config):
-        super(TempDirEnv, self).__init__(ns, config)
-        self.schema['properties']['delete_when_done'] = {
-            'type': 'boolean'
-        }
+    @property
+    def schema(self):
+        if not hasattr(self, '_schema'):
+            self._schema = super(TempDirEnv, self).schema
+            self._schema['properties']['delete_when_done'] = {
+                'description':
+                    'If true, temporary directory will be deleted when build '
+                    'has finished. Default is true.',
+                'type': 'boolean',
+            }
+
+        return self._schema
 
     def setup(self):
         self.dir = tempfile.mkdtemp(prefix='piper-')

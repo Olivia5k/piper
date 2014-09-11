@@ -1,12 +1,14 @@
+import jsonschema
+import pytest
 import mock
 
-from piper.env import Env
+from piper.env import EnvBase
 from piper.env import TempDirEnv
 
 
-class TestEnvExecute(object):
+class TestEnvBaseExecute(object):
     def setup_method(self, method):
-        self.env = Env(mock.Mock(), {})
+        self.env = EnvBase(mock.Mock(), {})
         self.step = mock.Mock()
 
     @mock.patch('piper.env.Process')
@@ -26,9 +28,9 @@ class TestEnvExecute(object):
         assert ret is procobj
 
 
-class TestEnvValidate(object):
+class TestEnvBaseValidate(object):
     def setup_method(self, method):
-        self.env = Env(mock.Mock(), {})
+        self.env = EnvBase(mock.Mock(), {})
         self.env.config = mock.Mock()
 
     @mock.patch('jsonschema.validate')
@@ -39,7 +41,9 @@ class TestEnvValidate(object):
 
 class TestTempDirEnvSetup(object):
     def setup_method(self, method):
-        self.env = TempDirEnv(mock.Mock(), {})
+        self.env = TempDirEnv(mock.Mock(), {
+            'class': 'hehe',
+        })
 
     @mock.patch('shutil.copytree')
     @mock.patch('os.chdir')
@@ -51,6 +55,18 @@ class TestTempDirEnvSetup(object):
         mkdtemp.assert_called_once_with(prefix='piper-')
         chdir.assert_called_once_with(mkdtemp.return_value)
         assert self.env.dir == mkdtemp.return_value
+
+    def test_validation(self):
+        self.env.validate()
+
+    def test_validation_extra_field(self):
+        self.env = TempDirEnv(mock.Mock(), {
+            'class': 'hehe',
+            'heart': 'black.as.night',
+        })
+
+        with pytest.raises(jsonschema.exceptions.ValidationError):
+            self.env.validate()
 
 
 class TestTempDirEnvTeardown(object):

@@ -4,7 +4,6 @@ version:
 
 envs:
   local:
-    version: '0.0.1'
     class: 'piper.env.Env'
 
 steps:
