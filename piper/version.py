@@ -45,7 +45,7 @@ class GitVersion(Version):
 
     def __init__(self, ns, config):
         super(GitVersion, self).__init__(ns, config)
-        if 'arguments' not in config.data:
+        if 'arguments' not in config:
             self.config.arguments = None
 
     @property

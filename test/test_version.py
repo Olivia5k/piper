@@ -1,7 +1,6 @@
 from piper.version import Version
 from piper.version import StaticVersion
 from piper.version import GitVersion
-from piper.utils import DotDict
 
 import jsonschema
 import pytest
@@ -19,9 +18,9 @@ class StaticVersionBase(object):
 
 class GitVersionBase(object):
     def setup_method(self, method):
-        self.git = GitVersion(mock.Mock(), DotDict({
+        self.git = GitVersion(mock.Mock(), {
             'class': 'piper.version.GitVersion',
-        }))
+        })
 
 
 class TestVersionValidate(object):
