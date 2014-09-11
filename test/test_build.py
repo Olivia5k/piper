@@ -2,15 +2,15 @@ import jsonschema
 import mock
 import pytest
 
-from piper.core import Piper
+from piper.build import Build
 from piper.utils import DotDict
 
 from test.utils import builtin
 
 
-class PiperTestBase(object):
+class BuildTestBase(object):
     def setup_method(self, method):
-        self.piper = Piper(mock.Mock())
+        self.build = Build(mock.Mock())
         self.base_config = {
             'version': {
                 'class': 'piper.version.Version',
@@ -36,7 +36,7 @@ class PiperTestBase(object):
         }
 
 
-class TestPiperSetup(PiperTestBase):
+class TestBuildSetup(BuildTestBase):
     def setup_method(self, method):
         self.methods = (
             'load_config',
@@ -49,19 +49,19 @@ class TestPiperSetup(PiperTestBase):
             'setup_env',
         )
 
-        super(TestPiperSetup, self).setup_method(method)
+        super(TestBuildSetup, self).setup_method(method)
 
     def test_setup_calls(self):
         for method in self.methods:
-            setattr(self.piper, method, mock.Mock())
+            setattr(self.build, method, mock.Mock())
 
-        self.piper.setup()
+        self.build.setup()
 
         for method in self.methods:
-            getattr(self.piper, method).assert_called_once_with()
+            getattr(self.build, method).assert_called_once_with()
 
 
-class TestPiperRun(PiperTestBase):
+class TestBuildRun(BuildTestBase):
     def setup_method(self, method):
         self.methods = (
             'setup',
@@ -69,29 +69,29 @@ class TestPiperRun(PiperTestBase):
             'teardown',
         )
 
-        super(TestPiperRun, self).setup_method(method)
-        self.piper.version = mock.Mock()
+        super(TestBuildRun, self).setup_method(method)
+        self.build.version = mock.Mock()
 
     def test_run_calls(self):
         for method in self.methods:
-            setattr(self.piper, method, mock.Mock())
+            setattr(self.build, method, mock.Mock())
 
-        self.piper.run()
+        self.build.run()
 
         for method in self.methods:
-            getattr(self.piper, method).assert_called_once_with()
+            getattr(self.build, method).assert_called_once_with()
 
 
-class TestPiperLoadConfig(PiperTestBase):
+class TestBuildLoadConfig(BuildTestBase):
     def setup_method(self, method):
         self.data = 'lel: 10\ntest: wizard\n\n'
-        super(TestPiperLoadConfig, self).setup_method(method)
+        super(TestBuildLoadConfig, self).setup_method(method)
 
     @mock.patch('sys.exit')
     @mock.patch('os.path.isfile')
     def test_load_config_no_file(self, isfile, exit):
         isfile.return_value = False
-        self.piper.load_config()
+        self.build.load_config()
 
         exit.assert_called_once_with(127)
 
@@ -102,7 +102,7 @@ class TestPiperLoadConfig(PiperTestBase):
         fake = mock.mock_open(read_data='{')
 
         with mock.patch(builtin('open'), fake):
-            self.piper.load_config()
+            self.build.load_config()
 
         exit.assert_called_once_with(126)
 
@@ -113,27 +113,27 @@ class TestPiperLoadConfig(PiperTestBase):
         fake = mock.mock_open(read_data=str(self.data))
 
         with mock.patch(builtin('open'), fake):
-            self.piper.load_config()
+            self.build.load_config()
 
         sl.assert_called_once_with(fake.return_value.read.return_value)
-        assert self.piper.raw_config == sl.return_value
-        assert isinstance(self.piper.config, DotDict)
-        assert self.piper.config.data == sl.return_value
+        assert self.build.raw_config == sl.return_value
+        assert isinstance(self.build.config, DotDict)
+        assert self.build.config.data == sl.return_value
 
 
-class TestPiperValidateConfig(PiperTestBase):
+class TestBuildValidateConfig(BuildTestBase):
     def setup_method(self, method):
-        super(TestPiperValidateConfig, self).setup_method(method)
-        self.piper.config = DotDict(self.base_config)
+        super(TestBuildValidateConfig, self).setup_method(method)
+        self.build.config = DotDict(self.base_config)
 
     def check_missing_key(self, key):
-        del self.piper.config.data[key]
+        del self.build.config.data[key]
         with pytest.raises(jsonschema.exceptions.ValidationError):
-            self.piper.validate_config()
+            self.build.validate_config()
 
     def test_passing_validation(self):
         # Do nothing; if no exception happens, this is valid.
-        self.piper.validate_config()
+        self.build.validate_config()
 
     def test_no_version_specified(self):
         self.check_missing_key('version')
@@ -148,63 +148,64 @@ class TestPiperValidateConfig(PiperTestBase):
         self.check_missing_key('jobs')
 
 
-class TestPiperLoadClasses(PiperTestBase):
+class TestBuildLoadClasses(BuildTestBase):
     def setup_method(self, method):
-        super(TestPiperLoadClasses, self).setup_method(method)
-        self.piper.config = DotDict(self.base_config)
+        super(TestBuildLoadClasses, self).setup_method(method)
+        self.build.config = DotDict(self.base_config)
 
         self.version = 'piper.version.Version'
         self.step = 'piper.step.Step'
         self.env = 'piper.env.TempDirEnv'
 
-    @mock.patch('piper.core.dynamic_load')
+    @mock.patch('piper.build.dynamic_load')
     def test_load_classes(self, dl):
-        self.piper.load_classes()
+        self.build.load_classes()
 
         calls = (
             mock.call(self.version),
             mock.call(self.step),
             mock.call(self.env)
         )
+        print(self.build.classes)
         assert dl.has_calls(calls, any_order=True)
-        assert self.piper.classes[self.version] is dl.return_value
-        assert self.piper.classes[self.step] is dl.return_value
-        assert self.piper.classes[self.env] is dl.return_value
+        assert self.build.classes[self.version] is dl.return_value
+        assert self.build.classes[self.step] is dl.return_value
+        assert self.build.classes[self.env] is dl.return_value
 
 
-class TestPiperSetVersion(object):
+class TestBuildSetVersion(object):
     def setup_method(self, method):
         self.version = '0.0.0.0.0.0.0.0.1-beta'
         self.cls = mock.Mock()
         self.cls_key = 'mandowar.FearOfTheDark'
 
-        self.piper = Piper(mock.Mock())
-        self.piper.classes = {self.cls_key: self.cls}
-        self.piper.config = DotDict({
+        self.build = Build(mock.Mock())
+        self.build.classes = {self.cls_key: self.cls}
+        self.build.config = DotDict({
             'version': {
                 'class': self.cls_key,
             },
         })
 
     def test_set_version(self):
-        self.piper.set_version()
+        self.build.set_version()
 
         self.cls.assert_called_once_with(
-            self.piper.ns,
-            self.piper.config.version
+            self.build.ns,
+            self.build.config.version
         )
         self.cls.return_value.validate.assert_called_once_with()
 
 
-class TestPiperConfigureEnv(object):
+class TestBuildConfigureEnv(object):
     def setup_method(self, method):
         self.env_key = 'local'
         self.cls_key = 'unisonic.KingForADay'
         self.cls = mock.Mock()
 
-        self.piper = Piper(mock.Mock(env=self.env_key))
-        self.piper.classes = {self.cls_key: self.cls}
-        self.piper.config = DotDict({
+        self.build = Build(mock.Mock(env=self.env_key))
+        self.build.classes = {self.cls_key: self.cls}
+        self.build.config = DotDict({
             'envs': {
                 'local': {
                     'class': self.cls_key,
@@ -213,16 +214,16 @@ class TestPiperConfigureEnv(object):
         })
 
     def test_configure_env(self):
-        self.piper.configure_env()
+        self.build.configure_env()
 
         self.cls.assert_called_once_with(
-            self.piper.ns,
-            self.piper.config.envs[self.env_key]
+            self.build.ns,
+            self.build.config.envs[self.env_key]
         )
         self.cls.return_value.validate.assert_called_once_with()
 
 
-class TestPiperConfigureSteps(object):
+class TestBuildConfigureSteps(object):
     def setup_method(self, method):
         self.step_key = 'local'
         self.config = {
@@ -236,25 +237,25 @@ class TestPiperConfigureSteps(object):
             },
         }
 
-        self.piper = Piper(mock.Mock(job=self.step_key))
+        self.build = Build(mock.Mock(job=self.step_key))
         for key in self.config['steps']:
             cls = self.config['steps'][key]['class']
-            self.piper.classes[cls] = mock.Mock()
+            self.build.classes[cls] = mock.Mock()
 
-        self.piper.config = DotDict(self.config)
+        self.build.config = DotDict(self.config)
 
     def test_configure_steps(self):
-        self.piper.configure_steps()
+        self.build.configure_steps()
 
         for key in self.config['steps']:
             cls_key = self.config['steps'][key]['class']
 
-            cls = self.piper.classes[cls_key]
-            cls.assert_called_once_with(key, self.piper.config.steps[key])
+            cls = self.build.classes[cls_key]
+            cls.assert_called_once_with(key, self.build.config.steps[key])
             cls.return_value.validate.assert_called_once_with()
 
 
-class TestPiperConfigureJob(object):
+class TestBuildConfigureJob(object):
     def setup_method(self, method):
         self.job_key = 'mmmbop'
         self.step_keys = ('bidubidappa', 'dubop', 'schuwappa')
@@ -269,18 +270,18 @@ class TestPiperConfigureJob(object):
             },
         }
 
-    def get_piper(self, config):
-        piper = Piper(mock.Mock(job=self.job_key))
-        piper.steps = dict(zip(self.step_keys, self.steps))
-        piper.config = DotDict(config)
-        return piper
+    def get_build(self, config):
+        build = Build(mock.Mock(job=self.job_key))
+        build.steps = dict(zip(self.step_keys, self.steps))
+        build.config = DotDict(config)
+        return build
 
     def test_configure_job(self):
-        self.piper = self.get_piper(self.config)
-        self.piper.configure_job()
+        self.build = self.get_build(self.config)
+        self.build.configure_job()
 
         for x, _ in enumerate(self.step_keys):
-            assert self.piper.order[x] is self.steps[x]
+            assert self.build.order[x] is self.steps[x]
 
     def test_configure_job_with_dependency(self):
         """
@@ -291,17 +292,17 @@ class TestPiperConfigureJob(object):
         """
 
         self.steps[1].config.depends = self.step_keys[0]
-        self.piper = self.get_piper({
+        self.build = self.get_build({
             'jobs': {
                 self.job_key: self.step_keys[1:2],
             },
         })
 
-        self.piper.configure_job()
+        self.build.configure_job()
 
-        assert len(self.piper.order) == 2
-        assert self.piper.order[0] is self.steps[0]
-        assert self.piper.order[1] is self.steps[1]
+        assert len(self.build.order) == 2
+        assert self.build.order[0] is self.steps[0]
+        assert self.build.order[1] is self.steps[1]
 
     def test_configure_job_with_multiple_dependencies(self):
         """
@@ -313,18 +314,18 @@ class TestPiperConfigureJob(object):
         # Let the third step depend on the two earlier ones, and let the job
         # configuration only specify the third step.
         self.steps[2].config.depends = self.step_keys[0:2]
-        self.piper = self.get_piper({
+        self.build = self.get_build({
             'jobs': {
                 self.job_key: (self.step_keys[2],),
             },
         })
 
-        self.piper.configure_job()
+        self.build.configure_job()
 
-        assert len(self.piper.order) == 3
-        assert self.piper.order[0] is self.steps[0]
-        assert self.piper.order[1] is self.steps[1]
-        assert self.piper.order[2] is self.steps[2]
+        assert len(self.build.order) == 3
+        assert self.build.order[0] is self.steps[0]
+        assert self.build.order[1] is self.steps[1]
+        assert self.build.order[2] is self.steps[2]
 
     def test_configure_job_with_nested_dependencies(self):
         """
@@ -336,18 +337,18 @@ class TestPiperConfigureJob(object):
         # step depend on the first one. Whew.
         self.steps[2].config.depends = self.step_keys[1]
         self.steps[1].config.depends = self.step_keys[0]
-        self.piper = self.get_piper({
+        self.build = self.get_build({
             'jobs': {
                 self.job_key: (self.step_keys[2],),
             },
         })
 
-        self.piper.configure_job()
+        self.build.configure_job()
 
-        assert len(self.piper.order) == 3
-        assert self.piper.order[0] is self.steps[0]
-        assert self.piper.order[1] is self.steps[1]
-        assert self.piper.order[2] is self.steps[2]
+        assert len(self.build.order) == 3
+        assert self.build.order[0] is self.steps[0]
+        assert self.build.order[1] is self.steps[1]
+        assert self.build.order[2] is self.steps[2]
 
     def test_configure_job_with_nested_dependencies_out_of_order(self):
         """
@@ -359,66 +360,66 @@ class TestPiperConfigureJob(object):
         # step depend on the second one. Whew x2.
         self.steps[2].config.depends = self.step_keys[0]
         self.steps[0].config.depends = self.step_keys[1]
-        self.piper = self.get_piper({
+        self.build = self.get_build({
             'jobs': {
                 self.job_key: (self.step_keys[2],),
             },
         })
 
-        self.piper.configure_job()
+        self.build.configure_job()
 
-        assert len(self.piper.order) == 3
-        assert self.piper.order[0] is self.steps[1]
-        assert self.piper.order[1] is self.steps[0]
-        assert self.piper.order[2] is self.steps[2]
+        assert len(self.build.order) == 3
+        assert self.build.order[0] is self.steps[1]
+        assert self.build.order[1] is self.steps[0]
+        assert self.build.order[2] is self.steps[2]
 
 
-class TestPiperExecute(object):
+class TestBuildExecute(object):
     def setup_method(self, method):
-        self.piper = Piper(mock.Mock())
-        self.piper.order = [mock.Mock() for _ in range(3)]
-        self.piper.env = mock.Mock()
+        self.build = Build(mock.Mock())
+        self.build.order = [mock.Mock() for _ in range(3)]
+        self.build.env = mock.Mock()
 
     def test_all_successful(self):
-        self.piper.execute()
+        self.build.execute()
 
-        calls = [mock.call(step) for step in self.piper.order]
-        assert self.piper.env.execute.call_args_list == calls
-        assert self.piper.success is True
+        calls = [mock.call(step) for step in self.build.order]
+        assert self.build.env.execute.call_args_list == calls
+        assert self.build.success is True
 
     def test_execution_stops_by_failed_step(self):
-        self.piper.order[1].success = False
-        self.piper.env.execute.side_effect = (
+        self.build.order[1].success = False
+        self.build.env.execute.side_effect = (
             mock.Mock(),
             mock.Mock(success=False),
         )
-        self.piper.execute()
+        self.build.execute()
 
-        calls = [mock.call(step) for step in self.piper.order[:2]]
-        assert self.piper.env.execute.call_args_list == calls
-        assert self.piper.success is False
+        calls = [mock.call(step) for step in self.build.order[:2]]
+        assert self.build.env.execute.call_args_list == calls
+        assert self.build.success is False
 
 
-class TestPiperSetupEnv(PiperTestBase):
+class TestBuildSetupEnv(BuildTestBase):
     def setup_method(self, method):
-        super(TestPiperSetupEnv, self).setup_method(method)
-        self.piper.env = mock.Mock()
+        super(TestBuildSetupEnv, self).setup_method(method)
+        self.build.env = mock.Mock()
 
     def test_setup_env(self):
-        self.piper.setup_env()
-        self.piper.env.setup.assert_called_once_with()
+        self.build.setup_env()
+        self.build.env.setup.assert_called_once_with()
 
 
-class TestPiperTeardown(PiperTestBase):
+class TestBuildTeardown(BuildTestBase):
     def setup_method(self, method):
-        super(TestPiperTeardown, self).setup_method(method)
-        self.piper.env = mock.Mock()
+        super(TestBuildTeardown, self).setup_method(method)
+        self.build.env = mock.Mock()
 
     def test_teardown(self):
-        self.piper.teardown_env = mock.Mock()
-        self.piper.teardown()
-        self.piper.teardown_env.assert_called_once_with()
+        self.build.teardown_env = mock.Mock()
+        self.build.teardown()
+        self.build.teardown_env.assert_called_once_with()
 
     def test_teardown_env(self):
-        self.piper.teardown_env()
-        self.piper.env.teardown.assert_called_once_with()
+        self.build.teardown_env()
+        self.build.env.teardown.assert_called_once_with()

@@ -64,5 +64,4 @@ class TestCommandLineStepValidate(object):
         jv.assert_called_once_with(self.step.config.data, self.step.schema)
 
     def test_validation(self):
-        # If no exception, is win
         self.step.validate()

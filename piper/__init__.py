@@ -2,7 +2,7 @@ import sys
 import argparse
 import logbook
 
-from piper.core import Piper
+from piper.build import Build
 from piper.logging import get_handler
 
 
@@ -58,4 +58,4 @@ def main():
         if ns.debug is True:
             handler.level = logbook.DEBUG
 
-        Piper(ns).run()
+        Build(ns).run()

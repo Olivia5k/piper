@@ -12,7 +12,7 @@ from piper.utils import DotDict
 from piper.utils import dynamic_load
 
 
-class Piper(object):
+class Build(object):
     """
     The main pipeline runner.
 
