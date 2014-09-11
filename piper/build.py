@@ -203,7 +203,7 @@ class Build(object):
         for step_key, step_config in self.config.steps.items():
             cls = self.classes[step_config['class']]
 
-            step = cls(step_key, step_config)
+            step = cls(self.ns, step_config, step_key)
             step.log.debug('Validating config...')
             step.validate()
             step.log.debug('Step configured.')

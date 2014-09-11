@@ -251,7 +251,11 @@ class TestBuildConfigureSteps(object):
             cls_key = self.config['steps'][key]['class']
 
             cls = self.build.classes[cls_key]
-            cls.assert_called_once_with(key, self.build.config.steps[key])
+            cls.assert_called_once_with(
+                self.build.ns,
+                self.build.config.steps[key],
+                key
+            )
             cls.return_value.validate.assert_called_once_with()
 
 
