@@ -1,5 +1,6 @@
 from piper.utils import DotDict
 from piper.utils import dynamic_load
+from piper.utils import oneshot
 
 import pytest
 
@@ -63,3 +64,13 @@ class TestDynamicLoad(object):
     def test_nonexistant_target(self):
         with pytest.raises(ImportError):
             dynamic_load('gammaray.empire.Avalon')
+
+
+class TestOneshot(object):
+    def test_execution(self):
+        ret = oneshot('echo lolz')
+        assert ret == 'lolz'
+
+    def test_failing_execution(self):
+        with pytest.raises(Exception):
+            oneshot('false')

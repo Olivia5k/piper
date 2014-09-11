@@ -1,3 +1,6 @@
+import subprocess as sub
+
+
 class DotDict(object):
     """
     Immutable dict-like objects accessible by dot notation
@@ -60,3 +63,24 @@ def dynamic_load(target):
 
     mod = __import__(module_name, fromlist=[class_name])
     return getattr(mod, class_name)
+
+
+def oneshot(cmd):
+    """
+    Oneshot execution of a subprocess. Returns output as a single string.
+
+    This is only to cut down on boiler.
+
+    """
+
+    popen = sub.Popen(cmd.split(), stdout=sub.PIPE, stderr=sub.PIPE)
+    exit = popen.wait()
+
+    if exit != 0:
+        raise Exception(
+            "Execution of '{0}' failed with exitcode {1}\n\n{2}".format(
+                cmd, exit, popen.stderr.read().decode().strip()
+            )
+        )
+
+    return str(popen.stdout.read().decode().strip())
