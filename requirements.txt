@@ -5,3 +5,4 @@ jsonschema==2.3.0
 blessings==1.5.1
 six==1.7.3
 ago==0.0.6
+facterpy==0.1

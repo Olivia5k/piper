@@ -9,6 +9,7 @@ install_requires = (
     'blessings==1.5.1',
     'six==1.7.3',
     'ago==0.0.6',
+    'facterpy==0.1',
 )
 
 tests_require = (
