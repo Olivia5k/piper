@@ -2,6 +2,7 @@ import logbook
 import jsonschema
 
 from piper.utils import DotDict
+from piper.utils import oneshot
 
 
 class Version(object):
@@ -67,3 +68,37 @@ class StaticVersion(Version):
 
     def get_version(self):
         return self.config.version
+
+
+class GitVersion(Version):
+    """
+    Versioning based on the output of `git describe`
+
+    """
+
+    def __init__(self, ns, config):
+        super(GitVersion, self).__init__(ns, config)
+        if 'arguments' not in config.data:
+            self.config.arguments = None
+
+    @property
+    def schema(self):
+        if not hasattr(self, '_schema'):
+            self._schema = super(GitVersion, self).schema
+            self._schema['properties']['arguments'] = {
+                'description':
+                    'Space separated arguments passed directly to the '
+                    '`git describe` call. Default is none. You probably want '
+                    'to add `--tags` if you are not using annotated tags.',
+                'type': 'string',
+            }
+
+        return self._schema
+
+    def get_version(self):
+        cmd = 'git describe'
+
+        if self.config.arguments:
+            cmd += ' ' + self.config.arguments
+
+        return oneshot(cmd)

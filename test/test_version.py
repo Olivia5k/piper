@@ -1,5 +1,7 @@
 from piper.version import Version
 from piper.version import StaticVersion
+from piper.version import GitVersion
+from piper.utils import DotDict
 
 import jsonschema
 import pytest
@@ -13,6 +15,13 @@ class StaticVersionBase(object):
             'class': 'hehe',
             'version': self.v,
         })
+
+
+class GitVersionBase(object):
+    def setup_method(self, method):
+        self.git = GitVersion(mock.Mock(), DotDict({
+            'class': 'piper.version.GitVersion',
+        }))
 
 
 class TestVersionValidate(object):
@@ -58,3 +67,27 @@ class TestStaticVersionSchema(StaticVersionBase):
 
         with pytest.raises(jsonschema.exceptions.ValidationError):
             self.version.validate()
+
+
+class TestGitVersionSchema(GitVersionBase):
+    def test_validation(self):
+        self.git.validate()
+
+    def test_validation_extra_field(self):
+        self.git.config.data['tyger'] = True
+        with pytest.raises(jsonschema.exceptions.ValidationError):
+            self.git.validate()
+
+
+class TestGitVersionGetVersion(GitVersionBase):
+    @mock.patch('piper.version.oneshot')
+    def test_get_version(self, os):
+        self.git.get_version()
+        os.assert_called_once_with('git describe')
+
+    @mock.patch('piper.version.oneshot')
+    def test_get_version_with_arguments(self, os):
+        flags = '--apathy-divine --snow'
+        self.git.config.arguments = flags
+        self.git.get_version()
+        os.assert_called_once_with('git describe {0}'.format(flags))

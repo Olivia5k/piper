@@ -1,10 +1,10 @@
 version:
-  class: 'piper.version.StaticVersion'
-  version: '0.0.1'
+  class: 'piper.version.GitVersion'
+  arguments: '--tags --long --dirty'
 
 envs:
   local:
-    class: 'piper.env.Env'
+    class: 'piper.env.EnvBase'
 
 steps:
   test:
