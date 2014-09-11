@@ -29,7 +29,8 @@ class DotDict(object):
             # Dict methods, just return and run them.
             return getattr(self.data, key)
 
-        val = self.data[key]
+        # Default to None
+        val = self.data.get(key, None)
 
         if isinstance(val, dict):
             val = DotDict(val)
@@ -43,6 +44,10 @@ class DotDict(object):
             return self.data == other.data
         else:
             return False
+
+    def __iter__(self):
+        for x in self.data:
+            yield x
 
     # So that we can still access as dicts
     __getitem__ = __getattr__

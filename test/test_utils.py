@@ -6,10 +6,9 @@ import pytest
 
 
 class TestDotDict(object):
-    def test_get_nonexistant_raises_keyerror(self):
-        with pytest.raises(KeyError):
-            dd = DotDict({})
-            dd.does_not_exist
+    def test_get_nonexistant_gives_none(self):
+        dd = DotDict({})
+        dd.does_not_exist is None
 
     def test_get_item(self):
         dd = DotDict({'danger': 'zone'})
@@ -54,6 +53,12 @@ class TestDotDict(object):
     def test_equality_to_others(self):
         dd = DotDict({})
         assert dd.__eq__(pytest.raises) is False
+
+    def test_iter_is_dict_iter(self):
+        data = {'reign': 'madness'}
+        dd = DotDict(data)
+
+        assert [x for x in dd] == [x for x in dd.data]
 
 
 class TestDynamicLoad(object):
