@@ -1,4 +1,3 @@
-import abc
 import logbook
 import jsonschema
 
@@ -14,8 +13,6 @@ class DynamicItem(object):
     that are identical in all of these, solely to avoid repetition.
 
     """
-
-    __metaclass__ = abc.ABCMeta
 
     def __init__(self, ns, config):
         self.ns = ns
