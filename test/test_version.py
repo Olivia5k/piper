@@ -6,6 +6,15 @@ import pytest
 import mock
 
 
+class StaticVersionBase(object):
+    def setup_method(self, method):
+        self.v = '32.1.12'
+        self.version = StaticVersion(mock.Mock(), {
+            'class': 'hehe',
+            'version': self.v,
+        })
+
+
 class TestVersionValidate(object):
     @mock.patch('jsonschema.validate')
     def test_validate(self, jv):
@@ -30,10 +39,22 @@ class TestVersionGetVersion(object):
             version.get_version()
 
 
-class TestStaticVersionGetVersion(object):
+class TestStaticVersionGetVersion(StaticVersionBase):
     def test_get_version(self):
-        v = '32.1.12'
-        version = StaticVersion(mock.Mock(), {'version': v})
+        ret = self.version.get_version()
+        assert ret == self.v
 
-        ret = version.get_version()
-        assert ret == v
+
+class TestStaticVersionSchema(StaticVersionBase):
+    def test_validation(self):
+        self.version.validate()
+
+    def test_validation_extra_field(self):
+        self.version = StaticVersion(mock.Mock(), {
+            'class': 'hehe',
+            'version': '3',
+            'stranger': 'in.you',
+        })
+
+        with pytest.raises(jsonschema.exceptions.ValidationError):
+            self.version.validate()

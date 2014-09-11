@@ -10,19 +10,6 @@ class Version(object):
 
     """
 
-    schema = {
-        '$schema': 'http://json-schema.org/draft-04/schema',
-        'type': 'object',
-        'additionalProperties': False,
-        'required': ['class'],
-        'properties': {
-            'class': {
-                'description': 'Python class to load to determine versions',
-                'type': 'string',
-            },
-        },
-    }
-
     def __init__(self, ns, config):
         self.ns = ns
         self.config = DotDict(config)
@@ -33,6 +20,25 @@ class Version(object):
 
     def __repr__(self):  # pragma: nocover
         return self.__str__()
+
+    @property
+    def schema(self):
+        if not hasattr(self, '_schema'):
+            self._schema = {
+                '$schema': 'http://json-schema.org/draft-04/schema',
+                'type': 'object',
+                'additionalProperties': False,
+                'required': ['class'],
+                'properties': {
+                    'class': {
+                        'description':
+                            'Python class to load to determine versions',
+                        'type': 'string',
+                    },
+                },
+            }
+
+        return self._schema
 
     def validate(self):
         jsonschema.validate(self.config.data, self.schema)
@@ -47,22 +53,17 @@ class StaticVersion(Version):
 
     """
 
-    schema = {
-        '$schema': 'http://json-schema.org/draft-04/schema',
-        'type': 'object',
-        'additionalProperties': False,
-        'required': ['class', 'version'],
-        'properties': {
-            'class': {
-                'description': 'Python class to load to determine versions',
+    @property
+    def schema(self):
+        if not hasattr(self, '_schema'):
+            self._schema = super(StaticVersion, self).schema
+            self._schema['required'].append('version')
+            self._schema['properties']['version'] = {
+                'description': 'Static version to use',
                 'type': 'string',
-            },
-            'version': {
-                'description': 'Version string for this project.',
-                'type': 'string',
-            },
-        },
-    }
+            }
+
+        return self._schema
 
     def get_version(self):
         return self.config.version
