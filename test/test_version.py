@@ -82,7 +82,7 @@ class TestGitVersionGetVersion(GitVersionBase):
     @mock.patch('piper.version.oneshot')
     def test_get_version(self, os):
         self.git.get_version()
-        os.assert_called_once_with('git describe')
+        os.assert_called_once_with('git describe --tags')
 
     @mock.patch('piper.version.oneshot')
     def test_get_version_with_arguments(self, os):
