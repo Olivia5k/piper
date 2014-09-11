@@ -2,37 +2,11 @@ import os
 import tempfile
 import shutil
 
-import logbook
-import jsonschema
-
-from piper.utils import DotDict
+from piper.abc import DynamicItem
 from piper.process import Process
 
 
-class EnvBase(object):
-    def __init__(self, ns, config):
-        self.ns = ns
-        self.config = DotDict(config)
-        self.log = logbook.Logger(self.__class__.__name__)
-
-    @property
-    def schema(self):
-        if not hasattr(self, '_schema'):
-            self._schema = {
-                '$schema': 'http://json-schema.org/draft-04/schema',
-                'type': 'object',
-                'additionalProperties': False,
-                'required': ['class'],
-                'properties': {
-                    'class': {
-                        'description': 'Python class to load for this env',
-                        'type': 'string',
-                    },
-                },
-            }
-
-        return self._schema
-
+class EnvBase(DynamicItem):
     def setup(self):  # pragma: nocover
         pass
 
@@ -47,9 +21,6 @@ class EnvBase(object):
         proc.run()
 
         return proc
-
-    def validate(self):
-        jsonschema.validate(self.config.data, self.schema)
 
 
 class TempDirEnv(EnvBase):
