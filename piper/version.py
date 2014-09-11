@@ -43,11 +43,6 @@ class GitVersion(Version):
 
     """
 
-    def __init__(self, ns, config):
-        super(GitVersion, self).__init__(ns, config)
-        if 'arguments' not in config:
-            self.config.arguments = None
-
     @property
     def schema(self):
         if not hasattr(self, '_schema'):
