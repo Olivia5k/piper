@@ -55,8 +55,9 @@ class GitVersion(Version):
             self._schema['properties']['arguments'] = {
                 'description':
                     'Space separated arguments passed directly to the '
-                    '`git describe` call. Default is none. You probably want '
+                    '`git describe` call. You probably want '
                     'to add `--tags` if you are not using annotated tags.',
+                'default': "",
                 'type': 'string',
             }
 

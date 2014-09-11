@@ -40,7 +40,8 @@ class TempDirEnv(EnvBase):
             self._schema['properties']['delete_when_done'] = {
                 'description':
                     'If true, temporary directory will be deleted when build '
-                    'has finished. Default is true.',
+                    'has finished.',
+                'default': True,
                 'type': 'boolean',
             }
 
