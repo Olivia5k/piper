@@ -22,6 +22,11 @@ class DynamicItem(object):
         self.config = DotDict(config)
         self.log = logbook.Logger(self.__class__.__name__)
 
+        # Set missing optional keys to None in the config
+        for k in set(self.schema['properties']) - set(self.schema['required']):
+            if k not in config:
+                config[k] = None
+
     def __repr__(self):  # pragma: nocover
         return self.__str__()
 
