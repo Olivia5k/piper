@@ -7,4 +7,12 @@
         "alternate": "piper/{}.py",
         "command": "test"
     },
+    "piper/cli/*.py": {
+        "alternate": "test/cli/test_{}.py",
+        "command": "source"
+    },
+    "test/cli/test_*.py": {
+        "alternate": "piper/cli/{}.py",
+        "command": "test"
+    },
 }
