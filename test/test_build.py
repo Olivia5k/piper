@@ -2,34 +2,13 @@ import mock
 
 from piper.build import Build
 from piper.utils import DotDict
+from test.utils import BASE_CONFIG
 
 
 class BuildTestBase(object):
     def setup_method(self, method):
         self.build = Build(mock.Mock(), mock.MagicMock())
-        self.base_config = {
-            'version': {
-                'class': 'piper.version.Version',
-                'version': '0.0.1-alpha1',
-            },
-            'jobs': {'test': ['test'], 'build': ['test', 'build']},
-            'envs': {
-                'local': {
-                    'class': 'piper.env.TempDirEnv',
-                    'delete_when_done': False,
-                },
-            },
-            'steps': {
-                'test': {
-                    'class': 'piper.step.Step',
-                    'command': '/usr/bin/env python setup.py test',
-                },
-                'build': {
-                    'class': 'piper.step.Step',
-                    'command': '/usr/bin/env python setup.py sdist',
-                },
-            },
-        }
+        self.base_config = BASE_CONFIG
 
 
 class TestBuildSetup(BuildTestBase):

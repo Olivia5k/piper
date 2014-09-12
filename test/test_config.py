@@ -6,35 +6,13 @@ import mock
 from piper.config import BuildConfig
 from piper.utils import DotDict
 
-from test.utils import builtin
+from test import utils
 
 
 class BuildConfigTestBase(object):
     def setup_method(self, method):
         self.config = BuildConfig(mock.Mock())
-        self.base_config = {
-            'version': {
-                'class': 'piper.version.Version',
-                'version': '0.0.1-alpha1',
-            },
-            'jobs': {'test': ['test'], 'build': ['test', 'build']},
-            'envs': {
-                'local': {
-                    'class': 'piper.env.TempDirEnv',
-                    'delete_when_done': False,
-                },
-            },
-            'steps': {
-                'test': {
-                    'class': 'piper.step.Step',
-                    'command': '/usr/bin/env python setup.py test',
-                },
-                'build': {
-                    'class': 'piper.step.Step',
-                    'command': '/usr/bin/env python setup.py sdist',
-                },
-            },
-        }
+        self.base_config = utils.BASE_CONFIG
 
 
 class TestBuildConfigLoadConfig(BuildConfigTestBase):
@@ -56,7 +34,7 @@ class TestBuildConfigLoadConfig(BuildConfigTestBase):
         isfile.return_value = True
         fake = mock.mock_open(read_data='{')
 
-        with mock.patch(builtin('open'), fake):
+        with mock.patch(utils.builtin('open'), fake):
             self.config.load_config()
 
         exit.assert_called_once_with(126)
@@ -67,7 +45,7 @@ class TestBuildConfigLoadConfig(BuildConfigTestBase):
         isfile.return_value = True
         fake = mock.mock_open(read_data=str(self.data))
 
-        with mock.patch(builtin('open'), fake):
+        with mock.patch(utils.builtin('open'), fake):
             self.config.load_config()
 
         sl.assert_called_once_with(fake.return_value.read.return_value)
