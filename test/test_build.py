@@ -65,9 +65,9 @@ class TestBuildLoadClasses(BuildTestBase):
         super(TestBuildLoadClasses, self).setup_method(method)
         self.build.config = DotDict(self.base_config)
 
-        self.version = 'piper.version.Version'
-        self.step = 'piper.step.Step'
-        self.env = 'piper.env.TempDirEnv'
+        self.version = 'piper.version.GitVersion'
+        self.step = 'piper.step.CommandLineStep'
+        self.env = 'piper.env.EnvBase'
 
     @mock.patch('piper.build.dynamic_load')
     def test_load_classes(self, dl):
@@ -78,7 +78,6 @@ class TestBuildLoadClasses(BuildTestBase):
             mock.call(self.step),
             mock.call(self.env)
         )
-        print(self.build.classes)
         assert dl.has_calls(calls, any_order=True)
         assert self.build.classes[self.version] is dl.return_value
         assert self.build.classes[self.step] is dl.return_value

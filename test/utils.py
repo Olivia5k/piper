@@ -1,29 +1,10 @@
 import mock
+import yaml
 
 
-BASE_CONFIG = {
-    'version': {
-        'class': 'piper.version.Version',
-        'version': '0.0.1-alpha1',
-    },
-    'jobs': {'test': ['test'], 'build': ['test', 'build']},
-    'envs': {
-        'local': {
-            'class': 'piper.env.TempDirEnv',
-            'delete_when_done': False,
-        },
-    },
-    'steps': {
-        'test': {
-            'class': 'piper.step.Step',
-            'command': 'python setup.py test',
-        },
-        'build': {
-            'class': 'piper.step.Step',
-            'command': 'python setup.py sdist',
-        },
-    },
-}
+# Actually use the current project piper.yml for tests. Dogfood that shit, yo!
+with open('piper.yml') as f:
+    BASE_CONFIG = yaml.safe_load(f.read())
 
 
 def builtin(target):
