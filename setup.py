@@ -50,7 +50,7 @@ setup(
     zip_safe=False,
     entry_points={
         'console_scripts': [
-            'piper = piper:main',
+            'piper = piper.cli.piper:piper_entry',
         ],
     },
     cmdclass={'test': PyTest},
