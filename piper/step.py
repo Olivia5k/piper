@@ -26,7 +26,7 @@ class StepBase(DynamicItem):
             self._schema = super(StepBase, self).schema
             self._schema['properties']['depends'] = {
                 'description': 'Step required to run before this one.',
-                'type': ['string', 'null'],
+                'type': ['string', 'null', 'array'],
             }
 
         return self._schema

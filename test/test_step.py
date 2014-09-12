@@ -23,6 +23,14 @@ class TestStepBaseValidate(StepTestBase):
     def test_validation(self):
         self.step.validate()
 
+    def test_validation_with_single_depends(self):
+        self.step.config.data['depends'] = 'step'
+        self.step.validate()
+
+    def test_validation_with_multiple_depends(self):
+        self.step.config.data['depends'] = ['step', 'singleton']
+        self.step.validate()
+
 
 class TestStepBaseSetIndex(StepTestBase):
     def test_set_index(self):
