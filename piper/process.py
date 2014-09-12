@@ -55,4 +55,4 @@ class Process(object):
 
         self.success = exit == 0
         if not self.success:
-            self.log.error(self.popen.stderr.read())
+            self.log.error(self.popen.stderr.read().decode('utf-8'))
