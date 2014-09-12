@@ -5,13 +5,18 @@ import mock
 
 
 class TestPiperEntry(object):
+    @mock.patch('piper.cli.piper.build_parser')
     @mock.patch('piper.cli.piper.Build')
+    @mock.patch('piper.cli.piper.BuildConfig')
     @mock.patch('sys.argv')
-    def test_main_entry_point(self, argv, Build):
+    def test_main_entry_point(self, argv, BC, B, bp):
         piper_entry()
 
-        assert Build.call_count == 1
-        Build.return_value.run.assert_called_once_with()
+        B.assert_called_once_with(
+            bp.return_value.parse_args.return_value,
+            BC.return_value.load.return_value,
+        )
+        B.return_value.run.assert_called_once_with()
 
     @mock.patch('piper.cli.piper.Build')
     @mock.patch('sys.argv')
@@ -20,7 +25,6 @@ class TestPiperEntry(object):
         Build.return_value.run.return_value = False
         piper_entry()
 
-        assert Build.call_count == 1
         Build.return_value.run.assert_called_once_with()
         exit.assert_called_once_with(1)
 
@@ -31,6 +35,5 @@ class TestPiperEntry(object):
         bp.return_value.parse_args.return_value.debug = True
         piper_entry()
 
-        assert Build.call_count == 1
         assert gh.return_value.level == logbook.DEBUG
         Build.return_value.run.assert_called_once_with()

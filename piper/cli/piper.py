@@ -3,6 +3,7 @@ import argparse
 import logbook
 
 from piper.build import Build
+from piper.config import BuildConfig
 from piper.logging import get_handler
 
 
@@ -58,6 +59,8 @@ def piper_entry():
         if ns.debug is True:
             handler.level = logbook.DEBUG
 
-        success = Build(ns).run()
+        config = BuildConfig(ns).load()
+
+        success = Build(ns, config).run()
         if not success:
             sys.exit(1)

@@ -1,16 +1,12 @@
-import jsonschema
 import mock
-import pytest
 
 from piper.build import Build
 from piper.utils import DotDict
 
-from test.utils import builtin
-
 
 class BuildTestBase(object):
     def setup_method(self, method):
-        self.build = Build(mock.Mock())
+        self.build = Build(mock.Mock(), mock.MagicMock())
         self.base_config = {
             'version': {
                 'class': 'piper.version.Version',
@@ -39,8 +35,6 @@ class BuildTestBase(object):
 class TestBuildSetup(BuildTestBase):
     def setup_method(self, method):
         self.methods = (
-            'load_config',
-            'validate_config',
             'load_classes',
             'set_version',
             'configure_env',
@@ -87,72 +81,6 @@ class TestBuildRun(BuildTestBase):
         assert ret is True
 
 
-class TestBuildLoadConfig(BuildTestBase):
-    def setup_method(self, method):
-        self.data = 'lel: 10\ntest: wizard\n\n'
-        super(TestBuildLoadConfig, self).setup_method(method)
-
-    @mock.patch('sys.exit')
-    @mock.patch('os.path.isfile')
-    def test_load_config_no_file(self, isfile, exit):
-        isfile.return_value = False
-        self.build.load_config()
-
-        exit.assert_called_once_with(127)
-
-    @mock.patch('sys.exit')
-    @mock.patch('os.path.isfile')
-    def test_load_config_invalid_yaml(self, isfile, exit):
-        isfile.return_value = True
-        fake = mock.mock_open(read_data='{')
-
-        with mock.patch(builtin('open'), fake):
-            self.build.load_config()
-
-        exit.assert_called_once_with(126)
-
-    @mock.patch('yaml.safe_load')
-    @mock.patch('os.path.isfile')
-    def test_load_config_actual_load(self, isfile, sl):
-        isfile.return_value = True
-        fake = mock.mock_open(read_data=str(self.data))
-
-        with mock.patch(builtin('open'), fake):
-            self.build.load_config()
-
-        sl.assert_called_once_with(fake.return_value.read.return_value)
-        assert self.build.raw_config == sl.return_value
-        assert isinstance(self.build.config, DotDict)
-        assert self.build.config.data == sl.return_value
-
-
-class TestBuildValidateConfig(BuildTestBase):
-    def setup_method(self, method):
-        super(TestBuildValidateConfig, self).setup_method(method)
-        self.build.config = DotDict(self.base_config)
-
-    def check_missing_key(self, key):
-        del self.build.config.data[key]
-        with pytest.raises(jsonschema.exceptions.ValidationError):
-            self.build.validate_config()
-
-    def test_passing_validation(self):
-        # Do nothing; if no exception happens, this is valid.
-        self.build.validate_config()
-
-    def test_no_version_specified(self):
-        self.check_missing_key('version')
-
-    def test_no_envs_specified(self):
-        self.check_missing_key('envs')
-
-    def test_no_steps_specified(self):
-        self.check_missing_key('steps')
-
-    def test_no_jobs_specified(self):
-        self.check_missing_key('jobs')
-
-
 class TestBuildLoadClasses(BuildTestBase):
     def setup_method(self, method):
         super(TestBuildLoadClasses, self).setup_method(method)
@@ -184,7 +112,7 @@ class TestBuildSetVersion(object):
         self.cls = mock.Mock()
         self.cls_key = 'mandowar.FearOfTheDark'
 
-        self.build = Build(mock.Mock())
+        self.build = Build(mock.Mock(), mock.Mock())
         self.build.classes = {self.cls_key: self.cls}
         self.build.config = DotDict({
             'version': {
@@ -208,7 +136,7 @@ class TestBuildConfigureEnv(object):
         self.cls_key = 'unisonic.KingForADay'
         self.cls = mock.Mock()
 
-        self.build = Build(mock.Mock(env=self.env_key))
+        self.build = Build(mock.Mock(env=self.env_key), mock.Mock())
         self.build.classes = {self.cls_key: self.cls}
         self.build.config = DotDict({
             'envs': {
@@ -242,7 +170,7 @@ class TestBuildConfigureSteps(object):
             },
         }
 
-        self.build = Build(mock.Mock(job=self.step_key))
+        self.build = Build(mock.Mock(job=self.step_key), mock.Mock())
         for key in self.config['steps']:
             cls = self.config['steps'][key]['class']
             self.build.classes[cls] = mock.Mock()
@@ -280,7 +208,7 @@ class TestBuildConfigureJob(object):
         }
 
     def get_build(self, config):
-        build = Build(mock.Mock(job=self.job_key))
+        build = Build(mock.Mock(job=self.job_key), mock.Mock())
         build.steps = dict(zip(self.step_keys, self.steps))
         build.config = DotDict(config)
         return build
@@ -385,7 +313,7 @@ class TestBuildConfigureJob(object):
 
 class TestBuildExecute(object):
     def setup_method(self, method):
-        self.build = Build(mock.Mock())
+        self.build = Build(mock.Mock(), mock.Mock())
         self.build.order = [mock.Mock() for _ in range(3)]
         self.build.env = mock.Mock()
 
