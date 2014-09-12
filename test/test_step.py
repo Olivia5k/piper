@@ -7,7 +7,11 @@ import pytest
 
 class StepTestBase(object):
     def setup_method(self, method):
-        self.step = StepBase(mock.Mock(), {}, 'key')
+        self.step = StepBase(
+            mock.Mock(),
+            {'class': 'piper.step.Class'},
+            'key'
+        )
 
 
 class TestStepBaseValidate(StepTestBase):
@@ -15,6 +19,9 @@ class TestStepBaseValidate(StepTestBase):
     def test_validate(self, jv):
         self.step.validate()
         jv.assert_called_once_with(self.step.config.data, self.step.schema)
+
+    def test_validation(self):
+        self.step.validate()
 
 
 class TestStepBaseSetIndex(StepTestBase):
