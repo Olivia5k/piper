@@ -63,23 +63,28 @@ class TestBuildSetup(BuildTestBase):
 
 class TestBuildRun(BuildTestBase):
     def setup_method(self, method):
-        self.methods = (
-            'setup',
-            'execute',
-            'teardown',
-        )
+        self.methods = ('setup', 'execute', 'teardown')
 
         super(TestBuildRun, self).setup_method(method)
         self.build.version = mock.Mock()
 
-    def test_run_calls(self):
         for method in self.methods:
             setattr(self.build, method, mock.Mock())
 
+    def test_run_calls(self):
         self.build.run()
 
         for method in self.methods:
             getattr(self.build, method).assert_called_once_with()
+
+    def test_run_returns_boolean_success(self):
+        self.build.success = False
+        ret = self.build.run()
+        assert ret is False
+
+        self.build.success = True
+        ret = self.build.run()
+        assert ret is True
 
 
 class TestBuildLoadConfig(BuildTestBase):

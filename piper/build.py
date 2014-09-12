@@ -80,6 +80,7 @@ class Build(object):
         Main entry point
 
         This is run when starting the script from the command line.
+        Returns boolean success.
 
         """
 
@@ -97,6 +98,7 @@ class Build(object):
             past_tense='finished in {0}'
         )
         self.log.info('{0} {1}'.format(self.version, ts))
+        return self.success
 
     def setup(self):
         """
