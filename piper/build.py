@@ -92,10 +92,14 @@ class Build(object):
 
         self.end = datetime.datetime.now()
 
+        verb = 'finished successfully in'
+        if not self.success:
+            verb = 'failed after'
+
         ts = ago.human(
             self.end - self.start,
             precision=5,
-            past_tense='finished in {0}'
+            past_tense='%s {0}' % verb  # hee hee
         )
         self.log.info('{0} {1}'.format(self.version, ts))
         return self.success
