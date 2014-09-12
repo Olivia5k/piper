@@ -58,4 +58,6 @@ def piper_entry():
         if ns.debug is True:
             handler.level = logbook.DEBUG
 
-        Build(ns).run()
+        success = Build(ns).run()
+        if not success:
+            sys.exit(1)
