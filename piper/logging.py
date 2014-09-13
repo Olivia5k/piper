@@ -45,8 +45,8 @@ SEPARATOR = ': '
 class Colorizer(object):
     terminal = blessings.Terminal()
 
-    def __init__(self, regexp, formatting, aborting=False):
-        self.regexp = re.compile(regexp)
+    def __init__(self, regexp, formatting, aborting=False, flags=0):
+        self.regexp = re.compile(regexp, flags)
         self.formatting = formatting + '{t.normal}'
         self.aborting = aborting
 
@@ -73,6 +73,10 @@ class Colorizer(object):
 
 
 COLORIZERS = (
+    # Colorize error messages
+    Colorizer(r'^(err(?:or)?)(.*)$', '{t.bold_red}{0}{1}', True, re.I),
+    # Colorize warning messages
+    Colorizer(r'^(warn(?:ing)?)(.*)$', '{t.bold_yellow}{0}{1}', True, re.I),
     # Colorize paths based on if they contain slashes or not
     Colorizer(r'(\S*/[\S/]+)', '{t.bold_blue}{0}'),
     # Colorize environment variables
