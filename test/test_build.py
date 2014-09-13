@@ -186,9 +186,8 @@ class TestBuildConfigureJob(object):
         }
 
     def get_build(self, config):
-        build = Build(mock.Mock(job=self.job_key), mock.Mock())
+        build = Build(mock.Mock(job=self.job_key), DotDict(config))
         build.steps = dict(zip(self.step_keys, self.steps))
-        build.config = DotDict(config)
         return build
 
     def test_configure_job(self):
