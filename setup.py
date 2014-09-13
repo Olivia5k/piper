@@ -10,6 +10,7 @@ install_requires = (
     'six==1.7.3',
     'ago==0.0.6',
     'facterpy==0.1',
+    'SQLAlchemy==0.9.7',
 )
 
 tests_require = (
