@@ -40,6 +40,25 @@ class BuildConfig(object):
                     'items': {'type': 'string'},
                 },
             },
+            'db': {
+                'description': 'Database configuration',
+                'type': 'object',
+                'required': ['host'],
+                'properties': {
+                    'host': {
+                        'description': 'The host to connect to',
+                        'type': 'string',
+                    },
+                    'user': {
+                        'description': 'The username used for authentication',
+                        'type': ['string', 'null'],
+                    },
+                    'password': {
+                        'description': 'The passord used for authentication',
+                        'type': ['string', 'null'],
+                    },
+                },
+            },
         },
     }
 

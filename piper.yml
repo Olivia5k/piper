@@ -20,3 +20,8 @@ jobs:
   - 'test'
   build:
   - 'build'
+
+db:
+  host: 'sqlite:///data/piper.db'
+  user:
+  password:
