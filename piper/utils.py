@@ -1,3 +1,5 @@
+import os
+import errno
 import subprocess as sub
 
 
@@ -89,3 +91,19 @@ def oneshot(cmd):
         )
 
     return str(popen.stdout.read().decode().strip())
+
+
+def mkdir(path):  # pragma: nocover
+    """
+    Safe implementation of 'mkdir -p'
+
+    """
+
+    # Python 3.2 has os.makedirs(exist_ok=True)...
+    try:
+        os.makedirs(path)
+    except OSError as exc:
+        if exc.errno == errno.EEXIST and os.path.isdir(path):
+            pass
+        else:
+            raise

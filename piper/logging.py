@@ -5,7 +5,10 @@ import re
 import sys
 import hashlib
 import logbook
+import datetime
 import blessings
+
+from piper import utils
 
 # TODO: Some of these only work on dark terminals. Investigate.
 COLORS = (
@@ -35,6 +38,11 @@ DEFAULT_FORMAT_STRING = (
     '{t.bold}{colorized_channel}'
     '{t.bold}{t.black}:{t.normal} '
     '{record.message}'
+)
+
+DEFAULT_LOGFILE_FORMAT_STRING = (
+    '[{record.time:%Y-%m-%d %H:%M:%S.%f}]'
+    ' {record.level_name:>5} {record.channel}: {record.message}'
 )
 
 # This separator is used to split multiple channels to colorize each one.
@@ -76,7 +84,7 @@ COLORIZERS = (
     # Colorize error messages
     Colorizer(r'^(err(?:or)?)(.*)$', '{t.bold_red}{0}{1}', True, re.I),
     # Colorize warning messages
-    Colorizer(r'^(warn(?:ing)?)(.*)$', '{t.bold_yellow}{0}{1}', True, re.I),
+    Colorizer(r'^(warn(?:or)?)(.*)$', '{t.bold_yellow}{0}{1}', True, re.I),
     # Colorize paths based on if they contain slashes or not
     Colorizer(r'(\S*/[\S/]+)', '{t.bold_blue}{0}'),
     # Colorize environment variables
@@ -190,17 +198,24 @@ class BlessingsStringFormatter(logbook.StringFormatter):
         return rc
 
 
-def get_handler():
-    try:
-        # Remove the default logbook.StderrHandler so that we can actually hide
-        # debug output when debug is False. If we don't remove it, it will
-        # always print to stderr anyway.
-        logbook.default_handler.pop_application()
-    except AssertionError:
-        # Also, this can die during tests because the handler does not seem to
-        # be set when running them.
-        pass
+def get_handlers():  # pragma: nocover
+    # Remove the default logbook.StderrHandler so that we can actually hide
+    # debug output when debug is False. If we don't remove it, it will
+    # always print to stderr anyway.
+    logbook.default_handler.pop_application()
 
-    handler = logbook.StreamHandler(sys.stdout, level=logbook.INFO)
-    handler.formatter = BlessingsStringFormatter(colorizers=COLORIZERS)
-    return handler
+    stream = logbook.StreamHandler(sys.stdout, level=logbook.INFO, bubble=True)
+    stream.formatter = BlessingsStringFormatter(colorizers=COLORIZERS)
+
+    utils.mkdir('logs/')
+    filename = 'logs/piper-{0}.log'.format(
+        datetime.datetime.now().strftime('%Y%M%d.%H%M%S')
+    )
+    logfile = logbook.FileHandler(
+        filename,
+        format_string=DEFAULT_LOGFILE_FORMAT_STRING,
+        level=logbook.INFO,
+        bubble=True
+    )
+
+    return stream, logfile

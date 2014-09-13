@@ -4,7 +4,7 @@ import logbook
 
 from piper.build import Build
 from piper.config import BuildConfig
-from piper.logging import get_handler
+from piper.logging import get_handlers
 
 
 def build_parser():
@@ -41,17 +41,19 @@ def build_parser():
 
 
 def piper_entry():
-    handler = get_handler()
+    stream, logfile = get_handlers()
 
-    with handler.applicationbound():
-        parser = build_parser()
-        ns = parser.parse_args(sys.argv[1:])
+    with stream.applicationbound():
+        with logfile.applicationbound():
+            parser = build_parser()
+            ns = parser.parse_args(sys.argv[1:])
 
-        if ns.debug is True:
-            handler.level = logbook.DEBUG
+            if ns.debug is True:
+                stream.level = logbook.DEBUG
+                logfile.level = logbook.DEBUG
 
-        config = BuildConfig(ns).load()
+            config = BuildConfig(ns).load()
 
-        success = Build(ns, config).run()
-        if not success:
-            sys.exit(1)
+            success = Build(ns, config).run()
+            if not success:
+                sys.exit(1)
