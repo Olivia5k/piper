@@ -1,13 +1,13 @@
-from piper.cli.piper import piper_entry
+from piper.cli.cmd_piper import piper_entry
 import logbook
 
 import mock
 
 
 class TestPiperEntry(object):
-    @mock.patch('piper.cli.piper.build_parser')
-    @mock.patch('piper.cli.piper.Build')
-    @mock.patch('piper.cli.piper.BuildConfig')
+    @mock.patch('piper.cli.cmd_piper.build_parser')
+    @mock.patch('piper.cli.cmd_piper.Build')
+    @mock.patch('piper.cli.cmd_piper.BuildConfig')
     @mock.patch('sys.argv')
     def test_main_entry_point(self, argv, BC, B, bp):
         piper_entry()
@@ -18,7 +18,7 @@ class TestPiperEntry(object):
         )
         B.return_value.run.assert_called_once_with()
 
-    @mock.patch('piper.cli.piper.Build')
+    @mock.patch('piper.cli.cmd_piper.Build')
     @mock.patch('sys.argv')
     @mock.patch('sys.exit')
     def test_failing_build_exits_nonzero(self, exit, argv, Build):
@@ -28,9 +28,9 @@ class TestPiperEntry(object):
         Build.return_value.run.assert_called_once_with()
         exit.assert_called_once_with(1)
 
-    @mock.patch('piper.cli.piper.Build')
-    @mock.patch('piper.cli.piper.build_parser')
-    @mock.patch('piper.cli.piper.get_handler')
+    @mock.patch('piper.cli.cmd_piper.Build')
+    @mock.patch('piper.cli.cmd_piper.build_parser')
+    @mock.patch('piper.cli.cmd_piper.get_handler')
     def test_debug_argument_sets_debug_log_level(self, gh, bp, Build):
         bp.return_value.parse_args.return_value.debug = True
         piper_entry()
