@@ -24,7 +24,6 @@ COLORS = (
 COLOR_LEN = len(COLORS)
 
 # Any consecutive string containing a slash
-PATH_RXP = re.compile(r'(\S*/[\S/]+)')
 # The end of "foo (x/y)"
 COUNTER_RXP = re.compile(r'(\s*\(\d+/\d+\))$')
 
@@ -43,6 +42,44 @@ DEFAULT_FORMAT_STRING = (
 SEPARATOR = ': '
 
 
+class Colorizer(object):
+    terminal = blessings.Terminal()
+
+    def __init__(self, regexp, formatting, aborting=False):
+        self.regexp = re.compile(regexp)
+        self.formatting = formatting + '{t.normal}'
+        self.aborting = aborting
+
+    def colorize(self, message):
+        """
+        Recursively apply the color regexp on the message
+
+        """
+
+        match = self.regexp.search(message)
+        if match:
+            start, stop = match.span()
+            before, after = match.string[:start], match.string[stop:]
+            colored = self.formatting.format(*match.groups(), t=self.terminal)
+
+            # Colorize the remaining part as well; there might be matching
+            # parts left in the part that was not colorized yet.
+            done, after = self.colorize(after)
+            message = before + colored + after
+            if done:
+                return True, message
+
+        return bool(match), message
+
+
+COLORIZERS = (
+    # Colorize paths based on if they contain slashes or not
+    Colorizer(r'(\S*/[\S/]+)', '{t.bold_blue}{0}'),
+    # Colorize environment variables
+    Colorizer(r'([A-Z]+)(=)', '{t.bold_green}{0}{t.bold_black}{1}'),
+)
+
+
 class BlessingsStringFormatter(logbook.StringFormatter):
     """
     StringFormatter subclass that gives access to blessings.Terminal().
@@ -53,7 +90,8 @@ class BlessingsStringFormatter(logbook.StringFormatter):
 
     """
 
-    def __init__(self, format_string=None):
+    def __init__(self, format_string=None, colorizers=tuple()):
+        self.colorizers = colorizers
         self.terminal = blessings.Terminal()
         self.md5_cache = {}
 
@@ -131,21 +169,19 @@ class BlessingsStringFormatter(logbook.StringFormatter):
     def get_color(self, md5):  # pragma: nocover
         return COLORS[int(md5, 16) % COLOR_LEN]
 
-    def prepare_record(self, rc):  # pragma: nocover
+    def prepare_record(self, rc):
         """
-        Manipulate the log message
+        Manipulate the log message, adding colors using the set of Colorizer()
+        instances.
 
         """
 
-        # Colorize paths
-        match = PATH_RXP.findall(rc.message)
-        if match:
-            for path in match:
-                rc.message = rc.message.replace(
-                    path,
-                    self.terminal.bold + self.terminal.blue + path +
-                    self.terminal.normal
-                )
+        for colorizer in self.colorizers:
+            done, message = colorizer.colorize(rc.message)
+            rc.message = message
+
+            if done and colorizer.aborting is True:
+                break
 
         return rc
 
@@ -162,5 +198,5 @@ def get_handler():
         pass
 
     handler = logbook.StreamHandler(sys.stdout, level=logbook.INFO)
-    handler.formatter = BlessingsStringFormatter()
+    handler.formatter = BlessingsStringFormatter(colorizers=COLORIZERS)
     return handler

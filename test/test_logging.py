@@ -1,5 +1,7 @@
 from piper.logging import BlessingsStringFormatter as BSF
+from piper.logging import Colorizer
 from piper.logging import SEPARATOR
+
 import mock
 
 
@@ -80,3 +82,55 @@ class TestBlessingsStringFormatterFormatRecord(object):
 
         assert self.bsf._formatter.format.call_count == 1
         self.bsf._formatter.format.assert_called_once_with(**self.kwargs)
+
+
+class TestBlessingsStringFormatterPrepareRecord(object):
+    def setup_method(self, method):
+        self.rc = mock.Mock()
+        self.colorizer = mock.Mock()
+        self.colorizer.colorize.return_value = True, self.rc
+        self.bsf = BSF(colorizers=(self.colorizer, self.colorizer))
+
+    def test_colorization(self):
+        self.bsf.prepare_record(self.rc)
+        assert self.colorizer.colorize.call_count == 2
+
+    def test_abort(self):
+        self.colorizer.aborting = True
+        self.bsf.prepare_record(self.rc)
+        assert self.colorizer.colorize.call_count == 1
+
+
+class TestColorizerColorize(object):
+    def test_stop_if_no_matches(self):
+        color = Colorizer('regexp', 'replace')
+        done, ret = color.colorize('message')
+
+        assert done is False
+        assert ret is 'message'
+
+    def test_colorize(self):
+        string = 'a voice in the dark'
+        regexp = r'(voice in)'
+        replacement = 'silent {t.bold}{0}'
+
+        color = Colorizer(regexp, replacement)
+        color.terminal = mock.Mock(bold='<bold>', normal='<normal>')
+
+        done, ret = color.colorize(string)
+
+        assert done is True
+        assert ret == 'a silent <bold>voice in<normal> the dark'
+
+    def test_colorize_multiple(self):
+        string = 'new york, new york'
+        regexp = r'(new)'
+        replacement = '{t.bold}{0}'
+
+        color = Colorizer(regexp, replacement)
+        color.terminal = mock.Mock(bold='<bold>', normal='<normal>')
+
+        done, ret = color.colorize(string)
+
+        assert done is True
+        assert ret == '<bold>new<normal> york, <bold>new<normal> york'
