@@ -4,6 +4,7 @@ import ago
 import logbook
 import six
 
+from piper.config import BuildConfig
 from piper.utils import dynamic_load
 
 
@@ -236,3 +237,37 @@ class Build(object):
 
         self.env.log.debug('Tearing down env...')
         self.env.teardown()
+
+
+class ExecCLI(object):
+    def compose(self, parser):
+        exec = parser.add_parser('exec', help='Execute a job')
+
+        # sub = exec.add_subparsers(help='Exec commands', dest="exec_command")
+        exec.add_argument(
+            'job',
+            nargs='?',
+            default='build',
+            help='The job to execute',
+        )
+
+        exec.add_argument(
+            'env',
+            nargs='?',
+            default='local',
+            help='The environment to execute in',
+        )
+
+        exec.add_argument(
+            '--dry-run',
+            '-n',
+            action='store_true',
+            help="Only print execution commands, don't actually do anything",
+        )
+
+        return 'exec', self.run
+
+    def run(self, ns, config):
+        success = Build(ns, config).run()
+
+        return 0 if success else 1
