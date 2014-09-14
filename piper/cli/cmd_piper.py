@@ -8,7 +8,7 @@ from piper import config
 from piper.logging import get_handlers
 
 
-def build_parser():
+def build_parser():  # pragma: nocover
     parser = argparse.ArgumentParser('piper')
 
     parser.add_argument(
@@ -41,7 +41,7 @@ def piper_entry():
             # Just running 'piper' should print the help.
             if not ns.command:
                 parser.print_help()
-                sys.exit(0)
+                return 0
 
             # Lower the logging level if we're being verbose.
             if ns.verbose is True:

@@ -4,6 +4,8 @@ import logbook
 import mock
 
 
+# TODO: These could have some refactoring love, but I've yet to find a nice way
+# to do setup on mock.patch objects without passing them around like krazy.
 class TestPiperEntry(object):
     @mock.patch('piper.cli.cmd_piper.build_parser')
     @mock.patch('piper.config.BuildConfig')
@@ -53,3 +55,17 @@ class TestPiperEntry(object):
 
         for logger in gh.return_value:
             assert logger.level == logbook.DEBUG
+
+    @mock.patch('piper.cli.cmd_piper.build_parser')
+    @mock.patch('piper.cli.cmd_piper.get_handlers')
+    def test_no_command_runs_help(self, gh, bp):
+        gh.return_value = mock.MagicMock(), mock.MagicMock()
+        parser, runners = mock.MagicMock(), mock.MagicMock()
+        bp.return_value = (parser, runners)
+
+        ns = parser.parse_args.return_value
+        ns.command = False
+        ret = piper_entry()
+
+        assert ret == 0
+        parser.print_help.assert_called_once_with()
