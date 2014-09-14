@@ -240,24 +240,23 @@ class Build(object):
 
 class ExecCLI(object):
     def compose(self, parser):  # pragma: nocover
-        exec = parser.add_parser('exec', help='Execute a job')
+        cli = parser.add_parser('exec', help='Execute a job')
 
-        # sub = exec.add_subparsers(help='Exec commands', dest="exec_command")
-        exec.add_argument(
+        cli.add_argument(
             'job',
             nargs='?',
             default='build',
             help='The job to execute',
         )
 
-        exec.add_argument(
+        cli.add_argument(
             'env',
             nargs='?',
             default='local',
             help='The environment to execute in',
         )
 
-        exec.add_argument(
+        cli.add_argument(
             '--dry-run',
             '-n',
             action='store_true',
