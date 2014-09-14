@@ -4,7 +4,6 @@ import ago
 import logbook
 import six
 
-from piper.config import BuildConfig
 from piper.utils import dynamic_load
 
 
@@ -240,7 +239,7 @@ class Build(object):
 
 
 class ExecCLI(object):
-    def compose(self, parser):
+    def compose(self, parser):  # pragma: nocover
         exec = parser.add_parser('exec', help='Execute a job')
 
         # sub = exec.add_subparsers(help='Exec commands', dest="exec_command")

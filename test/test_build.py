@@ -1,6 +1,7 @@
 import mock
 
 from piper.build import Build
+from piper.build import ExecCLI
 from piper.utils import DotDict
 from test.utils import BASE_CONFIG
 
@@ -337,3 +338,25 @@ class TestBuildTeardown(BuildTestBase):
     def test_teardown_env(self):
         self.build.teardown_env()
         self.build.env.teardown.assert_called_once_with()
+
+
+class TestExecCLIRun(object):
+    def setup_method(self, method):
+        self.cli = ExecCLI()
+        self.ns = mock.Mock()
+        self.config = mock.Mock()
+
+    @mock.patch('piper.build.Build')
+    def test_calls(self, b):
+        ret = self.cli.run(self.ns, self.config)
+
+        assert ret == 0
+        b.assert_called_once_with(self.ns, self.config)
+        b.return_value.run.assert_called_once_with()
+
+    @mock.patch('piper.build.Build')
+    def test_nonzero_exitcode_on_failure(self, b):
+        b.return_value.run.return_value = False
+        ret = self.cli.run(self.ns, self.config)
+
+        assert ret == 1
