@@ -84,11 +84,12 @@ class PropertyNamespace(Base):
 
 class DbCLI(object):
     tables = (Agent, Build, Project, VCSRoot, Property, PropertyNamespace)
+    sqlite = 'sqlite:///'
 
     def __init__(self):
         self.log = logbook.Logger(self.__class__.__name__)
 
-    def compose(self, parser):
+    def compose(self, parser):  # pragma: nocover
         db = parser.add_parser('db', help='Perform database tasks')
 
         sub = db.add_subparsers(help='Database commands', dest="db_command")
@@ -107,24 +108,28 @@ class DbCLI(object):
 
         # SQLite needs a full path that might be relative. This allows to
         # specify {PWD} in the config string and let that be propagated here
-        token = 'sqlite:///'
-        if host.startswith(token):
-            host = host.format(PWD=os.getenv('PWD'))
-            self.log.info('Using {0} as host'.format(host))
+        if host.startswith(self.sqlite):
+            self.handle_sqlite(host)
 
-            target = os.path.dirname(host.replace(token, ''))
-            if not os.path.exists(target):
-                self.log.debug('Creating {0}'.format(target))
-                utils.mkdir(target)
+        self.log.info('Creating tables for {0}'.format(host))
+        self.create_tables(host, echo=ns.verbose)
 
-        engine = create_engine(config.db.host, echo=ns.verbose)
+    def handle_sqlite(self, host):
+        target = os.path.dirname(host.replace(self.sqlite, ''))
+
+        if not os.path.exists(target):
+            self.log.debug('Creating {0}'.format(target))
+            utils.mkdir(target)
+
+    def create_tables(self, host, echo=False):
+        engine = create_engine(host, echo=echo)
         self.log.debug('Engine created')
 
         Session.configure(bind=engine)
         self.log.debug('Session configured')
 
         for table in self.tables:
-            self.log.debug('Creating table {0}'.format(table.__tablename__))
+            self.log.debug('Creating table `{0}`'.format(table.__tablename__))
             table.metadata.bind = engine
             table.metadata.create_all()
 
