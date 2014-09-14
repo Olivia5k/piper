@@ -111,15 +111,16 @@ class TestBuildSetVersion(object):
 
 class TestBuildConfigureEnv(object):
     def setup_method(self, method):
-        self.env_key = 'local'
+        env = 'local'
+        self.ns = mock.Mock(env=env)
         self.cls_key = 'unisonic.KingForADay'
         self.cls = mock.Mock()
 
-        self.build = Build(mock.Mock(env=self.env_key), mock.Mock())
+        self.build = Build(mock.Mock(env=self.ns.env), mock.Mock())
         self.build.classes = {self.cls_key: self.cls}
         self.build.config = DotDict({
             'envs': {
-                'local': {
+                env: {
                     'class': self.cls_key,
                 }
             },
@@ -130,7 +131,7 @@ class TestBuildConfigureEnv(object):
 
         self.cls.assert_called_once_with(
             self.build.ns,
-            self.build.config.envs[self.env_key]
+            self.build.config.envs[self.ns.env]
         )
         self.cls.return_value.validate.assert_called_once_with()
 
@@ -173,7 +174,7 @@ class TestBuildConfigureSteps(object):
 
 class TestBuildConfigureJob(object):
     def setup_method(self, method):
-        self.job_key = 'mmmbop'
+        self.ns = mock.Mock(job='mmmbop')
         self.step_keys = ('bidubidappa', 'dubop', 'schuwappa')
         self.steps = (mock.Mock(), mock.Mock(), mock.Mock())
 
@@ -182,12 +183,12 @@ class TestBuildConfigureJob(object):
 
         self.config = {
             'jobs': {
-                self.job_key: self.step_keys,
+                self.ns.job: self.step_keys,
             },
         }
 
     def get_build(self, config):
-        build = Build(mock.Mock(job=self.job_key), DotDict(config))
+        build = Build(mock.Mock(job=self.ns.job), DotDict(config))
         build.steps = dict(zip(self.step_keys, self.steps))
         return build
 
@@ -209,7 +210,7 @@ class TestBuildConfigureJob(object):
         self.steps[1].config.depends = self.step_keys[0]
         self.build = self.get_build({
             'jobs': {
-                self.job_key: self.step_keys[1:2],
+                self.ns.job: self.step_keys[1:2],
             },
         })
 
@@ -231,7 +232,7 @@ class TestBuildConfigureJob(object):
         self.steps[2].config.depends = self.step_keys[0:2]
         self.build = self.get_build({
             'jobs': {
-                self.job_key: (self.step_keys[2],),
+                self.ns.job: (self.step_keys[2],),
             },
         })
 
@@ -254,7 +255,7 @@ class TestBuildConfigureJob(object):
         self.steps[1].config.depends = self.step_keys[0]
         self.build = self.get_build({
             'jobs': {
-                self.job_key: (self.step_keys[2],),
+                self.ns.job: (self.step_keys[2],),
             },
         })
 
@@ -277,7 +278,7 @@ class TestBuildConfigureJob(object):
         self.steps[0].config.depends = self.step_keys[1]
         self.build = self.get_build({
             'jobs': {
-                self.job_key: (self.step_keys[2],),
+                self.ns.job: (self.step_keys[2],),
             },
         })
 

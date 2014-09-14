@@ -22,9 +22,6 @@ class Build(object):
         self.ns = ns
         self.config = config
 
-        self.job_key = self.ns.job
-        self.env_key = self.ns.env
-
         self.start = datetime.datetime.now()
 
         self.classes = {}
@@ -43,7 +40,7 @@ class Build(object):
 
         """
 
-        self.log.info('Setting up {0}...'.format(self.job_key))
+        self.log.info('Setting up {0}...'.format(self.ns.job))
 
         self.setup()
         self.execute()
@@ -120,7 +117,7 @@ class Build(object):
         """
 
         self.log.debug('Loading environment...')
-        env_config = self.config.envs[self.env_key]
+        env_config = self.config.envs[self.ns.env]
         cls = self.classes[env_config['class']]
 
         self.env = cls(self.ns, env_config)
@@ -149,7 +146,7 @@ class Build(object):
 
         """
 
-        for step_key in self.config.jobs[self.job_key]:
+        for step_key in self.config.jobs[self.ns.job]:
             step = self.steps[step_key]
             self.order.append(step)
 
@@ -199,7 +196,7 @@ class Build(object):
         """
 
         total = len(self.order)
-        self.log.info('Running {0}...'.format(self.job_key))
+        self.log.info('Running {0}...'.format(self.ns.job))
 
         for x, step in enumerate(self.order, start=1):
             step.set_index(x, total)
@@ -210,7 +207,7 @@ class Build(object):
                 step.log.info('Step complete.')
             else:
                 # If the success is not positive, bail and stop running.
-                step.log.error('Step "{0}" failed.'.format(self.job_key))
+                step.log.error('Step "{0}" failed.'.format(self.ns.job))
                 self.success = False
                 break
 
