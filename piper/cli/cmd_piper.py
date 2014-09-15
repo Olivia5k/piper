@@ -35,7 +35,8 @@ def piper_entry():
 
     with stream.applicationbound():
         with logfile.applicationbound():
-            parser, runners = build_parser()
+            conf = config.BuildConfig().load()
+            parser, runners = build_parser(conf)
             ns = parser.parse_args(sys.argv[1:])
 
             # Just running 'piper' should print the help.
@@ -49,6 +50,5 @@ def piper_entry():
                 logfile.level = logbook.DEBUG
 
             # Actually execute the command
-            conf = config.BuildConfig(ns).load()
             exitcode = runners[ns.command](ns, conf)
             return exitcode

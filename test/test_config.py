@@ -11,7 +11,7 @@ from test import utils
 
 class BuildConfigTestBase(object):
     def setup_method(self, method):
-        self.config = BuildConfig(mock.Mock())
+        self.config = BuildConfig()
         self.base_config = utils.BASE_CONFIG
 
 

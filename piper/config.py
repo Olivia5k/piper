@@ -62,7 +62,7 @@ class BuildConfig(object):
         },
     }
 
-    def __init__(self, ns):
+    def __init__(self):
         self.raw_config = None
         self.config = None
         self.log = logbook.Logger(self.__class__.__name__)
