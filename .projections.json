@@ -15,4 +15,12 @@
         "alternate": "piper/cli/{}.py",
         "command": "test"
     },
+    "piper/db/*.py": {
+        "alternate": "test/db/test_{}.py",
+        "command": "source"
+    },
+    "test/db/test_*.py": {
+        "alternate": "piper/db/{}.py",
+        "command": "test"
+    },
 }
