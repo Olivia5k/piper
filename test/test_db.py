@@ -1,6 +1,8 @@
 from piper.db import DbCLI
+from piper.db import DatabaseBase
 
 import mock
+import pytest
 
 
 class DbCLIBase(object):
@@ -17,3 +19,14 @@ class TestDbCLIRun(DbCLIBase):
 
         assert ret == 0
         self.cli.cls.init.assert_called_once_with(self.ns, self.config)
+
+
+class TestDatabaseBaseInit(object):
+    def setup_method(self, method):
+        self.db = DatabaseBase()
+        self.ns = mock.Mock()
+        self.config = mock.Mock()
+
+    def test_raises_not_implemented_error(self):
+        with pytest.raises(NotImplementedError):
+            self.db.init(self.ns, self.config)
