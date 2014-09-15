@@ -1,5 +1,5 @@
-from piper.db import DbCLI
-from piper.db import DatabaseBase
+from piper.db.core import DbCLI
+from piper.db.core import DatabaseBase
 
 import mock
 import pytest

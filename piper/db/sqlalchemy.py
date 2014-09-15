@@ -14,7 +14,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import relationship
 
-from piper.db import DatabaseBase
+from piper.db.core import DatabaseBase
 
 
 Base = declarative_base()
