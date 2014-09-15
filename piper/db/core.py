@@ -1,6 +1,29 @@
 import logbook
 
 
+class LazyDatabaseMixin(object):
+    """
+    A mixin class that gives the subclass lazy access to the database layer
+
+    The lazy attribute self.db is added, and the database class is gotten from
+    self.config, and an instance is made and returned.
+
+    """
+
+    _db = None
+
+    @property
+    def db(self):
+        assert self.config is not None, \
+            'Database accessed before self.config was set.'
+
+        if self._db is None:
+            self._db = self.config.get_database()
+            self._db.setup()
+
+        return self._db
+
+
 # Let's name this DatabaseBase. 'tis a silly name.
 class DatabaseBase(object):
     """
