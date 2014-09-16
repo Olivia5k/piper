@@ -1,4 +1,4 @@
-from piper.db.sqlalchemy import SQLAlchemyDB
+from piper.db.db_sqlalchemy import SQLAlchemyDB
 
 import mock
 import pytest
@@ -51,8 +51,8 @@ class TestSQLAlchemyDBCreateTables(SQLAlchemyDBBase):
         for x, table in enumerate(self.cli.tables):
             table.__tablename__ = x
 
-    @mock.patch('piper.db.sqlalchemy.Session')
-    @mock.patch('piper.db.sqlalchemy.create_engine')
+    @mock.patch('piper.db.db_sqlalchemy.Session')
+    @mock.patch('piper.db.db_sqlalchemy.create_engine')
     def test_creation(self, ce, se):
         eng = ce.return_value
         host = self.config.host
