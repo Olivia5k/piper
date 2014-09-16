@@ -1,26 +1,28 @@
 {
     "piper/*.py": {
         "alternate": "test/test_{}.py",
-        "command": "source"
+        "type": "source"
     },
     "test/test_*.py": {
         "alternate": "piper/{}.py",
-        "command": "test"
+        "type": "test"
     },
+
     "piper/cli/*.py": {
         "alternate": "test/cli/test_{}.py",
-        "command": "source"
+        "type": "source"
     },
     "test/cli/test_*.py": {
         "alternate": "piper/cli/{}.py",
-        "command": "test"
+        "type": "test"
     },
+
     "piper/db/*.py": {
         "alternate": "test/db/test_{}.py",
-        "command": "source"
+        "type": "source"
     },
     "test/db/test_*.py": {
         "alternate": "piper/db/{}.py",
-        "command": "test"
+        "type": "test"
     },
 }
