@@ -343,13 +343,13 @@ class TestBuildTeardown(BuildTestBase):
 
 class TestExecCLIRun(object):
     def setup_method(self, method):
-        self.cli = ExecCLI()
-        self.ns = mock.Mock()
         self.config = mock.Mock()
+        self.cli = ExecCLI(self.config)
+        self.ns = mock.Mock()
 
     @mock.patch('piper.build.Build')
     def test_calls(self, b):
-        ret = self.cli.run(self.ns, self.config)
+        ret = self.cli.run(self.ns)
 
         assert ret == 0
         b.assert_called_once_with(self.ns, self.config)
@@ -358,6 +358,6 @@ class TestExecCLIRun(object):
     @mock.patch('piper.build.Build')
     def test_nonzero_exitcode_on_failure(self, b):
         b.return_value.run.return_value = False
-        ret = self.cli.run(self.ns, self.config)
+        ret = self.cli.run(self.ns)
 
         assert ret == 1

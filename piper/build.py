@@ -237,6 +237,9 @@ class Build(LazyDatabaseMixin):
 
 
 class ExecCLI(object):
+    def __init__(self, config):
+        self.config = config
+
     def compose(self, parser):  # pragma: nocover
         cli = parser.add_parser('exec', help='Execute a job')
 
@@ -263,7 +266,7 @@ class ExecCLI(object):
 
         return 'exec', self.run
 
-    def run(self, ns, config):
-        success = Build(ns, config).run()
+    def run(self, ns):
+        success = Build(ns, self.config).run()
 
         return 0 if success else 1

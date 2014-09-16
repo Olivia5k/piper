@@ -38,9 +38,9 @@ class DatabaseBase(object):
         raise NotImplementedError()
 
 
-class DbCLI(object):
-    def __init__(self, cls):
-        self.cls = cls
+class DbCLI(LazyDatabaseMixin):
+    def __init__(self, config):
+        self.config = config
         self.log = logbook.Logger(self.__class__.__name__)
 
     def compose(self, parser):  # pragma: nocover
@@ -51,6 +51,6 @@ class DbCLI(object):
 
         return 'db', self.run
 
-    def run(self, ns, config):
-        self.cls.init(ns, config)
+    def run(self, ns):
+        self.db.init(ns)
         return 0

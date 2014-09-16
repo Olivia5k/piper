@@ -25,8 +25,9 @@ class TestPiperEntry(object):
         ret = piper_entry()
 
         assert ret == 0
+        bp.assert_called_once_with(conf)
         BC.return_value.load.assert_called_once_with()
-        runners[ns.command].assert_called_once_with(ns, conf)
+        runners[ns.command].assert_called_once_with(ns)
 
     @mock.patch('piper.cli.cmd_piper.build_parser')
     @mock.patch('sys.argv')

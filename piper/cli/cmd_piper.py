@@ -2,13 +2,13 @@ import sys
 import argparse
 import logbook
 
-from piper import db
+from piper.db import core as db
 from piper import build
 from piper import config
 from piper.logging import get_handlers
 
 
-def build_parser():  # pragma: nocover
+def build_parser(conf):  # pragma: nocover
     parser = argparse.ArgumentParser('piper')
 
     parser.add_argument(
@@ -21,8 +21,8 @@ def build_parser():  # pragma: nocover
     subparsers = parser.add_subparsers(help="Core commands", dest="command")
 
     clis = (
-        build.ExecCLI(),
-        db.DbCLI(),
+        build.ExecCLI(conf),
+        db.DbCLI(conf),
     )
 
     runners = dict(c.compose(subparsers) for c in clis)
@@ -50,5 +50,5 @@ def piper_entry():
                 logfile.level = logbook.DEBUG
 
             # Actually execute the command
-            exitcode = runners[ns.command](ns, conf)
+            exitcode = runners[ns.command](ns)
             return exitcode

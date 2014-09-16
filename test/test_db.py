@@ -7,18 +7,18 @@ import pytest
 
 class DbCLIBase(object):
     def setup_method(self, method):
-        self.cli = DbCLI(mock.Mock())
-        self.ns = mock.Mock()
         self.config = mock.Mock()
+        self.cli = DbCLI(self.config)
+        self.ns = mock.Mock()
 
 
 class TestDbCLIRun(DbCLIBase):
     def test_plain_run(self):
-        self.cli.cls.init = mock.Mock()
-        ret = self.cli.run(self.ns, self.config)
+        self.cli.db.init = mock.Mock()
+        ret = self.cli.run(self.ns)
 
         assert ret == 0
-        self.cli.cls.init.assert_called_once_with(self.ns, self.config)
+        self.cli.db.init.assert_called_once_with(self.ns)
 
 
 class TestDatabaseBaseInit(object):
