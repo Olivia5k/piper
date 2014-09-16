@@ -14,7 +14,7 @@ class LazyDatabaseMixin(object):
 
     @property
     def db(self):
-        assert self.config is not None, \
+        assert hasattr(self, 'config') and self.config is not None, \
             'Database accessed before self.config was set.'
 
         if self._db is None:
