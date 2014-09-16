@@ -5,9 +5,10 @@ import logbook
 import six
 
 from piper.utils import dynamic_load
+from piper.db.core import LazyDatabaseMixin
 
 
-class Build(object):
+class Build(LazyDatabaseMixin):
     """
     The main pipeline runner.
 
