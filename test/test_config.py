@@ -89,7 +89,7 @@ class TestBuildConfigLoadClasses(BuildConfigTestBase):
         self.version = 'piper.version.GitVersion'
         self.step = 'piper.step.CommandLineStep'
         self.env = 'piper.env.EnvBase'
-        self.db = 'piper.db.db_sqlalchemy.SQLAlchemyDB'
+        self.db = 'piper.db.SQLAlchemyDB'
 
     @mock.patch('piper.config.dynamic_load')
     def test_load_classes(self, dl):
@@ -126,7 +126,7 @@ class TestBuildConfigGetDatabase(BuildConfigTestBase):
     def setup_method(self, method):
         super(TestBuildConfigGetDatabase, self).setup_method(method)
         self.config.data = self.base_config
-        self.db = 'piper.db.db_sqlalchemy.SQLAlchemyDB'
+        self.db = 'piper.db.SQLAlchemyDB'
         self.mock = mock.Mock()
         self.config.classes[self.db] = self.mock
 
