@@ -4,7 +4,6 @@ import ago
 import logbook
 import six
 
-from piper.utils import dynamic_load
 from piper.db.core import LazyDatabaseMixin
 
 
@@ -25,7 +24,6 @@ class Build(LazyDatabaseMixin):
 
         self.start = datetime.datetime.now()
 
-        self.classes = {}
         self.steps = {}
         self.order = []
         self.success = None
@@ -70,32 +68,12 @@ class Build(LazyDatabaseMixin):
 
         """
 
-        self.load_classes()
         self.set_version()
         self.configure_env()
         self.configure_steps()
         self.configure_job()
 
         self.setup_env()
-
-    def load_classes(self):
-        self.log.debug("Loading classes for versions, steps and envs...")
-
-        classes = set()
-
-        classes.add(self.config.version['class'])
-
-        for env in self.config.envs.values():
-            classes.add(env['class'])
-
-        for step in self.config.steps.values():
-            classes.add(step['class'])
-
-        for cls in classes:
-            self.log.debug("Loading class '{0}()'".format(cls))
-            self.classes[cls] = dynamic_load(cls)
-
-        self.log.debug("Class loading done.")
 
     def set_version(self):
         """
@@ -105,7 +83,7 @@ class Build(LazyDatabaseMixin):
 
         self.log.debug('Determining version...')
         ver_config = self.config.version
-        cls = self.classes[ver_config['class']]
+        cls = self.config.classes[ver_config['class']]
 
         self.version = cls(self.ns, ver_config)
         self.version.validate()
@@ -119,7 +97,7 @@ class Build(LazyDatabaseMixin):
 
         self.log.debug('Loading environment...')
         env_config = self.config.envs[self.ns.env]
-        cls = self.classes[env_config['class']]
+        cls = self.config.classes[env_config['class']]
 
         self.env = cls(self.ns, env_config)
         self.log.debug('Validating env config...')
@@ -133,7 +111,7 @@ class Build(LazyDatabaseMixin):
         """
 
         for step_key, step_config in self.config.steps.items():
-            cls = self.classes[step_config['class']]
+            cls = self.config.classes[step_config['class']]
 
             step = cls(self.ns, step_config, step_key)
             step.log.debug('Validating config...')

@@ -5,9 +5,10 @@ import logbook
 import jsonschema
 
 from piper.utils import DotDict
+from piper.utils import dynamic_load
 
 
-class BuildConfig(object):
+class BuildConfig(DotDict):
     schema = {
         "$schema": "http://json-schema.org/draft-04/schema",
         'type': 'object',
@@ -64,13 +65,18 @@ class BuildConfig(object):
 
     def __init__(self):
         self.raw_config = None
-        self.config = None
+
+        self.data = {}
+        self.classes = {}
+
         self.log = logbook.Logger(self.__class__.__name__)
 
-    def load(self):  # pragma: nocover
+    def load(self):
+        self.log.info('Loading configuration')
         self.load_config()
         self.validate_config()
-        return self.config
+        self.load_classes()
+        return self
 
     def load_config(self):
         """
@@ -93,11 +99,28 @@ class BuildConfig(object):
                 self.log.error('Invalid YAML in piper.yml. Aborting.')
                 return sys.exit(126)
 
-        self.config = DotDict(self.raw_config)
+        self.data = self.raw_config
         self.log.debug('Configuration file loaded.')
-
-        return self.config
 
     def validate_config(self):
         self.log.debug('Validating root config...')
         jsonschema.validate(self.raw_config, self.schema)
+
+    def load_classes(self):
+        self.log.debug("Loading classes...")
+
+        targets = set()
+
+        targets.add(self.version['class'])
+
+        for env in self.envs.values():
+            targets.add(env['class'])
+
+        for step in self.steps.values():
+            targets.add(step['class'])
+
+        for cls in targets:
+            self.log.debug("Loading class '{0}()'".format(cls))
+            self.classes[cls] = dynamic_load(cls)
+
+        self.log.debug("Class loading done.")

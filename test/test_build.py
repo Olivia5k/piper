@@ -15,7 +15,6 @@ class BuildTestBase(object):
 class TestBuildSetup(BuildTestBase):
     def setup_method(self, method):
         self.methods = (
-            'load_classes',
             'set_version',
             'configure_env',
             'configure_steps',
@@ -61,30 +60,6 @@ class TestBuildRun(BuildTestBase):
         assert ret is True
 
 
-class TestBuildLoadClasses(BuildTestBase):
-    def setup_method(self, method):
-        super(TestBuildLoadClasses, self).setup_method(method)
-        self.build.config = DotDict(self.base_config)
-
-        self.version = 'piper.version.GitVersion'
-        self.step = 'piper.step.CommandLineStep'
-        self.env = 'piper.env.EnvBase'
-
-    @mock.patch('piper.build.dynamic_load')
-    def test_load_classes(self, dl):
-        self.build.load_classes()
-
-        calls = (
-            mock.call(self.version),
-            mock.call(self.step),
-            mock.call(self.env)
-        )
-        assert dl.has_calls(calls, any_order=True)
-        assert self.build.classes[self.version] is dl.return_value
-        assert self.build.classes[self.step] is dl.return_value
-        assert self.build.classes[self.env] is dl.return_value
-
-
 class TestBuildSetVersion(object):
     def setup_method(self, method):
         self.version = '0.0.0.0.0.0.0.0.1-beta'
@@ -92,12 +67,12 @@ class TestBuildSetVersion(object):
         self.cls_key = 'mandowar.FearOfTheDark'
 
         self.build = Build(mock.Mock(), mock.Mock())
-        self.build.classes = {self.cls_key: self.cls}
         self.build.config = DotDict({
             'version': {
                 'class': self.cls_key,
             },
         })
+        self.build.config.classes = {self.cls_key: self.cls}
 
     def test_set_version(self):
         self.build.set_version()
@@ -117,7 +92,6 @@ class TestBuildConfigureEnv(object):
         self.cls = mock.Mock()
 
         self.build = Build(mock.Mock(env=self.ns.env), mock.Mock())
-        self.build.classes = {self.cls_key: self.cls}
         self.build.config = DotDict({
             'envs': {
                 env: {
@@ -125,6 +99,7 @@ class TestBuildConfigureEnv(object):
                 }
             },
         })
+        self.build.config.classes = {self.cls_key: self.cls}
 
     def test_configure_env(self):
         self.build.configure_env()
@@ -151,11 +126,11 @@ class TestBuildConfigureSteps(object):
         }
 
         self.build = Build(mock.Mock(job=self.step_key), mock.Mock())
+        self.build.config = DotDict(self.config)
+        self.build.config.classes = {}
         for key in self.config['steps']:
             cls = self.config['steps'][key]['class']
-            self.build.classes[cls] = mock.Mock()
-
-        self.build.config = DotDict(self.config)
+            self.build.config.classes[cls] = mock.Mock()
 
     def test_configure_steps(self):
         self.build.configure_steps()
@@ -163,7 +138,7 @@ class TestBuildConfigureSteps(object):
         for key in self.config['steps']:
             cls_key = self.config['steps'][key]['class']
 
-            cls = self.build.classes[cls_key]
+            cls = self.build.config.classes[cls_key]
             cls.assert_called_once_with(
                 self.build.ns,
                 self.build.config.steps[key],

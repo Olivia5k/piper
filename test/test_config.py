@@ -2,9 +2,9 @@ import jsonschema
 import pytest
 
 import mock
+import copy
 
 from piper.config import BuildConfig
-from piper.utils import DotDict
 
 from test import utils
 
@@ -12,7 +12,9 @@ from test import utils
 class BuildConfigTestBase(object):
     def setup_method(self, method):
         self.config = BuildConfig()
-        self.base_config = utils.BASE_CONFIG
+        # Without the deepcopy the tests that check for missing keys will
+        # destroy everything for everyone!
+        self.base_config = copy.deepcopy(utils.BASE_CONFIG)
 
 
 class TestBuildConfigLoadConfig(BuildConfigTestBase):
@@ -50,8 +52,6 @@ class TestBuildConfigLoadConfig(BuildConfigTestBase):
 
         sl.assert_called_once_with(fake.return_value.read.return_value)
         assert self.config.raw_config == sl.return_value
-        assert isinstance(self.config.config, DotDict)
-        assert self.config.config.data == sl.return_value
 
 
 class TestBuildConfigValidateConfig(BuildConfigTestBase):
@@ -79,3 +79,41 @@ class TestBuildConfigValidateConfig(BuildConfigTestBase):
 
     def test_no_jobs_specified(self):
         self.check_missing_key('jobs')
+
+
+class TestBuildConfigLoadClasses(BuildConfigTestBase):
+    def setup_method(self, method):
+        super(TestBuildConfigLoadClasses, self).setup_method(method)
+        self.config.data = self.base_config
+
+        self.version = 'piper.version.GitVersion'
+        self.step = 'piper.step.CommandLineStep'
+        self.env = 'piper.env.EnvBase'
+
+    @mock.patch('piper.config.dynamic_load')
+    def test_load_classes(self, dl):
+        self.config.load_classes()
+
+        calls = (
+            mock.call(self.version),
+            mock.call(self.step),
+            mock.call(self.env)
+        )
+        assert dl.has_calls(calls, any_order=True)
+        assert self.config.classes[self.version] is dl.return_value
+        assert self.config.classes[self.step] is dl.return_value
+        assert self.config.classes[self.env] is dl.return_value
+
+
+class TestBuildConfigLoad(BuildConfigTestBase):
+    def test_calls(self):
+        self.config.load_config = mock.Mock()
+        self.config.validate_config = mock.Mock()
+        self.config.load_classes = mock.Mock()
+
+        ret = self.config.load()
+        assert ret is self.config
+
+        self.config.load_config.assert_called_once_with()
+        self.config.validate_config.assert_called_once_with()
+        self.config.load_classes.assert_called_once_with()
