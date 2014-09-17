@@ -6,7 +6,7 @@ import pytest
 
 class SQLAlchemyDBBase(object):
     def setup_method(self, method):
-        self.cli = SQLAlchemyDB()
+        self.db = SQLAlchemyDB()
         self.ns = mock.Mock()
         self.config = mock.Mock()
 
@@ -16,9 +16,9 @@ class TestSQLAlchemyDBSetup(SQLAlchemyDBBase):
     @mock.patch('piper.db.db_sqlalchemy.Session')
     def test_setup(self, se, ce):
         config = mock.Mock()
-        self.cli.setup(config)
+        self.db.setup(config)
 
-        assert self.cli.config is config
+        assert self.db.config is config
         ce.assert_called_once_with(config.db.host)
         se.configure.assert_called_once_with(bind=ce.return_value)
 
@@ -28,16 +28,16 @@ class TestSQLAlchemyDBInit(SQLAlchemyDBBase):
         self.config.db.host = None
 
         with pytest.raises(AssertionError):
-            self.cli.init(self.ns, self.config)
+            self.db.init(self.ns, self.config)
 
     def test_calls(self):
-        self.cli.handle_sqlite = mock.Mock()
-        self.cli.create_tables = mock.Mock()
+        self.db.handle_sqlite = mock.Mock()
+        self.db.create_tables = mock.Mock()
 
-        self.cli.init(self.ns, self.config)
+        self.db.init(self.ns, self.config)
 
-        self.cli.handle_sqlite.assert_called_once_with(self.config.db.host)
-        self.cli.create_tables.assert_called_once_with(
+        self.db.handle_sqlite.assert_called_once_with(self.config.db.host)
+        self.db.create_tables.assert_called_once_with(
             self.config.db.host,
             echo=self.ns.verbose,
         )
@@ -51,16 +51,16 @@ class TestSQLAlchemyDBHandleSqlite(SQLAlchemyDBBase):
         self.config.db.host = 'sqlite:///amaranthine.db'
         exists.return_value = False
 
-        self.cli.handle_sqlite(self.ns.host)
+        self.db.handle_sqlite(self.ns.host)
         mkdir.assert_called_once_with(dirname.return_value)
 
 
 class TestSQLAlchemyDBCreateTables(SQLAlchemyDBBase):
     def setup_method(self, method):
         super(TestSQLAlchemyDBCreateTables, self).setup_method(method)
-        self.cli.tables = (mock.Mock(), mock.Mock())
+        self.db.tables = (mock.Mock(), mock.Mock())
 
-        for x, table in enumerate(self.cli.tables):
+        for x, table in enumerate(self.db.tables):
             table.__tablename__ = x
 
     @mock.patch('piper.db.db_sqlalchemy.Session')
@@ -69,11 +69,11 @@ class TestSQLAlchemyDBCreateTables(SQLAlchemyDBBase):
         eng = ce.return_value
         host = self.config.host
 
-        self.cli.create_tables(host)
+        self.db.create_tables(host)
 
         ce.assert_called_once_with(host, echo=False)
         se.configure.assert_called_once_with(bind=eng)
 
-        for table in self.cli.tables:
+        for table in self.db.tables:
             assert table.metadata.bind is eng
             table.metadata.create_all.assert_called_once_with()
