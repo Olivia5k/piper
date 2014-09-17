@@ -112,6 +112,7 @@ class BuildConfig(DotDict):
         targets = set()
 
         targets.add(self.version['class'])
+        targets.add(self.db['class'])
 
         for env in self.envs.values():
             targets.add(env['class'])
@@ -124,3 +125,6 @@ class BuildConfig(DotDict):
             self.classes[cls] = dynamic_load(cls)
 
         self.log.debug("Class loading done.")
+
+    def get_database(self):
+        return self.classes[self.db['class']]()

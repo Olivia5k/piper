@@ -89,6 +89,7 @@ class TestBuildConfigLoadClasses(BuildConfigTestBase):
         self.version = 'piper.version.GitVersion'
         self.step = 'piper.step.CommandLineStep'
         self.env = 'piper.env.EnvBase'
+        self.db = 'piper.db.db_sqlalchemy.SQLAlchemyDB'
 
     @mock.patch('piper.config.dynamic_load')
     def test_load_classes(self, dl):
@@ -97,12 +98,14 @@ class TestBuildConfigLoadClasses(BuildConfigTestBase):
         calls = (
             mock.call(self.version),
             mock.call(self.step),
-            mock.call(self.env)
+            mock.call(self.env),
+            mock.call(self.db),
         )
-        assert dl.has_calls(calls, any_order=True)
+        assert dl.has_calls(calls)
         assert self.config.classes[self.version] is dl.return_value
         assert self.config.classes[self.step] is dl.return_value
         assert self.config.classes[self.env] is dl.return_value
+        assert self.config.classes[self.db] is dl.return_value
 
 
 class TestBuildConfigLoad(BuildConfigTestBase):
@@ -117,3 +120,16 @@ class TestBuildConfigLoad(BuildConfigTestBase):
         self.config.load_config.assert_called_once_with()
         self.config.validate_config.assert_called_once_with()
         self.config.load_classes.assert_called_once_with()
+
+
+class TestBuildConfigGetDatabase(BuildConfigTestBase):
+    def setup_method(self, method):
+        super(TestBuildConfigGetDatabase, self).setup_method(method)
+        self.config.data = self.base_config
+        self.db = 'piper.db.db_sqlalchemy.SQLAlchemyDB'
+        self.mock = mock.Mock()
+        self.config.classes[self.db] = self.mock
+
+    def test_plain_run(self):
+        ret = self.config.get_database()
+        assert ret is self.mock.return_value

@@ -22,6 +22,7 @@ jobs:
   - 'build'
 
 db:
+  class: 'piper.db.db_sqlalchemy.SQLAlchemyDB'
   host: 'sqlite:///data/piper.db'
   user:
   password:

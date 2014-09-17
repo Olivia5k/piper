@@ -90,8 +90,6 @@ class SQLAlchemyDB(DatabaseBase):
         host = config.db.host
         assert host is not None, 'No database configured'
 
-        # SQLite needs a full path that might be relative. This allows to
-        # specify {PWD} in the config string and let that be propagated here
         if host.startswith(self.sqlite):
             self.handle_sqlite(host)
 
