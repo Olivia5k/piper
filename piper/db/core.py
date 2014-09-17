@@ -18,7 +18,7 @@ class LazyDatabaseMixin(object):
             'Database accessed before self.config was set.'
 
         if self._db is None:
-            self._db = self.config.get_database()
+            self._db = self.config.get_database(self.config)
             self._db.setup()
 
         return self._db

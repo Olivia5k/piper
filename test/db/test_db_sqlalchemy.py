@@ -11,6 +11,18 @@ class SQLAlchemyDBBase(object):
         self.config = mock.Mock()
 
 
+class TestSQLAlchemyDBSetup(SQLAlchemyDBBase):
+    @mock.patch('piper.db.db_sqlalchemy.create_engine')
+    @mock.patch('piper.db.db_sqlalchemy.Session')
+    def test_setup(self, se, ce):
+        config = mock.Mock()
+        self.cli.setup(config)
+
+        assert self.cli.config is config
+        ce.assert_called_once_with(config.db.host)
+        se.configure.assert_called_once_with(bind=ce.return_value)
+
+
 class TestSQLAlchemyDBInit(SQLAlchemyDBBase):
     def test_no_db(self):
         self.config.db.host = None

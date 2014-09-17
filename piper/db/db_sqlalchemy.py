@@ -86,6 +86,11 @@ class SQLAlchemyDB(DatabaseBase):
     tables = (Agent, Build, Project, VCSRoot, Property, PropertyNamespace)
     sqlite = 'sqlite:///'
 
+    def setup(self, config):
+        self.config = config
+        self.engine = create_engine(config.db.host)
+        Session.configure(bind=self.engine)
+
     def init(self, ns, config):
         host = config.db.host
         assert host is not None, 'No database configured'

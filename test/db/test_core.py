@@ -52,7 +52,7 @@ class TestLazyDatabaseMixinDb(object):
 
         self.ldm.db
 
-        self.ldm.config.get_database.assert_called_once_with()
+        self.ldm.config.get_database.assert_called_once_with(self.ldm.config)
 
     def test_db_gets_configured(self):
         self.ldm.config = mock.Mock()
