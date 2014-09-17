@@ -31,7 +31,7 @@ class TestDatabaseBaseInit(object):
 
     def test_raises_not_implemented_error(self):
         with pytest.raises(NotImplementedError):
-            self.db.init(self.ns, self.config)
+            self.db.init(self.ns)
 
 
 class TestLazyDatabaseMixinDb(object):

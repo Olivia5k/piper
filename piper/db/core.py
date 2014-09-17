@@ -34,7 +34,7 @@ class DatabaseBase(object):
     def __init__(self):
         self.log = logbook.Logger(self.__class__.__name__)
 
-    def init(self, ns, config):
+    def init(self, ns):
         raise NotImplementedError()
 
 
