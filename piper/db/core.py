@@ -12,16 +12,22 @@ class LazyDatabaseMixin(object):
 
     _db = None
 
-    @property
-    def db(self):
-        assert hasattr(self, 'config') and self.config is not None, \
-            'Database accessed before self.config was set.'
-
+    def _get_db(self):
         if self._db is None:
+            assert hasattr(self, 'config') and self.config is not None, \
+                'Database accessed before self.config was set.'
+
             self._db = self.config.get_database(self.config)
             self._db.setup()
 
         return self._db
+
+    def _set_db(self, val):
+        # This is actually mostly for tests so that we don't have to do the
+        # mock-out-the-property dance for all the tests that hit the db.
+        self._db = val
+
+    db = property(_get_db, _set_db)
 
 
 # Let's name this DatabaseBase. 'tis a silly name.
