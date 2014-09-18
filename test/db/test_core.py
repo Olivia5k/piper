@@ -20,6 +20,16 @@ class DatabaseBaseTestBase(object):  # <3
         self.ns = mock.Mock()
         self.config = mock.Mock()
 
+    def missing(self, name, *args, **kwargs):
+        """
+        This is basically a skeleton for a sanity check that methods on the
+        interface just cause NIE.
+
+        """
+
+        with pytest.raises(NotImplementedError):
+            getattr(self.db, name)(*args, **kwargs)
+
 
 class TestDbCLIRun(DbCLIBase):
     def test_plain_run(self):
@@ -32,20 +42,17 @@ class TestDbCLIRun(DbCLIBase):
 
 class TestDatabaseBaseInit(DatabaseBaseTestBase):
     def test_raises_not_implemented_error(self):
-        with pytest.raises(NotImplementedError):
-            self.db.init(self.ns)
+        self.missing('init', self.ns)
 
 
 class TestDatabaseBaseNewBuild(DatabaseBaseTestBase):
     def test_raises_not_implemented_error(self):
-        with pytest.raises(NotImplementedError):
-            self.db.new_build(mock.Mock())
+        self.missing('new_build', mock.Mock())
 
 
 class TestDatabaseBaseUpdateBuild(DatabaseBaseTestBase):
     def test_raises_not_implemented_error(self):
-        with pytest.raises(NotImplementedError):
-            self.db.update_build(mock.Mock())
+        self.missing('update_build', mock.Mock())
 
 
 class TestLazyDatabaseMixinDb(object):
