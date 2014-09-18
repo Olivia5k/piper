@@ -43,7 +43,7 @@ class DatabaseBase(object):
     def init(self, ns):
         raise NotImplementedError()
 
-    def new_build(self, build):
+    def add_build(self, build):
         raise NotImplementedError()
 
     def update_build(self, build):

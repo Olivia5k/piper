@@ -45,9 +45,9 @@ class TestDatabaseBaseInit(DatabaseBaseTestBase):
         self.missing('init', self.ns)
 
 
-class TestDatabaseBaseNewBuild(DatabaseBaseTestBase):
+class TestDatabaseBaseAddBuild(DatabaseBaseTestBase):
     def test_raises_not_implemented_error(self):
-        self.missing('new_build', mock.Mock())
+        self.missing('add_build', mock.Mock())
 
 
 class TestDatabaseBaseUpdateBuild(DatabaseBaseTestBase):
