@@ -15,6 +15,7 @@ class BuildTestBase(object):
 class TestBuildSetup(BuildTestBase):
     def setup_method(self, method):
         self.methods = (
+            'add_build',
             'set_version',
             'configure_env',
             'configure_steps',
@@ -314,6 +315,15 @@ class TestBuildTeardown(BuildTestBase):
     def test_teardown_env(self):
         self.build.teardown_env()
         self.build.env.teardown.assert_called_once_with()
+
+
+class TestBuildAddBuild(BuildTestBase):
+    def test_add_build(self):
+        self.build.db = mock.Mock()
+        self.build.add_build()
+
+        assert self.build.build_id is self.build.db.new_build.return_value
+        self.build.db.new_build.assert_called_once_with(self.build)
 
 
 class TestExecCLIRun(object):

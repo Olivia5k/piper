@@ -24,6 +24,7 @@ class Build(LazyDatabaseMixin):
 
         self.start = datetime.datetime.now()
 
+        self.build_id = None
         self.steps = {}
         self.order = []
         self.success = None
@@ -68,12 +69,24 @@ class Build(LazyDatabaseMixin):
 
         """
 
+        self.add_build()
         self.set_version()
+
         self.configure_env()
         self.configure_steps()
         self.configure_job()
 
         self.setup_env()
+
+    def add_build(self):
+        """
+        Add a build object to the database
+
+        Also store the reference to the build
+
+        """
+
+        self.build_id = self.db.new_build(self)
 
     def set_version(self):
         """
