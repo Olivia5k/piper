@@ -1,4 +1,5 @@
 from piper.db.db_sqlalchemy import SQLAlchemyDB
+from piper.db.db_sqlalchemy import in_session
 
 import mock
 import pytest
@@ -77,3 +78,32 @@ class TestSQLAlchemyDBCreateTables(SQLAlchemyDBBase):
         for table in self.db.tables:
             assert table.metadata.bind is eng
             table.metadata.create_all.assert_called_once_with()
+
+
+class TestInSessionInner(object):
+    def setup_method(self, method):
+        self.mock = mock.Mock()
+        self.sql = mock.Mock()  # self instance for the call
+        self.inner = in_session(self.mock)
+        self.args = ['nutbush']
+        self.kwargs = {'city': 'limits'}
+
+    @mock.patch('piper.db.db_sqlalchemy.Session')
+    def test_return_value(self, session):
+        ret = self.inner(*self.args, **self.kwargs)
+        assert ret is self.mock.return_value
+
+    @mock.patch('piper.db.db_sqlalchemy.Session')
+    def test_session_calls(self, session):
+        self.inner(*self.args, **self.kwargs)
+        session.assert_called_once_with()
+        session.return_value.close.assert_called_once_with()
+
+    @mock.patch('piper.db.db_sqlalchemy.Session')
+    def test_args_and_kwargs(self, session):
+        self.inner(self.sql, *self.args, **self.kwargs)
+        self.mock.assert_called_once_with(
+            session.return_value,
+            *self.args,
+            **self.kwargs
+        )

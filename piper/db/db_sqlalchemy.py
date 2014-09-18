@@ -82,6 +82,21 @@ class PropertyNamespace(Base):
     created = Column(DateTime, default=datetime.datetime.now)
 
 
+def in_session(func):
+    """
+    Decorator that gives a session scope to the function
+
+    """
+
+    def inner(self, *args, **kwargs):
+        session = Session()
+        ret = func(session, *args, **kwargs)
+        session.close()
+        return ret
+
+    return inner
+
+
 class SQLAlchemyDB(DatabaseBase):
     tables = (Agent, Build, Project, VCSRoot, Property, PropertyNamespace)
     sqlite = 'sqlite:///'
