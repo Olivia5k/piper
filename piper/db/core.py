@@ -17,7 +17,7 @@ class LazyDatabaseMixin(object):
             assert hasattr(self, 'config') and self.config is not None, \
                 'Database accessed before self.config was set.'
 
-            self._db = self.config.get_database(self.config)
+            self._db = self.config.get_database()
             self._db.setup()
 
         return self._db
