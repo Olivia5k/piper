@@ -238,7 +238,7 @@ class Build(LazyDatabaseMixin):
         self.env.log.debug('Tearing down env...')
         self.env.teardown()
 
-    def default_db_kwargs(self):
+    def default_db_kwargs(self):  # pragma: nocover
         """
         Generate a dict with keys to update in the database
 
