@@ -1,5 +1,6 @@
 import os
 import datetime
+import socket
 
 from piper import utils
 
@@ -10,6 +11,7 @@ from sqlalchemy import ForeignKey
 from sqlalchemy import Integer
 from sqlalchemy import String
 from sqlalchemy import create_engine
+from sqlalchemy import update
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import relationship
@@ -100,7 +102,7 @@ def in_session(func):
 
     def inner(self, *args, **kwargs):
         session = Session()
-        ret = func(session, *args, **kwargs)
+        ret = func(self, session, *args, **kwargs)
         session.close()
         return ret
 
@@ -146,3 +148,86 @@ class SQLAlchemyDB(DatabaseBase):
             table.metadata.create_all()
 
         self.log.info('Database initialization complete.')
+
+    def get_or_create(self, session, model, **kwargs):
+        # http://stackoverflow.com/questions/2546207/
+        instance = session.query(model).filter_by(**kwargs).first()
+        if instance:
+            return instance
+        else:
+            instance = model(**kwargs)
+            session.add(instance)
+            return instance
+
+    @in_session
+    def add_build(self, session, build):
+        instance = Build(
+            agent=self.get_agent(),
+            project=self.get_project(build),
+            user=os.getenv('USER'),
+            **build.default_db_kwargs()
+        )
+        session.add(instance)
+
+        session.commit()
+        return instance.id
+
+    @in_session
+    def update_build(self, session, build, **extra):
+        values = build.default_db_kwargs()
+        values.update(extra)
+
+        stmt = update(Build).where(Build.id == build.id).values(values)
+        session.execute(stmt)
+        session.commit()
+
+    @in_session
+    def get_project(self, session, build):
+        """
+        Lazily get the project.
+
+        Create the project if it does not exist. If the VCS root for the
+        project does not exist, create that too.
+
+        """
+
+        vcs = self.get_or_create(
+            session,
+            VCSRoot,
+            root_url=build.vcs.root_url,
+            name=build.vcs.name,
+        )
+
+        project = self.get_or_create(
+            session,
+            Project,
+            name=build.vcs.get_project_name(),
+            vcs=vcs,
+        )
+
+        session.commit()
+        return project
+
+    @in_session
+    def get_agent(self, session):
+        """
+        Lazily get agent.
+
+        Create the project if it does not exist. If the VCS root for the
+        project does not exist, create that too.
+
+        """
+
+        name = socket.gethostname()
+        agent = self.get_or_create(
+            session,
+            Agent,
+            name=name,
+            fqdn=name,  # XXX
+            active=True,
+            busy=False,
+            registered=False,
+        )
+
+        session.commit()
+        return agent

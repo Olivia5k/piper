@@ -27,10 +27,12 @@ class Build(LazyDatabaseMixin):
 
         self.start = datetime.datetime.now()
 
-        self.build_id = None
+        self.id = None
         self.steps = {}
         self.order = []
         self.success = None
+        self.crashed = False
+        self.status = None
 
         self.log = logbook.Logger(self.__class__.__name__)
 
@@ -50,6 +52,8 @@ class Build(LazyDatabaseMixin):
         self.teardown()
 
         self.end = datetime.datetime.now()
+
+        self.db.update_build(self, ended=self.end)
 
         verb = 'finished successfully in'
         if not self.success:
@@ -89,7 +93,7 @@ class Build(LazyDatabaseMixin):
 
         """
 
-        self.build_id = self.db.new_build(self)
+        self.id = self.db.add_build(self)
 
     def set_version(self):
         """
@@ -195,6 +199,11 @@ class Build(LazyDatabaseMixin):
 
         for x, step in enumerate(self.order, start=1):
             step.set_index(x, total)
+
+            # Update db status to show that we are running this build
+            self.status = '{0}/{1}: {2}'.format(x, total, step.key)
+            self.db.update_build(self)
+
             step.log.info('Running...')
             proc = self.env.execute(step)
 
@@ -228,6 +237,19 @@ class Build(LazyDatabaseMixin):
 
         self.env.log.debug('Tearing down env...')
         self.env.teardown()
+
+    def default_db_kwargs(self):
+        """
+        Generate a dict with keys to update in the database
+
+        """
+
+        return {
+            'success': self.success,
+            'crashed': self.crashed,
+            'status': self.status,
+            'updated': datetime.datetime.now()
+        }
 
 
 class ExecCLI(object):
