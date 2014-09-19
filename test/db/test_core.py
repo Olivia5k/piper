@@ -37,7 +37,7 @@ class TestDbCLIRun(DbCLIBase):
         ret = self.cli.run(self.ns)
 
         assert ret == 0
-        self.cli.db.init.assert_called_once_with(self.ns)
+        self.cli.db.init.assert_called_once_with(self.ns, self.config)
 
 
 class TestDatabaseBaseInit(DatabaseBaseTestBase):

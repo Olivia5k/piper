@@ -103,6 +103,7 @@ class TestInSessionInner(object):
     def test_args_and_kwargs(self, session):
         self.inner(self.sql, *self.args, **self.kwargs)
         self.mock.assert_called_once_with(
+            self.sql,
             session.return_value,
             *self.args,
             **self.kwargs
