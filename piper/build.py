@@ -5,6 +5,7 @@ import logbook
 import six
 
 from piper.db.core import LazyDatabaseMixin
+from piper.vcs import GitVCS
 
 
 class Build(LazyDatabaseMixin):
@@ -21,6 +22,8 @@ class Build(LazyDatabaseMixin):
     def __init__(self, ns, config):
         self.ns = ns
         self.config = config
+
+        self.vcs = GitVCS('github', 'git@github.com')
 
         self.start = datetime.datetime.now()
 
