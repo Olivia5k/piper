@@ -27,7 +27,9 @@ class Agent(Base):
     id = Column(Integer(), primary_key=True)
     fqdn = Column(String(255))
     name = Column(String(255))
-    busy = Boolean()
+    active = Column(Boolean())
+    busy = Column(Boolean())
+    registered = Column(Boolean())
     properties = relationship('Property')
     created = Column(DateTime, default=datetime.datetime.now)
     last_seen = Column(DateTime, default=datetime.datetime.now)
@@ -38,9 +40,16 @@ class Build(Base):
 
     id = Column(Integer(), primary_key=True)
     agent = relationship('Agent')
+    agent_id = Column(Integer, ForeignKey('agent.id'))
     project = relationship('Project')
-    success = Boolean()
+    project_id = Column(Integer, ForeignKey('project.id'))
+
+    user = Column(String(255))
+    success = Column(Boolean())
+    crashed = Column(Boolean())
+    status = Column(String(255))
     started = Column(DateTime, default=datetime.datetime.now)
+    updated = Column(DateTime, default=datetime.datetime.now)
     ended = Column(DateTime)
 
 
@@ -50,6 +59,7 @@ class Project(Base):
     id = Column(Integer(), primary_key=True)
     name = Column(String(255))
     vcs = relationship('VCSRoot')
+    vcs_id = Column(Integer, ForeignKey('vcs_root.id'))
     created = Column(DateTime, default=datetime.datetime.now)
 
 
