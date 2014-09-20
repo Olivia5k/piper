@@ -1,11 +1,10 @@
-import datetime
-
 import ago
 import logbook
 import six
 
 from piper.db.core import LazyDatabaseMixin
 from piper.vcs import GitVCS
+from piper import utils
 
 
 class Build(LazyDatabaseMixin):
@@ -25,9 +24,10 @@ class Build(LazyDatabaseMixin):
 
         self.vcs = GitVCS('github', 'git@github.com')
 
-        self.start = datetime.datetime.now()
+        self.start = utils.now()
 
         self.id = None
+        self.version = None
         self.steps = {}
         self.order = []
         self.success = None
@@ -50,9 +50,12 @@ class Build(LazyDatabaseMixin):
         self.setup()
         self.execute()
         self.teardown()
+        self.finish()
 
-        self.end = datetime.datetime.now()
+        return self.success
 
+    def finish(self):
+        self.end = utils.now()
         self.db.update_build(self, ended=self.end)
 
         verb = 'finished successfully in'
@@ -65,7 +68,6 @@ class Build(LazyDatabaseMixin):
             past_tense='%s {0}' % verb  # hee hee
         )
         self.log.info('{0} {1}'.format(self.version, ts))
-        return self.success
 
     def setup(self):
         """
@@ -215,6 +217,7 @@ class Build(LazyDatabaseMixin):
                 self.success = False
                 break
 
+        self.status = ''
         # As long as we did not break out of the loop above, the build is
         # to be deemed succesful.
         if self.success is not False:
@@ -248,7 +251,7 @@ class Build(LazyDatabaseMixin):
             'success': self.success,
             'crashed': self.crashed,
             'status': self.status,
-            'updated': datetime.datetime.now()
+            'updated': utils.now()
         }
 
 

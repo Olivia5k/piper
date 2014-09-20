@@ -37,7 +37,7 @@ class TestBuildSetup(BuildTestBase):
 
 class TestBuildRun(BuildTestBase):
     def setup_method(self, method):
-        self.methods = ('setup', 'execute', 'teardown')
+        self.methods = ('setup', 'execute', 'teardown', 'finish')
 
         super(TestBuildRun, self).setup_method(method)
         self.build.version = mock.Mock()
@@ -324,6 +324,24 @@ class TestBuildAddBuild(BuildTestBase):
 
         assert self.build.id is self.build.db.add_build.return_value
         self.build.db.add_build.assert_called_once_with(self.build)
+
+
+class TestBuildFinish(BuildTestBase):
+    def setup_method(self, method):
+        super(TestBuildFinish, self).setup_method(method)
+        self.build.db = mock.Mock()
+
+    @mock.patch('ago.human')
+    @mock.patch('piper.utils.now')
+    def test_build_is_updated_in_database(self, now, human):
+        self.build.finish()
+
+        assert self.build.end is now.return_value
+        now.assert_called_once_with()
+        self.build.db.update_build.assert_called_once_with(
+            self.build,
+            ended=now.return_value
+        )
 
 
 class TestExecCLIRun(object):
