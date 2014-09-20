@@ -11,6 +11,8 @@ install_requires = (
     'ago==0.0.6',
     'facterpy==0.1',
     'SQLAlchemy==0.9.7',
+    'Flask==0.10.1',
+    'Flask-RESTful==0.2.12',
 )
 
 tests_require = (
