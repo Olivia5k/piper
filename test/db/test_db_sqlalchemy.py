@@ -80,6 +80,29 @@ class TestSQLAlchemyDBCreateTables(SQLAlchemyDBBase):
             table.metadata.create_all.assert_called_once_with()
 
 
+class TestSQLAlchemyDBGetOrCreate(SQLAlchemyDBBase):
+    def setup_method(self, method):
+        super(TestSQLAlchemyDBGetOrCreate, self).setup_method(method)
+        self.session = mock.Mock()
+        self.model = mock.Mock()
+        self.kwargs = {'life is a grave': 'i dig it'}
+        self.filter = self.session.query.return_value.filter_by
+
+    def test_already_exists(self):
+        ret = self.db.get_or_create(self.session, self.model, **self.kwargs)
+
+        assert ret is self.filter.return_value.first.return_value
+        assert self.session.add.call_count == 0
+
+    def test_does_not_exist(self):
+        self.filter.return_value.first.return_value = None
+
+        self.db.get_or_create(self.session, self.model, **self.kwargs)
+
+        self.model.assert_called_once_with(**self.kwargs)
+        self.session.add.assert_called_once_with(self.model.return_value)
+
+
 class TestInSessionInner(object):
     def setup_method(self, method):
         self.mock = mock.Mock()
