@@ -33,7 +33,8 @@ class TestGitVCSGetProjectName(object):
     @mock.patch('piper.utils.oneshot')
     def test_return_value(self, os):
         ret = self.git.get_project_name()
-        assert ret is os.return_value.split.return_value[1]
+        split = os.return_value.split.return_value
+        assert ret is split[1].replace.return_value
 
     @mock.patch('piper.utils.oneshot')
     def test_calls(self, os):

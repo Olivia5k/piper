@@ -22,4 +22,4 @@ class VCSBase(object):
 class GitVCS(VCSBase):
     def get_project_name(self):
         name = utils.oneshot('git config remote.origin.url')
-        return name.split(':')[1]
+        return name.split(':')[1].replace('.git', '')
