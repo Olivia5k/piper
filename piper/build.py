@@ -1,6 +1,7 @@
 import ago
 import logbook
 import six
+import mock
 
 from piper.db.core import LazyDatabaseMixin
 from piper.vcs import GitVCS
@@ -35,6 +36,10 @@ class Build(LazyDatabaseMixin):
         self.status = None
 
         self.log = logbook.Logger(self.__class__.__name__)
+
+        if self.ns.dry_run:
+            self.log.warn('Switching to mock database for dry run')
+            self.db = mock.Mock()
 
     def run(self):
         """
