@@ -1,6 +1,7 @@
 import os
 import errno
 import subprocess as sub
+import datetime
 
 
 class DotDict(object):
@@ -107,3 +108,13 @@ def mkdir(path):  # pragma: nocover
             pass
         else:
             raise
+
+
+def now():
+    """
+    Mockable now() method. datetime.datetime is immutable and cannot be patched
+    by mock.
+
+    """
+
+    return datetime.datetime.now()
