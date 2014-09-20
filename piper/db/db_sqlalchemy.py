@@ -188,6 +188,22 @@ class SQLAlchemyDB(DatabaseBase):
         """
 
         with in_session() as session:
+            project = self.get_or_create(
+                session,
+                Project,
+                name=build.vcs.get_project_name(),
+                vcs=self.get_vcs(build),
+            )
+
+            return project
+
+    def get_vcs(self, build):
+        """
+        Lazily get the vcs.
+
+        """
+
+        with in_session() as session:
             vcs = self.get_or_create(
                 session,
                 VCSRoot,
@@ -195,14 +211,7 @@ class SQLAlchemyDB(DatabaseBase):
                 name=build.vcs.name,
             )
 
-            project = self.get_or_create(
-                session,
-                Project,
-                name=build.vcs.get_project_name(),
-                vcs=vcs,
-            )
-
-            return project
+        return vcs
 
     def get_agent(self):
         """
