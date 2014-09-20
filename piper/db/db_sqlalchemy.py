@@ -148,9 +148,24 @@ class SQLAlchemyDB(DatabaseBase):
 
         self.log.info('Database initialization complete.')
 
-    def get_or_create(self, session, model, expunge=False, **kwargs):
-        # http://stackoverflow.com/questions/2546207/
-        instance = session.query(model).filter_by(**kwargs).first()
+    def get_or_create(self, session, model, expunge=False, keys=(), **kwargs):
+        """
+        Get or create an object.
+
+        A filter is done on the model with `kwargs`. If `keys` are specified,
+        only those keys will be used to do the filtering.
+
+        If `expunge` is True, the created object is detached from the session.
+        This is used if one get_or_create call calls another for its arguments
+        since the different calls would get different sessions.
+
+        """
+
+        filter = kwargs
+        if keys:
+            filter = dict((k, v) for k, v in kwargs.items() if k in keys)
+
+        instance = session.query(model).filter_by(**filter).first()
         if not instance:
             instance = model(**kwargs)
             session.add(instance)
@@ -205,6 +220,7 @@ class SQLAlchemyDB(DatabaseBase):
                 session,
                 VCSRoot,
                 expunge=expunge,
+                keys=('root_url',),
                 root_url=build.vcs.root_url,
                 name=build.vcs.name,
             )
@@ -217,6 +233,7 @@ class SQLAlchemyDB(DatabaseBase):
             agent = self.get_or_create(
                 session,
                 Agent,
+                keys=('fqdn',),
                 name=name,
                 fqdn=name,  # XXX
                 active=True,

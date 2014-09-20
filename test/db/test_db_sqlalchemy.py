@@ -93,7 +93,12 @@ class TestSQLAlchemyDBGetOrCreate(SQLAlchemyDBBase):
         super(TestSQLAlchemyDBGetOrCreate, self).setup_method(method)
         self.session = mock.Mock()
         self.model = mock.Mock()
-        self.kwargs = {'life is a grave': 'i dig it'}
+        self.kwargs = {
+            'life is a grave': 'i dig it',
+            'stanton': 'creed',
+        }
+        self.keys = ['stanton']
+        self.filtered_keys = {'stanton': 'creed'}
         self.filter = self.session.query.return_value.filter_by
 
     def test_already_exists(self):
@@ -109,6 +114,16 @@ class TestSQLAlchemyDBGetOrCreate(SQLAlchemyDBBase):
 
         self.model.assert_called_once_with(**self.kwargs)
         self.session.add.assert_called_once_with(self.model.return_value)
+
+    def test_filter_kwargs_without_keys(self):
+        self.db.get_or_create(self.session, self.model, **self.kwargs)
+        self.filter.assert_called_once_with(**self.kwargs)
+
+    def test_filter_kwargs_with_keys(self):
+        self.db.get_or_create(
+            self.session, self.model, keys=self.keys, **self.kwargs
+        )
+        self.filter.assert_called_once_with(**self.filtered_keys)
 
 
 class TestSQLAlchemyDBAddBuild(SQLAlchemyDBBase):
@@ -224,6 +239,7 @@ class TestSQLAlchemyDBGetVcs(SQLAlchemyDBBase):
             session.return_value,
             table,
             expunge=False,
+            keys=('root_url',),
             root_url=self.build.vcs.root_url,
             name=self.build.vcs.name,
         )
@@ -237,6 +253,7 @@ class TestSQLAlchemyDBGetVcs(SQLAlchemyDBBase):
             session.return_value,
             table,
             expunge=True,
+            keys=('root_url',),
             root_url=self.build.vcs.root_url,
             name=self.build.vcs.name,
         )
@@ -262,6 +279,7 @@ class TestSQLAlchemyDBGetAgent(SQLAlchemyDBBase):
         self.db.get_or_create.assert_called_once_with(
             session.return_value,
             table,
+            keys=('fqdn',),
             name=gh.return_value,
             fqdn=gh.return_value,
             active=True,
