@@ -198,11 +198,6 @@ class SQLAlchemyDB(DatabaseBase):
             return project
 
     def get_vcs(self, build):
-        """
-        Lazily get the vcs.
-
-        """
-
         with in_session() as session:
             vcs = self.get_or_create(
                 session,
@@ -214,14 +209,6 @@ class SQLAlchemyDB(DatabaseBase):
         return vcs
 
     def get_agent(self):
-        """
-        Lazily get agent.
-
-        Create the project if it does not exist. If the VCS root for the
-        project does not exist, create that too.
-
-        """
-
         with in_session() as session:
             name = socket.gethostname()
             agent = self.get_or_create(

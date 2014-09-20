@@ -196,6 +196,30 @@ class TestSQLAlchemyDBGetProject(SQLAlchemyDBBase):
         )
 
 
+class TestSQLAlchemyDBGetVcs(SQLAlchemyDBBase):
+    def setup_method(self, method):
+        super(TestSQLAlchemyDBGetVcs, self).setup_method(method)
+        self.build = mock.Mock()
+        self.db.get_or_create = mock.Mock()
+
+    @mock.patch('piper.db.db_sqlalchemy.Session')
+    def test_return_value_is_vcs(self, session):
+        ret = self.db.get_vcs(self.build)
+        assert ret is self.db.get_or_create.return_value
+
+    @mock.patch('piper.db.db_sqlalchemy.VCSRoot')
+    @mock.patch('piper.db.db_sqlalchemy.Session')
+    def test_get_or_create_arguments(self, session, table):
+        self.db.get_vcs(self.build)
+
+        self.db.get_or_create.assert_called_once_with(
+            session.return_value,
+            table,
+            root_url=self.build.vcs.root_url,
+            name=self.build.vcs.name,
+        )
+
+
 class TestInSessionInner(object):
     @mock.patch('piper.db.db_sqlalchemy.Session')
     def test_context_is_a_session(self, session):
