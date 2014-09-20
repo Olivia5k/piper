@@ -322,7 +322,7 @@ class TestBuildAddBuild(BuildTestBase):
         self.build.db = mock.Mock()
         self.build.add_build()
 
-        assert self.build.id is self.build.db.add_build.return_value
+        assert self.build.ref is self.build.db.add_build.return_value
         self.build.db.add_build.assert_called_once_with(self.build)
 
 

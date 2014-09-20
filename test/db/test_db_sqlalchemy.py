@@ -136,10 +136,10 @@ class TestSQLAlchemyDBAddBuild(SQLAlchemyDBBase):
 
     @mock.patch('piper.db.db_sqlalchemy.Build')
     @mock.patch('piper.db.db_sqlalchemy.Session')
-    def test_id_is_returned(self, sess, table):
+    def test_object_ref_is_returned(self, sess, table):
         ret = self.db.add_build(self.build)
 
-        assert ret is table.return_value.id
+        assert ret is table.return_value
 
     @mock.patch('piper.db.db_sqlalchemy.Build')
     @mock.patch('piper.db.db_sqlalchemy.Session')
@@ -147,6 +147,14 @@ class TestSQLAlchemyDBAddBuild(SQLAlchemyDBBase):
         self.db.add_build(self.build)
 
         sess.return_value.add.assert_called_once_with(table.return_value)
+
+    @mock.patch('piper.db.db_sqlalchemy.Build')
+    @mock.patch('piper.db.db_sqlalchemy.Session')
+    def test_instance_refreshed_and_expunged(self, sess, table):
+        self.db.add_build(self.build)
+
+        sess.return_value.refresh.assert_called_once_with(table.return_value)
+        sess.return_value.expunge.assert_called_once_with(table.return_value)
 
 
 class TestSQLAlchemyDBUpdateBuild(SQLAlchemyDBBase):
@@ -183,6 +191,7 @@ class TestSQLAlchemyDBUpdateBuild(SQLAlchemyDBBase):
         update.assert_called_once_with(table)
         where.assert_called_once_with(table.id.__eq__.return_value)
         values.assert_called_once_with(args)
+        table.id.__eq__.assert_called_once_with(self.build.ref.id)
 
     @mock.patch('piper.db.db_sqlalchemy.update')
     @mock.patch('piper.db.db_sqlalchemy.Build')
@@ -286,6 +295,69 @@ class TestSQLAlchemyDBGetAgent(SQLAlchemyDBBase):
             busy=False,
             registered=False,
         )
+
+
+class TestSQLAlchemyDBLockAgent(SQLAlchemyDBBase):
+    def setup_method(self, method):
+        super(TestSQLAlchemyDBLockAgent, self).setup_method(method)
+        self.build = mock.Mock()
+        self.db.set_agent_lock = mock.Mock()
+
+    def test_call(self):
+        self.db.lock_agent(self.build)
+        self.db.set_agent_lock.assert_called_once_with(self.build, True)
+
+
+class TestSQLAlchemyDBUnlockAgent(SQLAlchemyDBBase):
+    def setup_method(self, method):
+        super(TestSQLAlchemyDBUnlockAgent, self).setup_method(method)
+        self.build = mock.Mock()
+        self.db.set_agent_lock = mock.Mock()
+
+    def test_call(self):
+        self.db.unlock_agent(self.build)
+        self.db.set_agent_lock.assert_called_once_with(self.build, False)
+
+
+class TestSQLAlchemyDBSetAgentLock(SQLAlchemyDBBase):
+    def setup_method(self, method):
+        super(TestSQLAlchemyDBSetAgentLock, self).setup_method(method)
+        self.build = mock.Mock()
+
+    def assert_lock(self, session, table, locked):
+        table.id.__eq__ = mock.Mock()
+        self.db.set_agent_lock(self.build, locked)
+
+        filter = session.return_value.query.return_value.filter
+        agent = filter.return_value.scalar.return_value.agent
+
+        assert agent.busy is locked
+        session.return_value.add.assert_called_once_with(agent)
+
+    @mock.patch('piper.db.db_sqlalchemy.Build')
+    @mock.patch('piper.db.db_sqlalchemy.Session')
+    def test_query_chain(self, session, table):
+        table.id.__eq__ = mock.Mock()
+        self.db.set_agent_lock(self.build, True)
+
+        query = session.return_value.query
+        filter = query.return_value.filter
+        scalar = filter.return_value.scalar
+
+        query.assert_called_once_with(table)
+        filter.assert_called_once_with(table.id.__eq__.return_value)
+        scalar.assert_called_once_with()
+        table.id.__eq__.assert_called_once_with(self.build.ref.id)
+
+    @mock.patch('piper.db.db_sqlalchemy.Build')
+    @mock.patch('piper.db.db_sqlalchemy.Session')
+    def test_agent_updated_to_locked(self, session, table):
+        self.assert_lock(session, table, True)
+
+    @mock.patch('piper.db.db_sqlalchemy.Build')
+    @mock.patch('piper.db.db_sqlalchemy.Session')
+    def test_agent_updated_to_unlocked(self, session, table):
+        self.assert_lock(session, table, False)
 
 
 class TestInSessionInner(object):

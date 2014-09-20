@@ -84,6 +84,7 @@ class Build(LazyDatabaseMixin):
         """
 
         self.add_build()
+        self.lock_agent()
         self.set_version()
 
         self.configure_env()
@@ -100,7 +101,7 @@ class Build(LazyDatabaseMixin):
 
         """
 
-        self.id = self.db.add_build(self)
+        self.ref = self.db.add_build(self)
 
     def set_version(self):
         """
@@ -236,6 +237,7 @@ class Build(LazyDatabaseMixin):
 
     def teardown(self):
         self.teardown_env()
+        self.unlock_agent()
 
     def teardown_env(self):
         """
@@ -258,6 +260,14 @@ class Build(LazyDatabaseMixin):
             'status': self.status,
             'updated': utils.now()
         }
+
+    def lock_agent(self):
+        self.log.info('Locking agent')
+        self.db.lock_agent(self)
+
+    def unlock_agent(self):
+        self.log.info('Unlocking agent')
+        self.db.unlock_agent(self)
 
 
 class ExecCLI(object):
