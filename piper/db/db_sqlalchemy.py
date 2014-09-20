@@ -110,7 +110,7 @@ def in_session():
 
 class SQLAlchemyDB(DatabaseBase):
     tables = (Agent, Build, Project, VCSRoot, Property, PropertyNamespace)
-    sqlite = 'sqlite:///'
+    sqlite = 'sqlite://'
 
     def setup(self, config):
         self.config = config
@@ -121,7 +121,7 @@ class SQLAlchemyDB(DatabaseBase):
         host = config.db.host
         assert host is not None, 'No database configured'
 
-        if host.startswith(self.sqlite):
+        if host.startswith(self.sqlite) and host != self.sqlite:
             self.handle_sqlite(host)
 
         self.log.info('Creating tables for {0}'.format(host))
@@ -148,15 +148,17 @@ class SQLAlchemyDB(DatabaseBase):
 
         self.log.info('Database initialization complete.')
 
-    def get_or_create(self, session, model, **kwargs):
+    def get_or_create(self, session, model, expunge=False, **kwargs):
         # http://stackoverflow.com/questions/2546207/
         instance = session.query(model).filter_by(**kwargs).first()
-        if instance:
-            return instance
-        else:
+        if not instance:
             instance = model(**kwargs)
             session.add(instance)
-            return instance
+
+        if expunge:
+            session.expunge(instance)
+
+        return instance
 
     def add_build(self, build):
         with in_session() as session:
@@ -192,16 +194,17 @@ class SQLAlchemyDB(DatabaseBase):
                 session,
                 Project,
                 name=build.vcs.get_project_name(),
-                vcs=self.get_vcs(build),
+                vcs=self.get_vcs(build, expunge=True),
             )
 
             return project
 
-    def get_vcs(self, build):
+    def get_vcs(self, build, expunge=False):
         with in_session() as session:
             vcs = self.get_or_create(
                 session,
                 VCSRoot,
+                expunge=expunge,
                 root_url=build.vcs.root_url,
                 name=build.vcs.name,
             )

@@ -1,5 +1,11 @@
+import os
+
 from piper.db.db_sqlalchemy import SQLAlchemyDB
 from piper.db.db_sqlalchemy import in_session
+
+from piper.db.db_sqlalchemy import VCSRoot
+from piper.db.db_sqlalchemy import Agent
+from piper.db.db_sqlalchemy import Project
 
 import mock
 import pytest
@@ -215,6 +221,20 @@ class TestSQLAlchemyDBGetVcs(SQLAlchemyDBBase):
         self.db.get_or_create.assert_called_once_with(
             session.return_value,
             table,
+            expunge=False,
+            root_url=self.build.vcs.root_url,
+            name=self.build.vcs.name,
+        )
+
+    @mock.patch('piper.db.db_sqlalchemy.VCSRoot')
+    @mock.patch('piper.db.db_sqlalchemy.Session')
+    def test_get_or_create_arguments_with_expunge(self, session, table):
+        self.db.get_vcs(self.build, expunge=True)
+
+        self.db.get_or_create.assert_called_once_with(
+            session.return_value,
+            table,
+            expunge=True,
             root_url=self.build.vcs.root_url,
             name=self.build.vcs.name,
         )
@@ -276,3 +296,73 @@ class TestInSessionInner(object):
             pass
 
         session.return_value.close.assert_called_once_with()
+
+
+class TestSQLiteIntegration(SQLAlchemyDBBase):
+    """
+    These are tests that actually create objects in the database and retrieve
+    them to check the validity.
+
+    """
+
+    def setup_method(self, method):
+        super(TestSQLiteIntegration, self).setup_method(method)
+
+        self.config.db.host = 'sqlite:///test.db'
+        self.config.db.singleton = True
+        self.ns.verbose = False
+
+        self.db.init(self.ns, self.config)
+        self.db.setup(self.config)
+
+        self.build = mock.Mock()
+
+    def teardown_method(self, method):
+        os.remove('test.db')
+
+    def test_get_vcs(self):
+        self.build.vcs.name = 'oh sailor'
+        self.build.vcs.root_url = 'fiona://extraordinary-machine.net'
+
+        self.db.get_vcs(self.build)
+
+        with in_session() as session:
+            assert session.query(VCSRoot).count() == 1
+
+            vcs = session.query(VCSRoot).first()
+            assert vcs.name == self.build.vcs.name
+            assert vcs.root_url == self.build.vcs.root_url
+
+    @mock.patch('socket.gethostname')
+    def test_get_agent(self, gh):
+        hostname = 'shadow.cabinet'
+        gh.return_value = hostname
+        self.db.get_agent()
+
+        with in_session() as session:
+            assert session.query(Agent).count() == 1
+
+            agent = session.query(Agent).first()
+            assert agent.name == hostname
+            assert agent.fqdn == hostname
+            assert agent.active is True
+            assert agent.busy is False
+            assert agent.registered is False
+
+    def test_get_project(self):
+        self.build.vcs.name = 'apathy divine'
+        self.build.vcs.root_url = 'tokenring://wutheringheights.dk'
+        self.build.vcs.get_project_name.return_value = 'mandatory/fun'
+
+        self.db.get_project(self.build)
+
+        with in_session() as session:
+            assert session.query(Project).count() == 1
+            assert session.query(VCSRoot).count() == 1
+
+            vcs = session.query(VCSRoot).first()
+            assert vcs.name == self.build.vcs.name
+            assert vcs.root_url == self.build.vcs.root_url
+
+            project = session.query(Project).first()
+            assert project.name == 'mandatory/fun'
