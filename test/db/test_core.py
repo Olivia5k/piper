@@ -14,23 +14,6 @@ class DbCLIBase(object):
         self.ns = mock.Mock()
 
 
-class DatabaseBaseTestBase(object):  # <3
-    def setup_method(self, method):
-        self.db = DatabaseBase()
-        self.ns = mock.Mock()
-        self.config = mock.Mock()
-
-    def missing(self, name, *args, **kwargs):
-        """
-        This is basically a skeleton for a sanity check that methods on the
-        interface just cause NIE.
-
-        """
-
-        with pytest.raises(NotImplementedError):
-            getattr(self.db, name)(*args, **kwargs)
-
-
 class TestDbCLIRun(DbCLIBase):
     def test_plain_run(self):
         self.cli.db.init = mock.Mock()
@@ -40,7 +23,14 @@ class TestDbCLIRun(DbCLIBase):
         self.cli.db.init.assert_called_once_with(self.ns, self.config)
 
 
-class TestDatabaseBaseInterface(DatabaseBaseTestBase):
+class TestDatabaseBaseInterface(object):
+    def setup_method(self, method):
+        self.db = DatabaseBase()
+
+    def missing(self, name, *args, **kwargs):
+        with pytest.raises(NotImplementedError):
+            getattr(self.db, name)(*args, **kwargs)
+
     def test_everything_raises_not_implemented_error(self):
         self.mock = mock.Mock()
 
