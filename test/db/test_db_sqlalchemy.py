@@ -103,31 +103,52 @@ class TestSQLAlchemyDBGetOrCreate(SQLAlchemyDBBase):
         self.session.add.assert_called_once_with(self.model.return_value)
 
 
-class TestInSessionInner(object):
+class TestSQLAlchemyDBAddBuild(SQLAlchemyDBBase):
     def setup_method(self, method):
-        self.mock = mock.Mock()
-        self.sql = mock.Mock()  # self instance for the call
-        self.inner = in_session(self.mock)
-        self.args = ['nutbush']
-        self.kwargs = {'city': 'limits'}
+        super(TestSQLAlchemyDBAddBuild, self).setup_method(method)
+        self.build = mock.Mock()
+        self.build.default_db_kwargs.return_value = {'cave': 'canem'}
+
+    @mock.patch('piper.db.db_sqlalchemy.Build')
+    @mock.patch('piper.db.db_sqlalchemy.Session')
+    def test_id_is_returned(self, sess, table):
+        ret = self.db.add_build(self.build)
+
+        assert ret is table.return_value.id
+
+    @mock.patch('piper.db.db_sqlalchemy.Build')
+    @mock.patch('piper.db.db_sqlalchemy.Session')
+    def test_instance_added_to_session(self, sess, table):
+        self.db.add_build(self.build)
+
+        sess.add.assert_called_once_with(table.return_value)
+
+
+class TestInSessionInner(object):
+    @mock.patch('piper.db.db_sqlalchemy.Session')
+    def test_context_is_a_session(self, session):
+        with in_session() as val:
+            assert val is session.return_value
 
     @mock.patch('piper.db.db_sqlalchemy.Session')
-    def test_return_value(self, session):
-        ret = self.inner(*self.args, **self.kwargs)
-        assert ret is self.mock.return_value
+    def test_exception_rolls_back(self, session):
+        with pytest.raises(ValueError):
+            with in_session():
+                raise ValueError('zomg')
 
-    @mock.patch('piper.db.db_sqlalchemy.Session')
-    def test_session_calls(self, session):
-        self.inner(*self.args, **self.kwargs)
-        session.assert_called_once_with()
+        session.return_value.rollback.assert_called_once_with()
         session.return_value.close.assert_called_once_with()
 
     @mock.patch('piper.db.db_sqlalchemy.Session')
-    def test_args_and_kwargs(self, session):
-        self.inner(self.sql, *self.args, **self.kwargs)
-        self.mock.assert_called_once_with(
-            self.sql,
-            session.return_value,
-            *self.args,
-            **self.kwargs
-        )
+    def test_automatic_commit(self, session):
+        with in_session():
+            pass
+
+        session.return_value.commit.assert_called_once_with()
+
+    @mock.patch('piper.db.db_sqlalchemy.Session')
+    def test_automatic_close(self, session):
+        with in_session():
+            pass
+
+        session.return_value.close.assert_called_once_with()

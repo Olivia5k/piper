@@ -1,6 +1,7 @@
 import os
 import datetime
 import socket
+import contextlib
 
 from piper import utils
 
@@ -94,19 +95,17 @@ class PropertyNamespace(Base):
     created = Column(DateTime, default=datetime.datetime.now)
 
 
-def in_session(func):
-    """
-    Decorator that gives a session scope to the function
-
-    """
-
-    def inner(self, *args, **kwargs):
-        session = Session()
-        ret = func(self, session, *args, **kwargs)
+@contextlib.contextmanager
+def in_session():
+    session = Session()
+    try:
+        yield session
+        session.commit()
+    except:
+        session.rollback()
+        raise
+    finally:
         session.close()
-        return ret
-
-    return inner
 
 
 class SQLAlchemyDB(DatabaseBase):
@@ -159,30 +158,27 @@ class SQLAlchemyDB(DatabaseBase):
             session.add(instance)
             return instance
 
-    @in_session
-    def add_build(self, session, build):
-        instance = Build(
-            agent=self.get_agent(),
-            project=self.get_project(build),
-            user=os.getenv('USER'),
-            **build.default_db_kwargs()
-        )
-        session.add(instance)
+    def add_build(self, build):
+        with in_session() as session:
+            instance = Build(
+                agent=self.get_agent(),
+                project=self.get_project(build),
+                user=os.getenv('USER'),
+                **build.default_db_kwargs()
+            )
+            session.add(instance)
 
-        session.commit()
-        return instance.id
+            return instance.id
 
-    @in_session
-    def update_build(self, session, build, **extra):
-        values = build.default_db_kwargs()
-        values.update(extra)
+    def update_build(self, build, **extra):
+        with in_session() as session:
+            values = build.default_db_kwargs()
+            values.update(extra)
 
-        stmt = update(Build).where(Build.id == build.id).values(values)
-        session.execute(stmt)
-        session.commit()
+            stmt = update(Build).where(Build.id == build.id).values(values)
+            session.execute(stmt)
 
-    @in_session
-    def get_project(self, session, build):
+    def get_project(self, build):
         """
         Lazily get the project.
 
@@ -191,25 +187,24 @@ class SQLAlchemyDB(DatabaseBase):
 
         """
 
-        vcs = self.get_or_create(
-            session,
-            VCSRoot,
-            root_url=build.vcs.root_url,
-            name=build.vcs.name,
-        )
+        with in_session() as session:
+            vcs = self.get_or_create(
+                session,
+                VCSRoot,
+                root_url=build.vcs.root_url,
+                name=build.vcs.name,
+            )
 
-        project = self.get_or_create(
-            session,
-            Project,
-            name=build.vcs.get_project_name(),
-            vcs=vcs,
-        )
+            project = self.get_or_create(
+                session,
+                Project,
+                name=build.vcs.get_project_name(),
+                vcs=vcs,
+            )
 
-        session.commit()
-        return project
+            return project
 
-    @in_session
-    def get_agent(self, session):
+    def get_agent(self):
         """
         Lazily get agent.
 
@@ -218,16 +213,16 @@ class SQLAlchemyDB(DatabaseBase):
 
         """
 
-        name = socket.gethostname()
-        agent = self.get_or_create(
-            session,
-            Agent,
-            name=name,
-            fqdn=name,  # XXX
-            active=True,
-            busy=False,
-            registered=False,
-        )
+        with in_session() as session:
+            name = socket.gethostname()
+            agent = self.get_or_create(
+                session,
+                Agent,
+                name=name,
+                fqdn=name,  # XXX
+                active=True,
+                busy=False,
+                registered=False,
+            )
 
-        session.commit()
-        return agent
+            return agent
