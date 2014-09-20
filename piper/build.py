@@ -37,7 +37,7 @@ class Build(LazyDatabaseMixin):
 
         self.log = logbook.Logger(self.__class__.__name__)
 
-        if self.ns.dry_run:
+        if self.ns.dry_run is True:  # pragma: nocover
             self.log.warn('Switching to mock database for dry run')
             self.db = mock.Mock()
 
