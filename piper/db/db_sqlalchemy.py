@@ -203,14 +203,6 @@ class SQLAlchemyDB(DatabaseBase):
             session.execute(stmt)
 
     def get_project(self, build):
-        """
-        Lazily get the project.
-
-        Create the project if it does not exist. If the VCS root for the
-        project does not exist, create that too.
-
-        """
-
         with in_session() as session:
             project = self.get_or_create(
                 session,

@@ -40,19 +40,19 @@ class TestDbCLIRun(DbCLIBase):
         self.cli.db.init.assert_called_once_with(self.ns, self.config)
 
 
-class TestDatabaseBaseInit(DatabaseBaseTestBase):
-    def test_raises_not_implemented_error(self):
-        self.missing('init', self.ns)
+class TestDatabaseBaseInterface(DatabaseBaseTestBase):
+    def test_everything_raises_not_implemented_error(self):
+        self.mock = mock.Mock()
 
-
-class TestDatabaseBaseAddBuild(DatabaseBaseTestBase):
-    def test_raises_not_implemented_error(self):
-        self.missing('add_build', mock.Mock())
-
-
-class TestDatabaseBaseUpdateBuild(DatabaseBaseTestBase):
-    def test_raises_not_implemented_error(self):
-        self.missing('update_build', mock.Mock())
+        self.missing('setup', self.mock)
+        self.missing('init', self.mock, self.mock)
+        self.missing('add_build', self.mock)
+        self.missing('update_build', self.mock)
+        self.missing('get_project', self.mock)
+        self.missing('get_vcs', self.mock)
+        self.missing('get_agent')
+        self.missing('lock_agent', self.mock)
+        self.missing('unlock_agent', self.mock)
 
 
 class TestLazyDatabaseMixinDb(object):
