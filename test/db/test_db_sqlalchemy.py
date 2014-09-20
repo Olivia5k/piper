@@ -1,11 +1,13 @@
 import os
+import datetime
 
 from piper.db.db_sqlalchemy import SQLAlchemyDB
 from piper.db.db_sqlalchemy import in_session
 
-from piper.db.db_sqlalchemy import VCSRoot
 from piper.db.db_sqlalchemy import Agent
+from piper.db.db_sqlalchemy import Build
 from piper.db.db_sqlalchemy import Project
+from piper.db.db_sqlalchemy import VCSRoot
 
 import mock
 import pytest
@@ -320,6 +322,38 @@ class TestSQLiteIntegration(SQLAlchemyDBBase):
     def teardown_method(self, method):
         os.remove('test.db')
 
+    def assert_vcs(self, session):
+        assert session.query(VCSRoot).count() == 1
+
+        vcs = session.query(VCSRoot).first()
+        assert vcs.name == self.build.vcs.name
+        assert vcs.root_url == self.build.vcs.root_url
+
+    def assert_agent(self, session):
+        assert session.query(Agent).count() == 1
+
+        agent = session.query(Agent).first()
+        assert agent.name == self.hostname
+        assert agent.fqdn == self.hostname
+        assert agent.active is True
+        assert agent.busy is False
+        assert agent.registered is False
+
+    def assert_project(self, session):
+        assert session.query(Project).count() == 1
+
+        project = session.query(Project).first()
+        assert project.name == self.build.vcs.get_project_name.return_value
+
+    def assert_build(self, session):
+        assert session.query(Build).count() == 1
+
+        build = session.query(Build).first()
+        assert build.success == self.success
+        assert build.crashed == self.crashed
+        assert build.status == self.status
+        assert build.updated == self.now
+
     def test_get_vcs(self):
         self.build.vcs.name = 'oh sailor'
         self.build.vcs.root_url = 'fiona://extraordinary-machine.net'
@@ -327,27 +361,16 @@ class TestSQLiteIntegration(SQLAlchemyDBBase):
         self.db.get_vcs(self.build)
 
         with in_session() as session:
-            assert session.query(VCSRoot).count() == 1
-
-            vcs = session.query(VCSRoot).first()
-            assert vcs.name == self.build.vcs.name
-            assert vcs.root_url == self.build.vcs.root_url
+            self.assert_vcs(session)
 
     @mock.patch('socket.gethostname')
     def test_get_agent(self, gh):
-        hostname = 'shadow.cabinet'
-        gh.return_value = hostname
+        self.hostname = 'shadow.cabinet'
+        gh.return_value = self.hostname
         self.db.get_agent()
 
         with in_session() as session:
-            assert session.query(Agent).count() == 1
-
-            agent = session.query(Agent).first()
-            assert agent.name == hostname
-            assert agent.fqdn == hostname
-            assert agent.active is True
-            assert agent.busy is False
-            assert agent.registered is False
+            self.assert_agent(session)
 
     def test_get_project(self):
         self.build.vcs.name = 'apathy divine'
@@ -357,12 +380,36 @@ class TestSQLiteIntegration(SQLAlchemyDBBase):
         self.db.get_project(self.build)
 
         with in_session() as session:
-            assert session.query(Project).count() == 1
-            assert session.query(VCSRoot).count() == 1
+            self.assert_vcs(session)
+            self.assert_project(session)
 
-            vcs = session.query(VCSRoot).first()
-            assert vcs.name == self.build.vcs.name
-            assert vcs.root_url == self.build.vcs.root_url
+    @mock.patch('os.getenv')
+    @mock.patch('socket.gethostname')
+    def test_add_build(self, gh, getenv):
+        self.success, self.crashed, self.status = True, False, 'hehe'
+        self.now = datetime.datetime.now()
 
-            project = session.query(Project).first()
-            assert project.name == 'mandatory/fun'
+        self.username = 'fatmike'
+        self.hostname = 'anarchy.camp'
+        getenv.return_value = self.username
+        gh.return_value = self.hostname
+
+        self.build.default_db_kwargs.return_value = {
+            'success': self.success,
+            'crashed': self.crashed,
+            'status': self.status,
+            'updated': self.now,
+        }
+
+        self.build.vcs.name = 'apathy divine'
+        self.build.vcs.root_url = 'tokenring://wutheringheights.dk'
+        self.build.vcs.get_project_name.return_value = 'mandatory/fun'
+
+        self.db.add_build(self.build)
+
+        with in_session() as session:
+            # Yay integration
+            self.assert_build(session)
+            self.assert_agent(session)
+            self.assert_vcs(session)
+            self.assert_project(session)
