@@ -108,6 +108,8 @@ class TestSQLAlchemyDBAddBuild(SQLAlchemyDBBase):
         super(TestSQLAlchemyDBAddBuild, self).setup_method(method)
         self.build = mock.Mock()
         self.build.default_db_kwargs.return_value = {'cave': 'canem'}
+        self.db.get_agent = mock.Mock()
+        self.db.get_project = mock.Mock()
 
     @mock.patch('piper.db.db_sqlalchemy.Build')
     @mock.patch('piper.db.db_sqlalchemy.Session')
@@ -121,7 +123,52 @@ class TestSQLAlchemyDBAddBuild(SQLAlchemyDBBase):
     def test_instance_added_to_session(self, sess, table):
         self.db.add_build(self.build)
 
-        sess.add.assert_called_once_with(table.return_value)
+        sess.return_value.add.assert_called_once_with(table.return_value)
+
+
+class TestSQLAlchemyDBUpdateBuild(SQLAlchemyDBBase):
+    def setup_method(self, method):
+        super(TestSQLAlchemyDBUpdateBuild, self).setup_method(method)
+        self.build = mock.MagicMock()
+        self.extra = {'island in the sun': 'only way for things to come'}
+
+    @mock.patch('piper.db.db_sqlalchemy.update')
+    @mock.patch('piper.db.db_sqlalchemy.Build')
+    @mock.patch('piper.db.db_sqlalchemy.Session')
+    def test_values(self, session, table, update):
+        self.db.update_build(self.build, **self.extra)
+
+        self.build.default_db_kwargs.assert_called_once_with()
+        values = self.build.default_db_kwargs.return_value
+        values.update.assert_called_once_with(self.extra)
+
+    @mock.patch('piper.db.db_sqlalchemy.update')
+    @mock.patch('piper.db.db_sqlalchemy.Build')
+    @mock.patch('piper.db.db_sqlalchemy.Session')
+    def test_database_chain(self, session, table, update):
+        # Fake the comparison thingy that SQLAlchemy uses to make constructor
+        # objects. Default for the mock seems to be actually not mocked, even
+        # when it's magic.
+        table.id.__eq__ = mock.Mock()
+
+        self.db.update_build(self.build, **self.extra)
+
+        args = self.build.default_db_kwargs.return_value
+        where = update.return_value.where
+        values = where.return_value.values
+
+        update.assert_called_once_with(table)
+        where.assert_called_once_with(table.id.__eq__.return_value)
+        values.assert_called_once_with(args)
+
+    @mock.patch('piper.db.db_sqlalchemy.update')
+    @mock.patch('piper.db.db_sqlalchemy.Build')
+    @mock.patch('piper.db.db_sqlalchemy.Session')
+    def test_execution(self, session, table, update):
+        self.db.update_build(self.build, **self.extra)
+
+        stmt = update.return_value.where.return_value.values.return_value
+        session.return_value.execute.assert_called_once_with(stmt)
 
 
 class TestInSessionInner(object):
