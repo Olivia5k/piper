@@ -220,6 +220,34 @@ class TestSQLAlchemyDBGetVcs(SQLAlchemyDBBase):
         )
 
 
+class TestSQLAlchemyDBGetAgent(SQLAlchemyDBBase):
+    def setup_method(self, method):
+        super(TestSQLAlchemyDBGetAgent, self).setup_method(method)
+        self.db.get_or_create = mock.Mock()
+
+    @mock.patch('socket.gethostname')
+    @mock.patch('piper.db.db_sqlalchemy.Session')
+    def test_return_value_is_agent(self, session, gh):
+        ret = self.db.get_agent()
+        assert ret is self.db.get_or_create.return_value
+
+    @mock.patch('socket.gethostname')
+    @mock.patch('piper.db.db_sqlalchemy.Agent')
+    @mock.patch('piper.db.db_sqlalchemy.Session')
+    def test_get_or_create_arguments(self, session, table, gh):
+        self.db.get_agent()
+
+        self.db.get_or_create.assert_called_once_with(
+            session.return_value,
+            table,
+            name=gh.return_value,
+            fqdn=gh.return_value,
+            active=True,
+            busy=False,
+            registered=False,
+        )
+
+
 class TestInSessionInner(object):
     @mock.patch('piper.db.db_sqlalchemy.Session')
     def test_context_is_a_session(self, session):
