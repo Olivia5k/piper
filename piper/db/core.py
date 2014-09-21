@@ -90,6 +90,14 @@ class DatabaseBase(object):
 
         raise NotImplementedError()
 
+    def get_builds(self):
+        """
+        Get all builds!
+
+        """
+
+        raise NotImplementedError()
+
     def get_project(self, build):
         """
         Lazily get the project.
