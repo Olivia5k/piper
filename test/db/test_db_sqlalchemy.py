@@ -319,8 +319,7 @@ class TestSQLAlchemyDBSetAgentLock(SQLAlchemyDBBase):
         table.id.__eq__ = mock.Mock()
         self.db.set_agent_lock(self.build, locked)
 
-        filter = session.return_value.query.return_value.filter
-        agent = filter.return_value.scalar.return_value.agent
+        agent = session.return_value.query.return_value.get.return_value.agent
 
         assert agent.busy is locked
         session.return_value.add.assert_called_once_with(agent)
@@ -328,17 +327,13 @@ class TestSQLAlchemyDBSetAgentLock(SQLAlchemyDBBase):
     @mock.patch('piper.db.db_sqlalchemy.Build')
     @mock.patch('piper.db.db_sqlalchemy.Session')
     def test_query_chain(self, session, table):
-        table.id.__eq__ = mock.Mock()
         self.db.set_agent_lock(self.build, True)
 
         query = session.return_value.query
-        filter = query.return_value.filter
-        scalar = filter.return_value.scalar
+        get = query.return_value.get
 
         query.assert_called_once_with(table)
-        filter.assert_called_once_with(table.id.__eq__.return_value)
-        scalar.assert_called_once_with()
-        table.id.__eq__.assert_called_once_with(self.build.ref.id)
+        get.assert_called_once_with(self.build.ref.id)
 
     @mock.patch('piper.db.db_sqlalchemy.Build')
     @mock.patch('piper.db.db_sqlalchemy.Session')

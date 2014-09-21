@@ -264,8 +264,7 @@ class SQLAlchemyDB(DatabaseBase):
 
     def set_agent_lock(self, build, locked):
         with in_session() as session:
-            obj = session.query(Build).filter(Build.id == build.ref.id)
-            agent = obj.scalar().agent
+            agent = session.query(Build).get(build.ref.id).agent
             agent.busy = locked
 
             session.add(agent)
