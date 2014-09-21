@@ -59,13 +59,11 @@ setup(
     },
     cmdclass={'test': PyTest},
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 3 - Alpha',
         'Environment :: Console',
         'Operating System :: Unix',
         'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 2.6',
         'Topic :: Software Development :: Build Tools',
     ],
 )
