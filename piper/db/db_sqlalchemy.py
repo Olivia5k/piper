@@ -2,6 +2,7 @@ import os
 import datetime
 import socket
 import contextlib
+import json
 
 from piper import utils
 
@@ -13,6 +14,7 @@ from sqlalchemy import Integer
 from sqlalchemy import String
 from sqlalchemy import create_engine
 from sqlalchemy import update
+from sqlalchemy.ext.declarative import DeclarativeMeta
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import relationship
@@ -267,3 +269,35 @@ class SQLAlchemyDB(DatabaseBase):
             agent.busy = locked
 
             session.add(agent)
+
+    def sqla_json_encoder(self):
+        _visited_objs = []
+
+        # http://stackoverflow.com/questions/5022066/
+        class AlchemyEncoder(json.JSONEncoder):
+            def default(self, obj):
+                if isinstance(obj.__class__, DeclarativeMeta):
+                    if obj in _visited_objs:
+                        return None
+                    _visited_objs.append(obj)
+
+                    fields = {}
+                    for field in dir(obj):
+                        if not field.startswith('_') and field != 'metadata' \
+                                and not field.endswith('_id'):
+                            fields[field] = obj.__getattribute__(field)
+
+                    return fields
+
+                elif isinstance(obj, datetime.datetime):
+                    return str(obj.isoformat())
+
+                return json.JSONEncoder.default(self, obj)
+        return AlchemyEncoder
+
+    @property
+    def json_settings(self):
+        return {
+            'cls': self.sqla_json_encoder(),
+            'check_circular': False,
+        }
