@@ -112,7 +112,7 @@ def in_session():
 
 class SQLAlchemyDB(DatabaseBase):
     tables = (Agent, Build, Project, VCSRoot, Property, PropertyNamespace)
-    sqlite = 'sqlite://'
+    sqlite = 'sqlite:///'
 
     def setup(self, config):
         self.config = config
@@ -123,7 +123,7 @@ class SQLAlchemyDB(DatabaseBase):
         host = config.db.host
         assert host is not None, 'No database configured'
 
-        if host.startswith(self.sqlite) and host != self.sqlite:
+        if host.startswith(self.sqlite):
             self.handle_sqlite(host)
 
         self.log.info('Creating tables for {0}'.format(host))
@@ -131,9 +131,8 @@ class SQLAlchemyDB(DatabaseBase):
 
     def handle_sqlite(self, host):
         target = os.path.dirname(host.replace(self.sqlite, ''))
-
-        if not os.path.exists(target):
-            self.log.debug('Creating {0}'.format(target))
+        if target and not os.path.exists(target):
+            self.log.debug('Creating SQLite dir {0}'.format(target))
             utils.mkdir(target)
 
     def create_tables(self, host, echo=False):
