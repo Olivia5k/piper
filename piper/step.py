@@ -20,17 +20,6 @@ class StepBase(DynamicItem):
     def __repr__(self):  # pragma: nocover
         return "<{0} {1}>".format(self.__class__.__name__, self.key)
 
-    @property
-    def schema(self):
-        if not hasattr(self, '_schema'):
-            self._schema = super(StepBase, self).schema
-            self._schema['properties']['depends'] = {
-                'description': 'Step required to run before this one.',
-                'type': ['string', 'null', 'array'],
-            }
-
-        return self._schema
-
     def set_index(self, cur, tot):
         """
         Store the order of the step running and set up the logger accordingly.

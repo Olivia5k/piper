@@ -23,14 +23,6 @@ class TestStepBaseValidate(StepTestBase):
     def test_validation(self):
         self.step.validate()
 
-    def test_validation_with_single_depends(self):
-        self.step.config.data['depends'] = 'step'
-        self.step.validate()
-
-    def test_validation_with_multiple_depends(self):
-        self.step.config.data['depends'] = ['step', 'singleton']
-        self.step.validate()
-
 
 class TestStepBaseSetIndex(StepTestBase):
     def test_set_index(self):
@@ -40,11 +32,6 @@ class TestStepBaseSetIndex(StepTestBase):
         assert self.step.index[0] == index
         assert self.step.index[1] == total
         assert self.step.log is not None
-
-
-class TestStepBaseInit(StepTestBase):
-    def test_missing_optional_keys_are_added(self):
-        assert 'depends' in self.step.config.data
 
 
 class TestStepBaseGetCommand(StepTestBase):

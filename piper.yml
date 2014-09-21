@@ -13,12 +13,12 @@ steps:
   build:
     class: 'piper.step.CommandLineStep'
     command: 'python setup.py sdist'
-    depends: 'test'
 
 jobs:
   test:
   - 'test'
   build:
+  - 'test'
   - 'build'
 
 db:
