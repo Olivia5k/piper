@@ -1,5 +1,5 @@
 from piper.cli import cmd_piperd
-from piper.api import core as api
+from piper.api import api
 
 import mock
 

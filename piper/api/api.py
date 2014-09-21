@@ -27,7 +27,7 @@ class ApiCLI(LazyDatabaseMixin):
             for resource in mod.RESOURCES:
                 # Give the configuration to the resource.
                 # There might be a better way of doing this, but since we are
-                # not doing the instanciation of the resource objects it's
+                # not doing the instantiation of the resource objects it's
                 # difficult to actually pass arguments to it.
                 resource.config = self.config
                 api.add_resource(resource, '/api' + resource.endpoint)

@@ -1,4 +1,4 @@
-from piper.api import core as api
+from piper.api import api
 from piper.cli.cli import CLIBase
 
 
