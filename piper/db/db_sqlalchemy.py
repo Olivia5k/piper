@@ -218,7 +218,7 @@ class SQLAlchemyDB(DatabaseBase):
     def get_builds(self):
         with in_session() as session:
             builds = session.query(Build).all()
-            for build in builds:
+            for build in builds:  # pragma: nocover
                 build.agent.properties
                 build.project.vcs
 
