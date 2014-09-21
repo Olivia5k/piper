@@ -4,7 +4,7 @@ from piper.db.core import LazyDatabaseMixin
 
 
 class Build(Resource, LazyDatabaseMixin):
-    endpoint = '/build/<int:build_id>'
+    root = '/build/<int:build_id>'
 
     def get(self, build_id):
         """
@@ -31,7 +31,7 @@ class Build(Resource, LazyDatabaseMixin):
 
 
 class BuildList(Resource, LazyDatabaseMixin):
-    endpoint = '/build'
+    root = '/build'
 
     def get(self):  # pragma: nocover
         """
