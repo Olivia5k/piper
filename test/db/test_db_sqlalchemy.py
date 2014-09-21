@@ -351,6 +351,24 @@ class TestSQLAlchemyDBSetAgentLock(SQLAlchemyDBBase):
         self.assert_lock(session, table, False)
 
 
+class TestSQLAlchemyDBGetBuild(SQLAlchemyDBBase):
+    def setup_method(self, method):
+        super(TestSQLAlchemyDBGetBuild, self).setup_method(method)
+        self.build_id = 'phantom_moon'
+
+    @mock.patch('piper.db.db_sqlalchemy.Build')
+    @mock.patch('piper.db.db_sqlalchemy.Session')
+    def test_return_value(self, session, table):
+        ret = self.db.get_build(self.build_id)
+        assert ret is session.return_value.query.return_value.get.return_value
+
+    @mock.patch('piper.db.db_sqlalchemy.Build')
+    @mock.patch('piper.db.db_sqlalchemy.Session')
+    def test_result_is_expunged(self, session, table):
+        self.db.get_build(self.build_id)
+        session.return_value.expunge_all.assert_called_once_with()
+
+
 class TestInSessionInner(object):
     @mock.patch('piper.db.db_sqlalchemy.Session')
     def test_context_is_a_session(self, session):
@@ -397,7 +415,6 @@ class TestSQLiteIntegration(SQLAlchemyDBBase):
 
         self.db.init(self.ns, self.config)
         self.db.setup(self.config)
-
 
     def teardown_method(self, method):
         os.remove('test.db')
