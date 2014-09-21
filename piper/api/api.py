@@ -23,7 +23,7 @@ class ApiCLI(LazyDatabaseMixin):
     def get_modules(self):  # pragma: nocover
         return (build,)
 
-    def patch_json(self):  # pragma: nocover
+    def patch_json(self):
         # Patch the settings so that we get a proper JSON serializer for
         # whatever kind of objects we are going to return.
         rest_json.settings.update(self.db.json_settings)

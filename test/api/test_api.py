@@ -72,3 +72,14 @@ class TestApiCLIRun(object):
         ]
         self.cli.api.add_resource.assert_has_calls(api_calls)
         self.assert_config()
+
+
+class TestApiCLIPatchJson(object):
+    def setup_method(self, method):
+        self.cli = ApiCLI(mock.Mock())
+        self.cli.db = mock.Mock()
+
+    @mock.patch('piper.api.api.rest_json')
+    def test_patch(self, rj):
+        self.cli.patch_json()
+        rj.settings.update.assert_called_once_with(self.cli.db.json_settings)
