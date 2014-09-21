@@ -9,7 +9,7 @@ from piper.db.core import LazyDatabaseMixin
 class ApiCLI(LazyDatabaseMixin):
     def __init__(self, config):
         self.config = config
-        self.app = Flask(__name__)
+        self.app = Flask('piper')
         self.api = Api(self.app)
 
     def compose(self, parser):  # pragma: nocover
@@ -28,7 +28,9 @@ class ApiCLI(LazyDatabaseMixin):
         # whatever kind of objects we are going to return.
         rest_json.settings.update(self.db.json_settings)
 
-    def run(self, ns):
+    def setup(self):
+        self.patch_json()
+
         for mod in self.get_modules():
             for resource in mod.RESOURCES:
                 # Give the configuration to the resource.
@@ -38,5 +40,6 @@ class ApiCLI(LazyDatabaseMixin):
                 resource.config = self.config
                 self.api.add_resource(resource, '/api' + resource.root)
 
-        self.patch_json()
+    def run(self, ns):
+        self.setup()
         self.app.run(debug=True)

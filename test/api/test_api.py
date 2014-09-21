@@ -3,10 +3,9 @@ from piper.api.api import ApiCLI
 import mock
 
 
-class TestApiCLIRun(object):
+class TestApiCLISetup(object):
     def setup_method(self, method):
         self.config = mock.Mock()
-        self.ns = mock.Mock()
 
         self.cli = ApiCLI(self.config)
         self.cli.db = mock.Mock()
@@ -27,12 +26,11 @@ class TestApiCLIRun(object):
                 assert resource.config is self.config
 
     def test_calls(self):
-        self.cli.run(self.ns)
+        self.cli.setup()
 
         api_calls = [mock.call(self.modules[0].RESOURCES[0], '/api/venus')]
         self.cli.api.add_resource.assert_has_calls(api_calls)
         self.cli.patch_json.assert_called_once_with()
-        self.cli.app.run.assert_called_once_with(debug=True)
 
     def test_multiple_modules(self):
         self.modules = (mock.Mock(), mock.Mock(), mock.Mock())
@@ -43,7 +41,7 @@ class TestApiCLIRun(object):
 
         self.cli.get_modules.return_value = self.modules
 
-        self.cli.run(self.ns)
+        self.cli.setup()
 
         api_calls = [
             mock.call(self.modules[0].RESOURCES[0], '/api/greatest'),
@@ -62,7 +60,7 @@ class TestApiCLIRun(object):
                 mock.Mock(root='/lover'),
             )
 
-        self.cli.run(self.ns)
+        self.cli.setup()
 
         api_calls = [
             mock.call(self.modules[0].RESOURCES[0], '/api/i'),
@@ -83,3 +81,17 @@ class TestApiCLIPatchJson(object):
     def test_patch(self, rj):
         self.cli.patch_json()
         rj.settings.update.assert_called_once_with(self.cli.db.json_settings)
+
+
+class TestApiCLIRun(object):
+    def setup_method(self, method):
+        self.config = mock.Mock()
+        self.ns = mock.Mock()
+
+        self.cli = ApiCLI(self.config)
+        self.cli.setup = mock.Mock()
+        self.cli.app = mock.Mock()
+
+    def test_calls(self):
+        self.cli.run(self.ns)
+        self.cli.app.run.assert_called_once_with(debug=True)
