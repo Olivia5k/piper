@@ -202,6 +202,18 @@ class SQLAlchemyDB(DatabaseBase):
             stmt = update(Build).where(Build.id == build.ref.id).values(values)
             session.execute(stmt)
 
+    def get_build(self, build_id):
+        with in_session() as session:
+            build = session.query(Build).get(build_id)
+            if build is not None:
+                # Aight, so this is obviously bad and wrong.
+                # How do load in one query? Halp!
+                build.agent.properties
+                build.project.vcs
+
+                session.expunge_all()
+            return build
+
     def get_project(self, build):
         with in_session() as session:
             project = self.get_or_create(
