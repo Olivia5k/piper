@@ -54,6 +54,7 @@ setup(
     entry_points={
         'console_scripts': [
             'piper = piper.cli.cmd_piper:piper_entry',
+            'piperd = piper.cli.cmd_piperd:piperd_entry',
         ],
     },
     cmdclass={'test': PyTest},
