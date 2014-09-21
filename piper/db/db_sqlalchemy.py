@@ -270,7 +270,7 @@ class SQLAlchemyDB(DatabaseBase):
 
             session.add(agent)
 
-    def sqla_json_encoder(self):
+    def sqla_json_encoder(self):  # pragma: nocover
         _visited_objs = []
 
         # http://stackoverflow.com/questions/5022066/
@@ -296,7 +296,7 @@ class SQLAlchemyDB(DatabaseBase):
         return AlchemyEncoder
 
     @property
-    def json_settings(self):
+    def json_settings(self):  # pragma: nocover
         return {
             'cls': self.sqla_json_encoder(),
             'check_circular': False,
