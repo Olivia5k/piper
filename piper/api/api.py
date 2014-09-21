@@ -5,13 +5,12 @@ from flask.ext.restful.representations import json as rest_json
 from piper.api import build
 from piper.db.core import LazyDatabaseMixin
 
-app = Flask(__name__)
-api = Api(app)
-
 
 class ApiCLI(LazyDatabaseMixin):
     def __init__(self, config):
         self.config = config
+        self.app = Flask(__name__)
+        self.api = Api(self.app)
 
     def compose(self, parser):  # pragma: nocover
         api = parser.add_parser('api', help='Control the REST API')
@@ -24,11 +23,12 @@ class ApiCLI(LazyDatabaseMixin):
     def get_modules(self):  # pragma: nocover
         return (build,)
 
-    def run(self, ns):
+    def patch_json(self):  # pragma: nocover
         # Patch the settings so that we get a proper JSON serializer for
         # whatever kind of objects we are going to return.
         rest_json.settings.update(self.db.json_settings)
 
+    def run(self, ns):
         for mod in self.get_modules():
             for resource in mod.RESOURCES:
                 # Give the configuration to the resource.
@@ -36,6 +36,7 @@ class ApiCLI(LazyDatabaseMixin):
                 # not doing the instantiation of the resource objects it's
                 # difficult to actually pass arguments to it.
                 resource.config = self.config
-                api.add_resource(resource, '/api' + resource.root)
+                self.api.add_resource(resource, '/api' + resource.root)
 
-        app.run(debug=True)
+        self.patch_json()
+        self.app.run(debug=True)

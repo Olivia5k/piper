@@ -10,6 +10,9 @@ class TestApiCLIRun(object):
 
         self.cli = ApiCLI(self.config)
         self.cli.db = mock.Mock()
+        self.cli.app = mock.Mock()
+        self.cli.api = mock.Mock()
+        self.cli.patch_json = mock.Mock()
 
         self.modules = (mock.Mock(),)
         self.cli.get_modules = mock.Mock()
@@ -18,24 +21,20 @@ class TestApiCLIRun(object):
         for mod in self.modules:
             mod.RESOURCES = (mock.Mock(root='/venus'),)
 
-    @mock.patch('piper.api.api.rest_json')
-    @mock.patch('piper.api.api.app')
-    @mock.patch('piper.api.api.api')  # hehe
-    def test_calls(self, api, app, rest_json):
+    def assert_config(self):
+        for mod in self.modules:
+            for resource in mod.RESOURCES:
+                assert resource.config is self.config
+
+    def test_calls(self):
         self.cli.run(self.ns)
 
-        rest_json.settings.update.assert_called_once_with(
-            self.cli.db.json_settings
-        )
-
         api_calls = [mock.call(self.modules[0].RESOURCES[0], '/api/venus')]
-        api.add_resource.assert_has_calls(api_calls)
-        app.run.assert_called_once_with(debug=True)
+        self.cli.api.add_resource.assert_has_calls(api_calls)
+        self.cli.patch_json.assert_called_once_with()
+        self.cli.app.run.assert_called_once_with(debug=True)
 
-    @mock.patch('piper.api.api.rest_json')
-    @mock.patch('piper.api.api.app')
-    @mock.patch('piper.api.api.api')
-    def test_multiple_modules(self, api, app, rest_json):
+    def test_multiple_modules(self):
         self.modules = (mock.Mock(), mock.Mock(), mock.Mock())
 
         names = ('/greatest', '/songs', '/written')
@@ -51,12 +50,10 @@ class TestApiCLIRun(object):
             mock.call(self.modules[1].RESOURCES[0], '/api/songs'),
             mock.call(self.modules[2].RESOURCES[0], '/api/written'),
         ]
-        api.add_resource.assert_has_calls(api_calls)
+        self.cli.api.add_resource.assert_has_calls(api_calls)
+        self.assert_config()
 
-    @mock.patch('piper.api.api.rest_json')
-    @mock.patch('piper.api.api.app')
-    @mock.patch('piper.api.api.api')
-    def test_multiple_resources(self, api, app, rest_json):
+    def test_multiple_resources(self):
         for mod in self.modules:
             mod.RESOURCES = (
                 mock.Mock(root='/i'),
@@ -73,4 +70,5 @@ class TestApiCLIRun(object):
             mock.call(self.modules[0].RESOURCES[2], '/api/a'),
             mock.call(self.modules[0].RESOURCES[3], '/api/lover'),
         ]
-        api.add_resource.assert_has_calls(api_calls)
+        self.cli.api.add_resource.assert_has_calls(api_calls)
+        self.assert_config()
