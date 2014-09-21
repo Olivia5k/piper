@@ -80,6 +80,16 @@ class DatabaseBase(object):
 
         raise NotImplementedError()
 
+    def get_build(self, build_id):
+        """
+        Get a build and all its related fields.
+
+        Should return a Build object or None.
+
+        """
+
+        raise NotImplementedError()
+
     def get_project(self, build):
         """
         Lazily get the project.
