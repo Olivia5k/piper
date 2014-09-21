@@ -216,6 +216,16 @@ class SQLAlchemyDB(DatabaseBase):
                 session.expunge_all()
             return build
 
+    def get_builds(self):
+        with in_session() as session:
+            builds = session.query(Build).all()
+            for build in builds:
+                build.agent.properties
+                build.project.vcs
+
+            session.expunge_all()
+            return builds
+
     def get_project(self, build):
         with in_session() as session:
             project = self.get_or_create(
@@ -270,15 +280,13 @@ class SQLAlchemyDB(DatabaseBase):
             session.add(agent)
 
     def sqla_json_encoder(self):  # pragma: nocover
-        _visited_objs = []
-
-        # http://stackoverflow.com/questions/5022066/
         class AlchemyEncoder(json.JSONEncoder):
+            cache = utils.LimitedSizeDict(size_limit=1000)
+
             def default(self, obj):
                 if isinstance(obj.__class__, DeclarativeMeta):
-                    if obj in _visited_objs:
-                        return None
-                    _visited_objs.append(obj)
+                    if obj in self.cache:
+                        return self.cache[obj]
 
                     fields = {}
                     for field in dir(obj):
@@ -286,6 +294,7 @@ class SQLAlchemyDB(DatabaseBase):
                                 and not field.endswith('_id'):
                             fields[field] = obj.__getattribute__(field)
 
+                    self.cache[obj] = fields
                     return fields
 
                 elif isinstance(obj, datetime.datetime):
