@@ -23,7 +23,7 @@ class TestDbCLIRun(DbCLIBase):
         self.cli.db.init.assert_called_once_with(self.ns, self.config)
 
 
-class TestDatabaseBaseInterface(object):
+class TestDatabaseBase(object):
     def setup_method(self, method):
         self.db = DatabaseBase()
 
@@ -38,6 +38,7 @@ class TestDatabaseBaseInterface(object):
         self.missing('init', self.mock, self.mock)
         self.missing('add_build', self.mock)
         self.missing('update_build', self.mock)
+        self.missing('get_build', self.mock)
         self.missing('get_project', self.mock)
         self.missing('get_vcs', self.mock)
         self.missing('get_agent')
