@@ -18,6 +18,7 @@ class SQLAlchemyDBBase(object):
         self.db = SQLAlchemyDB()
         self.ns = mock.Mock()
         self.config = mock.Mock()
+        self.build = mock.Mock()
 
 
 class TestSQLAlchemyDBSetup(SQLAlchemyDBBase):
@@ -129,7 +130,6 @@ class TestSQLAlchemyDBGetOrCreate(SQLAlchemyDBBase):
 class TestSQLAlchemyDBAddBuild(SQLAlchemyDBBase):
     def setup_method(self, method):
         super(TestSQLAlchemyDBAddBuild, self).setup_method(method)
-        self.build = mock.Mock()
         self.build.default_db_kwargs.return_value = {'cave': 'canem'}
         self.db.get_agent = mock.Mock()
         self.db.get_project = mock.Mock()
@@ -160,7 +160,6 @@ class TestSQLAlchemyDBAddBuild(SQLAlchemyDBBase):
 class TestSQLAlchemyDBUpdateBuild(SQLAlchemyDBBase):
     def setup_method(self, method):
         super(TestSQLAlchemyDBUpdateBuild, self).setup_method(method)
-        self.build = mock.MagicMock()
         self.extra = {'island in the sun': 'only way for things to come'}
 
     @mock.patch('piper.db.db_sqlalchemy.update')
@@ -206,7 +205,6 @@ class TestSQLAlchemyDBUpdateBuild(SQLAlchemyDBBase):
 class TestSQLAlchemyDBGetProject(SQLAlchemyDBBase):
     def setup_method(self, method):
         super(TestSQLAlchemyDBGetProject, self).setup_method(method)
-        self.build = mock.Mock()
         self.db.get_vcs = mock.Mock()
         self.db.get_or_create = mock.Mock()
 
@@ -231,7 +229,6 @@ class TestSQLAlchemyDBGetProject(SQLAlchemyDBBase):
 class TestSQLAlchemyDBGetVcs(SQLAlchemyDBBase):
     def setup_method(self, method):
         super(TestSQLAlchemyDBGetVcs, self).setup_method(method)
-        self.build = mock.Mock()
         self.db.get_or_create = mock.Mock()
 
     @mock.patch('piper.db.db_sqlalchemy.Session')
@@ -300,7 +297,6 @@ class TestSQLAlchemyDBGetAgent(SQLAlchemyDBBase):
 class TestSQLAlchemyDBLockAgent(SQLAlchemyDBBase):
     def setup_method(self, method):
         super(TestSQLAlchemyDBLockAgent, self).setup_method(method)
-        self.build = mock.Mock()
         self.db.set_agent_lock = mock.Mock()
 
     def test_call(self):
@@ -311,7 +307,6 @@ class TestSQLAlchemyDBLockAgent(SQLAlchemyDBBase):
 class TestSQLAlchemyDBUnlockAgent(SQLAlchemyDBBase):
     def setup_method(self, method):
         super(TestSQLAlchemyDBUnlockAgent, self).setup_method(method)
-        self.build = mock.Mock()
         self.db.set_agent_lock = mock.Mock()
 
     def test_call(self):
@@ -320,10 +315,6 @@ class TestSQLAlchemyDBUnlockAgent(SQLAlchemyDBBase):
 
 
 class TestSQLAlchemyDBSetAgentLock(SQLAlchemyDBBase):
-    def setup_method(self, method):
-        super(TestSQLAlchemyDBSetAgentLock, self).setup_method(method)
-        self.build = mock.Mock()
-
     def assert_lock(self, session, table, locked):
         table.id.__eq__ = mock.Mock()
         self.db.set_agent_lock(self.build, locked)
@@ -407,7 +398,6 @@ class TestSQLiteIntegration(SQLAlchemyDBBase):
         self.db.init(self.ns, self.config)
         self.db.setup(self.config)
 
-        self.build = mock.Mock()
 
     def teardown_method(self, method):
         os.remove('test.db')
