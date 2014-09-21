@@ -53,8 +53,8 @@ setup(
     zip_safe=False,
     entry_points={
         'console_scripts': [
-            'piper = piper.cli.cmd_piper:piper_entry',
-            'piperd = piper.cli.cmd_piperd:piperd_entry',
+            'piper = piper.cli.cmd_piper:entry',
+            'piperd = piper.cli.cmd_piperd:entry',
         ],
     },
     cmdclass={'test': PyTest},
