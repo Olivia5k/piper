@@ -2,6 +2,7 @@ import os
 import errno
 import subprocess as sub
 import datetime
+from collections import OrderedDict
 
 
 class DotDict(object):
@@ -54,6 +55,30 @@ class DotDict(object):
 
     # So that we can still access as dicts
     __getitem__ = __getattr__
+
+
+class LimitedSizeDict(OrderedDict):  # pragma: nocover
+    """
+    A dict that pops items when it reaches a set size.
+    This can be used as a cache that will not expontentially grow forever.
+
+    http://stackoverflow.com/questions/2437617/
+
+    """
+
+    def __init__(self, *args, **kwds):
+        self.size_limit = kwds.pop("size_limit", None)
+        OrderedDict.__init__(self, *args, **kwds)
+        self._check_size_limit()
+
+    def __setitem__(self, key, value):
+        OrderedDict.__setitem__(self, key, value)
+        self._check_size_limit()
+
+    def _check_size_limit(self):
+        if self.size_limit is not None:
+            while len(self) > self.size_limit:
+                self.popitem(last=False)
 
 
 def dynamic_load(target):
