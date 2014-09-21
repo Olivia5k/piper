@@ -33,13 +33,14 @@ class Build(Resource, LazyDatabaseMixin):
 class BuildList(Resource, LazyDatabaseMixin):
     root = '/build'
 
-    def get(self):  # pragma: nocover
+    def get(self):
         """
         Get a list of builds
 
         """
 
-        raise NotImplementedError()
-
+        # Pagination is for cowards and people that don't fight with swords.
+        builds = self.db.get_builds()
+        return builds
 
 RESOURCES = (Build, BuildList)

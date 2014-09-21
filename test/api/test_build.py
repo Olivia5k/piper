@@ -1,6 +1,7 @@
 import mock
 
 from piper.api.build import Build
+from piper.api.build import BuildList
 
 
 class TestBuildGet(object):
@@ -21,3 +22,15 @@ class TestBuildGet(object):
         ret, code = self.build.get(1)
         assert ret == {}
         assert code == 404
+
+
+class TestBuildListGet(object):
+    def setup_method(self, method):
+        self.buildlist = BuildList()
+        self.buildlist.db = mock.Mock()
+
+    def test_call(self):
+        ret = self.buildlist.get()
+
+        assert ret is self.buildlist.db.get_builds.return_value
+        self.buildlist.db.get_builds.assert_called_once_with()
