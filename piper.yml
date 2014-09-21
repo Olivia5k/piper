@@ -10,16 +10,22 @@ steps:
   test:
     class: 'piper.step.CommandLineStep'
     command: 'tox'
+  lint:
+    class: 'piper.step.CommandLineStep'
+    command: 'flake8 -v piper/ test/'
   build:
     class: 'piper.step.CommandLineStep'
     command: 'python setup.py sdist'
 
 jobs:
   test:
-  - 'test'
+    - 'test'
+  lint:
+    - 'lint'
   build:
-  - 'test'
-  - 'build'
+    - 'lint'
+    - 'test'
+    - 'build'
 
 db:
   class: 'piper.db.SQLAlchemyDB'
