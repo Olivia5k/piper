@@ -19,7 +19,7 @@ class Build(Resource, LazyDatabaseMixin):
 
         return build
 
-    def delete(self, build_id):
+    def delete(self, build_id):  # pragma: nocover
         """
         Cancel a build
 
@@ -33,7 +33,7 @@ class Build(Resource, LazyDatabaseMixin):
 class BuildList(Resource, LazyDatabaseMixin):
     endpoint = '/build'
 
-    def get(self):
+    def get(self):  # pragma: nocover
         """
         Get a list of builds
 
