@@ -25,4 +25,13 @@
         "alternate": "piper/db/{}.py",
         "type": "test"
     },
+
+    "piper/api/*.py": {
+        "alternate": "test/api/test_{}.py",
+        "type": "source"
+    },
+    "test/api/test_*.py": {
+        "alternate": "piper/api/{}.py",
+        "type": "test"
+    },
 }
