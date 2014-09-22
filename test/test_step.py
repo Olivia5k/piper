@@ -8,20 +8,9 @@ import pytest
 class StepTestBase(object):
     def setup_method(self, method):
         self.step = StepBase(
-            mock.Mock(),
-            {'class': 'piper.step.Class'},
+            mock.Mock(**{'class': 'piper.step.Class'}),
             'key'
         )
-
-
-class TestStepBaseValidate(StepTestBase):
-    @mock.patch('jsonschema.validate')
-    def test_validate(self, jv):
-        self.step.validate()
-        jv.assert_called_once_with(self.step.config.data, self.step.schema)
-
-    def test_validation(self):
-        self.step.validate()
 
 
 class TestStepBaseSetIndex(StepTestBase):
@@ -44,7 +33,6 @@ class TestCommandLineStepGetCommand(object):
     def setup_method(self, method):
         self.command = '/usr/bin/empathy'
         self.step = CommandLineStep(
-            mock.Mock(),
             {'command': self.command},
             'key',
         )
@@ -52,20 +40,3 @@ class TestCommandLineStepGetCommand(object):
     def test_get_command(self):
         ret = self.step.get_command()
         assert ret == self.command
-
-
-class TestCommandLineStepValidate(object):
-    def setup_method(self, method):
-        config = {
-            'class': 'piper.step.CommandLineStep',
-            'command': 'command'
-        }
-        self.step = CommandLineStep(mock.Mock(), config, 'key')
-
-    @mock.patch('jsonschema.validate')
-    def test_validate_called(self, jv):
-        self.step.validate()
-        jv.assert_called_once_with(self.step.config.data, self.step.schema)
-
-    def test_validation(self):
-        self.step.validate()

@@ -60,7 +60,6 @@ class GitVersion(Version):
     def get_version(self):
         cmd = 'git describe'
 
-        if self.config.arguments:
-            cmd += ' ' + self.config.arguments
-
+        if self.config['arguments']:
+            cmd += ' ' + self.config['arguments']
         return oneshot(cmd)

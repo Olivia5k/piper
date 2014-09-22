@@ -9,8 +9,8 @@ class StepBase(DynamicItem):
 
     """
 
-    def __init__(self, ns, config, key):
-        super(StepBase, self).__init__(ns, config)
+    def __init__(self, config, key):
+        super(StepBase, self).__init__(config)
 
         self.index = ('x', 'y')
         self.key = key
@@ -64,4 +64,4 @@ class CommandLineStep(StepBase):
         return self._schema
 
     def get_command(self):
-        return self.config.command
+        return self.config['command']

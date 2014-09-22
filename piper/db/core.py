@@ -158,6 +158,6 @@ class DbCLI(LazyDatabaseMixin):
 
         return 'db', self.run
 
-    def run(self, ns):
-        self.db.init(ns, self.config)
+    def run(self):
+        self.db.init(self.config)
         return 0

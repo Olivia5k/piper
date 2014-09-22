@@ -116,18 +116,18 @@ class SQLAlchemyDB(DatabaseBase):
 
     def setup(self, config):
         self.config = config
-        self.engine = create_engine(config.db.host)
+        self.engine = create_engine(config.raw['db']['host'])
         Session.configure(bind=self.engine)
 
-    def init(self, ns, config):
-        host = config.db.host
+    def init(self, config):
+        host = config.raw['db']['host']
         assert host is not None, 'No database configured'
 
         if host.startswith(self.sqlite):
             self.handle_sqlite(host)
 
         self.log.info('Creating tables for {0}'.format(host))
-        self.create_tables(host, echo=ns.verbose)
+        self.create_tables(host, echo=config.verbose)
 
     def handle_sqlite(self, host):
         target = os.path.dirname(host.replace(self.sqlite, ''))

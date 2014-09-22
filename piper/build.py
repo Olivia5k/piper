@@ -18,8 +18,7 @@ class Build(LazyDatabaseMixin):
 
     """
 
-    def __init__(self, ns, config):
-        self.ns = ns
+    def __init__(self, config):
         self.config = config
 
         self.vcs = GitVCS('github', 'git@github.com')
@@ -36,7 +35,7 @@ class Build(LazyDatabaseMixin):
 
         self.log = logbook.Logger(self.__class__.__name__)
 
-        if self.ns.dry_run is True:  # pragma: nocover
+        if self.config.dry_run is True:  # pragma: nocover
             self.log.warn('Switching to mock database for dry run')
             self.db = mock.Mock()
 
@@ -49,7 +48,7 @@ class Build(LazyDatabaseMixin):
 
         """
 
-        self.log.info('Setting up {0}...'.format(self.ns.job))
+        self.log.info('Setting up {0}...'.format(self.config.job))
 
         self.setup()
         self.execute()
@@ -109,10 +108,10 @@ class Build(LazyDatabaseMixin):
         """
 
         self.log.debug('Determining version...')
-        ver_config = self.config.version
+        ver_config = self.config.raw['version']
         cls = self.config.classes[ver_config['class']]
 
-        self.version = cls(self.ns, ver_config)
+        self.version = cls(ver_config)
         self.version.validate()
         self.log.info(str(self.version))
 
@@ -123,10 +122,10 @@ class Build(LazyDatabaseMixin):
         """
 
         self.log.debug('Loading environment...')
-        env_config = self.config.envs[self.ns.env]
+        env_config = self.config.raw['envs'][self.config.env]
         cls = self.config.classes[env_config['class']]
 
-        self.env = cls(self.ns, env_config)
+        self.env = cls(env_config)
         self.log.debug('Validating env config...')
         self.env.validate()
         self.env.log.debug('Environment configured.')
@@ -137,10 +136,10 @@ class Build(LazyDatabaseMixin):
 
         """
 
-        for step_key, step_config in self.config.steps.items():
+        for step_key, step_config in self.config.raw['steps'].items():
             cls = self.config.classes[step_config['class']]
 
-            step = cls(self.ns, step_config, step_key)
+            step = cls(step_config, step_key)
             step.log.debug('Validating config...')
             step.validate()
             step.log.debug('Step configured.')
@@ -152,7 +151,7 @@ class Build(LazyDatabaseMixin):
 
         """
 
-        for step_key in self.config.jobs[self.ns.job]:
+        for step_key in self.config.raw['jobs'][self.config.job]:
             step = self.steps[step_key]
             self.order.append(step)
 
@@ -178,7 +177,7 @@ class Build(LazyDatabaseMixin):
         """
 
         total = len(self.order)
-        self.log.info('Running {0}...'.format(self.ns.job))
+        self.log.info('Running {0}...'.format(self.config.job))
 
         for x, step in enumerate(self.order, start=1):
             step.set_index(x, total)
@@ -194,7 +193,7 @@ class Build(LazyDatabaseMixin):
                 step.log.info('Step complete.')
             else:
                 # If the success is not positive, bail and stop running.
-                step.log.error('Step "{0}" failed.'.format(self.ns.job))
+                step.log.error('Step "{0}" failed.'.format(self.config.job))
                 self.success = False
                 break
 
@@ -275,7 +274,7 @@ class ExecCLI(object):
 
         return 'exec', self.run
 
-    def run(self, ns):
-        success = Build(ns, self.config).run()
+    def run(self):
+        success = Build(self.config).run()
 
         return 0 if success else 1

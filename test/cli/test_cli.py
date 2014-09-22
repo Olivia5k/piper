@@ -13,6 +13,7 @@ class TestCLIBaseEntry(object):
         self.cli.get_handlers.return_value = mock.MagicMock(), mock.MagicMock()
 
         self.cli.load_config = mock.Mock()
+        self.cli.config = mock.Mock()
 
         self.parser = mock.MagicMock()
         self.runners = mock.MagicMock()
@@ -27,13 +28,14 @@ class TestCLIBaseEntry(object):
         assert ret == self.runners[self.ns.command].return_value
         self.cli.load_config.assert_called_once_with()
         self.cli.build_parser.assert_called_once_with()
-        self.runners[self.ns.command].assert_called_once_with(self.ns)
+        cmd = self.runners[self.cli.config.command]
+        cmd.assert_called_once_with()
 
         for handler in self.cli.get_handlers.return_value:
             handler.applicationbound.assert_called_once_with()
 
     def test_verbose_argument_sets_debug_log_level(self):
-        self.ns.verbose = True
+        self.cli.config.verbose = True
 
         self.cli.entry()
 
@@ -41,7 +43,7 @@ class TestCLIBaseEntry(object):
             assert logger.level == logbook.DEBUG
 
     def test_no_command_runs_help(self):
-        self.ns.command = False
+        self.cli.config.command = False
 
         ret = self.cli.entry()
 

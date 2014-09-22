@@ -11,16 +11,16 @@ class DbCLIBase(object):
     def setup_method(self, method):
         self.config = mock.Mock()
         self.cli = DbCLI(self.config)
-        self.ns = mock.Mock()
+        self.cli.db = mock.Mock()
 
 
 class TestDbCLIRun(DbCLIBase):
     def test_plain_run(self):
         self.cli.db.init = mock.Mock()
-        ret = self.cli.run(self.ns)
+        ret = self.cli.run()
 
         assert ret == 0
-        self.cli.db.init.assert_called_once_with(self.ns, self.config)
+        self.cli.db.init.assert_called_once_with(self.config)
 
 
 class TestDatabaseBase(object):

@@ -86,12 +86,11 @@ class TestApiCLIPatchJson(object):
 class TestApiCLIRun(object):
     def setup_method(self, method):
         self.config = mock.Mock()
-        self.ns = mock.Mock()
 
         self.cli = ApiCLI(self.config)
         self.cli.setup = mock.Mock()
         self.cli.app = mock.Mock()
 
     def test_calls(self):
-        self.cli.run(self.ns)
+        self.cli.run(self.config)
         self.cli.app.run.assert_called_once_with(debug=True)

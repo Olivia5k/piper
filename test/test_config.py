@@ -51,16 +51,16 @@ class TestBuildConfigLoadConfig(BuildConfigTestBase):
             self.config.load_config()
 
         sl.assert_called_once_with(fake.return_value.read.return_value)
-        assert self.config.raw_config == sl.return_value
+        assert self.config.raw == sl.return_value
 
 
 class TestBuildConfigValidateConfig(BuildConfigTestBase):
     def setup_method(self, method):
         super(TestBuildConfigValidateConfig, self).setup_method(method)
-        self.config.raw_config = self.base_config
+        self.config.raw = self.base_config
 
     def check_missing_key(self, key):
-        del self.config.raw_config[key]
+        del self.config.raw[key]
         with pytest.raises(jsonschema.exceptions.ValidationError):
             self.config.validate_config()
 
@@ -84,7 +84,7 @@ class TestBuildConfigValidateConfig(BuildConfigTestBase):
 class TestBuildConfigLoadClasses(BuildConfigTestBase):
     def setup_method(self, method):
         super(TestBuildConfigLoadClasses, self).setup_method(method)
-        self.config.data = self.base_config
+        self.config.raw = self.base_config
 
         self.version = 'piper.version.GitVersion'
         self.step = 'piper.step.CommandLineStep'
@@ -125,7 +125,7 @@ class TestBuildConfigLoad(BuildConfigTestBase):
 class TestBuildConfigGetDatabase(BuildConfigTestBase):
     def setup_method(self, method):
         super(TestBuildConfigGetDatabase, self).setup_method(method)
-        self.config.data = self.base_config
+        self.config.raw = self.base_config
         self.db = 'piper.db.SQLAlchemyDB'
         self.mock = mock.Mock()
         self.config.classes[self.db] = self.mock
@@ -133,3 +133,22 @@ class TestBuildConfigGetDatabase(BuildConfigTestBase):
     def test_plain_run(self):
         ret = self.config.get_database()
         assert ret is self.mock.return_value
+
+
+class TestBuildConfigMergeNamespace(BuildConfigTestBase):
+    def setup_method(self, method):
+        super(TestBuildConfigMergeNamespace, self).setup_method(method)
+        self.correct = 'happy for the rest of your life'
+
+        # Can't use mocks because they have, like, a million properties.
+        class FakeNS(object):
+            key = self.correct
+            _internal = 'never make a pretty woman your wife'
+
+        self.ns = FakeNS()
+
+    def test_filtering(self):
+        self.config.merge_namespace(self.ns)
+
+        assert self.config.key == self.correct
+        assert not hasattr(self.config, '_internal')

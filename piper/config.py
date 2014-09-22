@@ -4,11 +4,10 @@ import yaml
 import logbook
 import jsonschema
 
-from piper.utils import DotDict
 from piper.utils import dynamic_load
 
 
-class BuildConfig(DotDict):
+class BuildConfig(object):
     schema = {
         "$schema": "http://json-schema.org/draft-04/schema",
         'type': 'object',
@@ -64,7 +63,7 @@ class BuildConfig(DotDict):
     }
 
     def __init__(self):
-        self.raw_config = None
+        self.raw = None
 
         self.data = {}
         self.classes = {}
@@ -92,32 +91,31 @@ class BuildConfig(DotDict):
             file_data = config.read()
 
             try:
-                self.raw_config = yaml.safe_load(file_data)
+                self.raw = yaml.safe_load(file_data)
 
             except yaml.parser.ParserError as exc:
                 self.log.error(exc)
                 self.log.error('Invalid YAML in piper.yml. Aborting.')
                 return sys.exit(126)
 
-        self.data = self.raw_config
         self.log.debug('Configuration file loaded.')
 
     def validate_config(self):
         self.log.debug('Validating root config...')
-        jsonschema.validate(self.raw_config, self.schema)
+        jsonschema.validate(self.raw, self.schema)
 
     def load_classes(self):
         self.log.debug("Loading classes...")
 
         targets = set()
 
-        targets.add(self.version['class'])
-        targets.add(self.db['class'])
+        targets.add(self.raw['version']['class'])
+        targets.add(self.raw['db']['class'])
 
-        for env in self.envs.values():
+        for env in self.raw['envs'].values():
             targets.add(env['class'])
 
-        for step in self.steps.values():
+        for step in self.raw['steps'].values():
             targets.add(step['class'])
 
         for cls in targets:
@@ -126,5 +124,19 @@ class BuildConfig(DotDict):
 
         self.log.debug("Class loading done.")
 
+    def merge_namespace(self, ns):
+        """
+        Take an argparse namespace and merge whatever it had directly in to the
+        configuration object.
+
+        Before this, we used to shuffle around both, to mostly the same use.
+
+        """
+
+        self.log.debug('Merging argparse namespace')
+        for key in filter(lambda x: not x.startswith('_'), dir(ns)):
+            attr = getattr(ns, key)
+            setattr(self, key, attr)
+
     def get_database(self):
-        return self.classes[self.db['class']]()
+        return self.classes[self.raw['db']['class']]()

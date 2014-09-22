@@ -2,13 +2,12 @@ import mock
 
 from piper.build import Build
 from piper.build import ExecCLI
-from piper.utils import DotDict
 from test.utils import BASE_CONFIG
 
 
 class BuildTestBase(object):
     def setup_method(self, method):
-        self.build = Build(mock.Mock(), mock.MagicMock())
+        self.build = Build(mock.MagicMock())
         self.base_config = BASE_CONFIG
 
 
@@ -67,47 +66,45 @@ class TestBuildSetVersion(object):
         self.cls = mock.Mock()
         self.cls_key = 'mandowar.FearOfTheDark'
 
-        self.build = Build(mock.Mock(), mock.Mock())
-        self.build.config = DotDict({
+        self.build = Build(mock.Mock())
+        self.build.config.raw = {
             'version': {
                 'class': self.cls_key,
             },
-        })
+        }
         self.build.config.classes = {self.cls_key: self.cls}
 
     def test_set_version(self):
         self.build.set_version()
 
-        self.cls.assert_called_once_with(
-            self.build.ns,
-            self.build.config.version
-        )
+        self.cls.assert_called_once_with(self.build.config.raw['version'])
         self.cls.return_value.validate.assert_called_once_with()
 
 
 class TestBuildConfigureEnv(object):
     def setup_method(self, method):
-        env = 'local'
-        self.ns = mock.Mock(env=env)
+        env_key = 'local'
         self.cls_key = 'unisonic.KingForADay'
         self.cls = mock.Mock()
 
-        self.build = Build(mock.Mock(env=self.ns.env), mock.Mock())
-        self.build.config = DotDict({
+        self.config = mock.Mock()
+        self.config.env = env_key
+        self.config.classes = {self.cls_key: self.cls}
+        self.config.raw = {
             'envs': {
-                env: {
+                env_key: {
                     'class': self.cls_key,
                 }
-            },
-        })
-        self.build.config.classes = {self.cls_key: self.cls}
+            }
+        }
+
+        self.build = Build(self.config)
 
     def test_configure_env(self):
         self.build.configure_env()
 
         self.cls.assert_called_once_with(
-            self.build.ns,
-            self.build.config.envs[self.ns.env]
+            self.build.config.raw['envs'][self.config.env]
         )
         self.cls.return_value.validate.assert_called_once_with()
 
@@ -115,7 +112,7 @@ class TestBuildConfigureEnv(object):
 class TestBuildConfigureSteps(object):
     def setup_method(self, method):
         self.step_key = 'local'
-        self.config = {
+        self.raw = {
             'steps': {
                 'bang': {
                     'class': 'edguy.police.LoveTyger',
@@ -126,23 +123,24 @@ class TestBuildConfigureSteps(object):
             },
         }
 
-        self.build = Build(mock.Mock(job=self.step_key), mock.Mock())
-        self.build.config = DotDict(self.config)
+        self.build = Build(mock.Mock(job=self.step_key))
+        self.build.config = mock.Mock()
         self.build.config.classes = {}
-        for key in self.config['steps']:
-            cls = self.config['steps'][key]['class']
+        self.build.config.raw = self.raw
+
+        for key in self.raw['steps']:
+            cls = self.raw['steps'][key]['class']
             self.build.config.classes[cls] = mock.Mock()
 
     def test_configure_steps(self):
         self.build.configure_steps()
 
-        for key in self.config['steps']:
-            cls_key = self.config['steps'][key]['class']
+        for key in self.raw['steps']:
+            cls_key = self.raw['steps'][key]['class']
 
             cls = self.build.config.classes[cls_key]
             cls.assert_called_once_with(
-                self.build.ns,
-                self.build.config.steps[key],
+                self.build.config.raw['steps'][key],
                 key
             )
             cls.return_value.validate.assert_called_once_with()
@@ -150,21 +148,22 @@ class TestBuildConfigureSteps(object):
 
 class TestBuildConfigureJob(object):
     def setup_method(self, method):
-        self.ns = mock.Mock(job='mmmbop')
         self.step_keys = ('bidubidappa', 'dubop', 'schuwappa')
+        self.job_key = 'mmmbop'
+
+        self.config = mock.MagicMock()
+        self.config.job = self.job_key
+        self.config.raw = {
+            'job': self.job_key,
+            'jobs': {self.job_key: self.step_keys}
+        }
         self.steps = (mock.Mock(), mock.Mock(), mock.Mock())
 
         for step in self.steps:
             step.config.depends = None
 
-        self.config = {
-            'jobs': {
-                self.ns.job: self.step_keys,
-            },
-        }
-
     def get_build(self, config):
-        build = Build(mock.Mock(job=self.ns.job), DotDict(config))
+        build = Build(self.config)
         build.steps = dict(zip(self.step_keys, self.steps))
         return build
 
@@ -172,13 +171,14 @@ class TestBuildConfigureJob(object):
         self.build = self.get_build(self.config)
         self.build.configure_job()
 
+        print(self.build.order)
         for x, _ in enumerate(self.step_keys):
             assert self.build.order[x] is self.steps[x]
 
 
 class TestBuildExecute(object):
     def setup_method(self, method):
-        self.build = Build(mock.Mock(), mock.Mock())
+        self.build = Build(mock.Mock())
         self.build.order = [mock.Mock() for _ in range(3)]
         self.build.env = mock.Mock()
 
@@ -258,19 +258,18 @@ class TestExecCLIRun(object):
     def setup_method(self, method):
         self.config = mock.Mock()
         self.cli = ExecCLI(self.config)
-        self.ns = mock.Mock()
 
     @mock.patch('piper.build.Build')
     def test_calls(self, b):
-        ret = self.cli.run(self.ns)
+        ret = self.cli.run()
 
         assert ret == 0
-        b.assert_called_once_with(self.ns, self.config)
+        b.assert_called_once_with(self.config)
         b.return_value.run.assert_called_once_with()
 
     @mock.patch('piper.build.Build')
     def test_nonzero_exitcode_on_failure(self, b):
         b.return_value.run.return_value = False
-        ret = self.cli.run(self.ns)
+        ret = self.cli.run()
 
         assert ret == 1

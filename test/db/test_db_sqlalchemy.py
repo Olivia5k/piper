@@ -16,8 +16,12 @@ import pytest
 class SQLAlchemyDBBase(object):
     def setup_method(self, method):
         self.db = SQLAlchemyDB()
-        self.ns = mock.Mock()
         self.config = mock.Mock()
+        self.config.raw = {
+            'db': {
+                'host': 'localhost',
+            }
+        }
         self.build = mock.Mock()
 
 
@@ -25,31 +29,32 @@ class TestSQLAlchemyDBSetup(SQLAlchemyDBBase):
     @mock.patch('piper.db.db_sqlalchemy.create_engine')
     @mock.patch('piper.db.db_sqlalchemy.Session')
     def test_setup(self, se, ce):
-        config = mock.Mock()
-        self.db.setup(config)
+        self.db.setup(self.config)
 
-        assert self.db.config is config
-        ce.assert_called_once_with(config.db.host)
+        assert self.db.config is self.config
+        ce.assert_called_once_with(self.config.raw['db']['host'])
         se.configure.assert_called_once_with(bind=ce.return_value)
 
 
 class TestSQLAlchemyDBInit(SQLAlchemyDBBase):
     def test_no_db(self):
-        self.config.db.host = None
+        self.config.raw['db']['host'] = None
 
         with pytest.raises(AssertionError):
-            self.db.init(self.ns, self.config)
+            self.db.init(self.config)
 
     def test_calls(self):
+        host = 'sqlite:///'
+        self.config.raw['db']['host'] = host
         self.db.handle_sqlite = mock.Mock()
         self.db.create_tables = mock.Mock()
 
-        self.db.init(self.ns, self.config)
+        self.db.init(self.config)
 
-        self.db.handle_sqlite.assert_called_once_with(self.config.db.host)
+        self.db.handle_sqlite.assert_called_once_with(host)
         self.db.create_tables.assert_called_once_with(
-            self.config.db.host,
-            echo=self.ns.verbose,
+            host,
+            echo=self.config.verbose,
         )
 
 
@@ -61,7 +66,7 @@ class TestSQLAlchemyDBHandleSqlite(SQLAlchemyDBBase):
         self.config.db.host = 'sqlite:///amaranthine.db'
         exists.return_value = False
 
-        self.db.handle_sqlite(self.ns.host)
+        self.db.handle_sqlite(self.config.host)
         mkdir.assert_called_once_with(dirname.return_value)
 
 
@@ -418,11 +423,10 @@ class TestSQLiteIntegration(SQLAlchemyDBBase):
     def setup_method(self, method):
         super(TestSQLiteIntegration, self).setup_method(method)
 
-        self.config.db.host = 'sqlite:///test.db'
-        self.config.db.singleton = True
-        self.ns.verbose = False
+        self.config.raw['db']['host'] = 'sqlite:///test.db'
+        self.config.verbose = False
 
-        self.db.init(self.ns, self.config)
+        self.db.init(self.config)
         self.db.setup(self.config)
 
     def teardown_method(self, method):

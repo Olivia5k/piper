@@ -8,7 +8,7 @@ from piper.env import TempDirEnv
 
 class TestEnvBaseExecute(object):
     def setup_method(self, method):
-        self.env = EnvBase(mock.Mock(), {})
+        self.env = EnvBase(mock.MagicMock())
         self.step = mock.Mock()
 
     @mock.patch('piper.env.Process')
@@ -20,7 +20,7 @@ class TestEnvBaseExecute(object):
 
         gc.assert_called_once_with()
         proc.assert_called_once_with(
-            self.env.ns,
+            self.env.config,
             gc.return_value,
             self.step.log_key
         )
@@ -30,20 +30,18 @@ class TestEnvBaseExecute(object):
 
 class TestEnvBaseValidate(object):
     def setup_method(self, method):
-        self.env = EnvBase(mock.Mock(), {})
+        self.env = EnvBase(mock.MagicMock())
         self.env.config = mock.Mock()
 
     @mock.patch('jsonschema.validate')
     def test_validate(self, jv):
         self.env.validate()
-        jv.assert_called_once_with(self.env.config.data, self.env.schema)
+        jv.assert_called_once_with(self.env.config, self.env.schema)
 
 
 class TestTempDirEnvSetup(object):
     def setup_method(self, method):
-        self.env = TempDirEnv(mock.Mock(), {
-            'class': 'hehe',
-        })
+        self.env = TempDirEnv(mock.MagicMock())
 
     @mock.patch('shutil.copytree')
     @mock.patch('os.chdir')
@@ -56,14 +54,11 @@ class TestTempDirEnvSetup(object):
         chdir.assert_called_once_with(mkdtemp.return_value)
         assert self.env.dir == mkdtemp.return_value
 
-    def test_validation(self):
-        self.env.validate()
-
     def test_validation_extra_field(self):
-        self.env = TempDirEnv(mock.Mock(), {
+        self.env = TempDirEnv(mock.MagicMock(**{
             'class': 'hehe',
             'heart': 'black.as.night',
-        })
+        }))
 
         with pytest.raises(jsonschema.exceptions.ValidationError):
             self.env.validate()
@@ -71,7 +66,7 @@ class TestTempDirEnvSetup(object):
 
 class TestTempDirEnvTeardown(object):
     def setup_method(self, method):
-        self.env = TempDirEnv(mock.Mock(), {})
+        self.env = TempDirEnv(mock.MagicMock())
         self.env.dir = '/dir'
 
     @mock.patch('shutil.rmtree')
@@ -92,7 +87,7 @@ class TestTempDirEnvTeardown(object):
 
 class TestTempDirEnvExecute(object):
     def setup_method(self, method):
-        self.env = TempDirEnv(mock.Mock(), {})
+        self.env = TempDirEnv(mock.MagicMock())
         self.env.dir = '/'
         self.env.cwd = '/repo'
         self.step = mock.Mock()
@@ -109,7 +104,7 @@ class TestTempDirEnvExecute(object):
         getcwd.assert_called_once_with()
         gc.assert_called_once_with()
         proc.assert_called_once_with(
-            self.env.ns,
+            self.env.config,
             gc.return_value,
             self.step.log_key
         )

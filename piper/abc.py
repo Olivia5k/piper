@@ -1,8 +1,6 @@
 import logbook
 import jsonschema
 
-from piper.utils import DotDict
-
 
 class DynamicItem(object):
     """
@@ -14,9 +12,8 @@ class DynamicItem(object):
 
     """
 
-    def __init__(self, ns, config):
-        self.ns = ns
-        self.config = DotDict(config)
+    def __init__(self, config):
+        self.config = config
         self.log = logbook.Logger(self.__class__.__name__)
 
         # Set missing optional keys to None or default values
@@ -48,4 +45,4 @@ class DynamicItem(object):
         return self._schema
 
     def validate(self):
-        jsonschema.validate(self.config.data, self.schema)
+        jsonschema.validate(self.config, self.schema)

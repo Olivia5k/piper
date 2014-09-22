@@ -57,17 +57,18 @@ class CLIBase(object):
 
                 parser, runners = self.build_parser()
                 ns = parser.parse_args(sys.argv[1:])
+                self.config.merge_namespace(ns)
 
                 # Just running the command should print the help.
-                if not ns.command:
+                if not self.config.command:
                     parser.print_help()
                     return 0
 
                 # Lower the logging level if we're being verbose.
-                if ns.verbose is True:
+                if self.config.verbose is True:
                     stream.level = logbook.DEBUG
                     logfile.level = logbook.DEBUG
 
                 # Actually execute the command
-                exitcode = runners[ns.command](ns)
+                exitcode = runners[self.config.command]()
                 return exitcode

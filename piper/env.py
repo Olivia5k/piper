@@ -16,7 +16,7 @@ class EnvBase(DynamicItem):
     def execute(self, step):
         cmd = step.get_command()
 
-        proc = Process(self.ns, cmd, step.log_key)
+        proc = Process(self.config, cmd, step.log_key)
         proc.setup()
         proc.run()
 
