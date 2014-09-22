@@ -5,58 +5,6 @@ import datetime
 from collections import OrderedDict
 
 
-class DotDict(object):
-    """
-    Immutable dict-like objects accessible by dot notation
-
-    Used because the amount of configuration access is very high and just using
-    dots instead of the dict notation feels good.
-
-    It should be noted that this class could definitely have a more elegant
-    writing, possibly inheriting from dict(). However, this is probably good
-    enough and will probably not cause any trouble.
-
-    """
-
-    def __init__(self, data):
-        # TODO: Make this more elegant
-        if isinstance(data, DotDict):
-            self.data = data.data
-        else:
-            self.data = data
-
-    def __repr__(self):  # pragma: nocover
-        return '<DotDict {}>'.format(self.data)
-
-    def __getattr__(self, key):
-        if key in ('values', 'keys', 'items'):
-            # Dict methods, just return and run them.
-            return getattr(self.data, key)
-
-        # Default to None
-        val = self.data.get(key, None)
-
-        if isinstance(val, dict):
-            val = DotDict(val)
-
-        return val
-
-    def __eq__(self, other):
-        if isinstance(other, dict):
-            return self.data == other
-        elif isinstance(other, DotDict):
-            return self.data == other.data
-        else:
-            return False
-
-    def __iter__(self):
-        for x in self.data:
-            yield x
-
-    # So that we can still access as dicts
-    __getitem__ = __getattr__
-
-
 class LimitedSizeDict(OrderedDict):  # pragma: nocover
     """
     A dict that pops items when it reaches a set size.
