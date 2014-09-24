@@ -36,14 +36,6 @@ class Process(object):
     def run(self):
         self.log.debug('Executing')
 
-        # FIXME: This cannot happen until all global argparse arguments are
-        # trickled down here. We should probably have this higher up, in
-        # Build() or somesuch
-        # if self.config.dry_run is True:
-        #     self.log.info('Not executing dry run.')
-        #     self.success = True
-        #     return
-
         while not self.popen.poll():
             # TODO: Gracefully handle stderr as well
             line = self.popen.stdout.readline()

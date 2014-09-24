@@ -3,7 +3,6 @@ import subprocess as sub
 from piper.process import Process
 
 import mock
-import pytest
 
 
 class TestProcessSetup(object):
@@ -74,12 +73,3 @@ class TestProcessRun(object):
         self.proc.run()
 
         assert self.mocks['stdout'].readline.call_count == 4
-
-    @pytest.mark.skipif(True, reason='disabled')
-    def test_dry_run_does_not_execute(self):
-        self.proc.popen = mock.Mock()
-        self.proc.config.dry_run = True
-        self.proc.run()
-
-        assert self.proc.popen.poll.call_count == 0
-        assert self.proc.success is True

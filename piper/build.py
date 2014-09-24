@@ -1,6 +1,5 @@
 import ago
 import logbook
-import mock
 
 from piper.db.core import LazyDatabaseMixin
 from piper.vcs import GitVCS
@@ -34,10 +33,6 @@ class Build(LazyDatabaseMixin):
         self.status = None
 
         self.log = logbook.Logger(self.__class__.__name__)
-
-        if self.config.dry_run is True:  # pragma: nocover
-            self.log.warn('Switching to mock database for dry run')
-            self.db = mock.Mock()
 
     def run(self):
         """
@@ -263,13 +258,6 @@ class ExecCLI(object):
             nargs='?',
             default='local',
             help='The environment to execute in',
-        )
-
-        cli.add_argument(
-            '--dry-run',
-            '-n',
-            action='store_true',
-            help="Only print execution commands, don't actually do anything",
         )
 
         return 'exec', self.run
