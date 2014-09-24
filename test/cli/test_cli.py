@@ -1,3 +1,4 @@
+import sys
 from piper.cli.cli import CLIBase
 import logbook
 
@@ -12,6 +13,7 @@ class TestCLIBaseEntry(object):
         self.cli.get_handlers = mock.Mock()
         self.cli.get_handlers.return_value = mock.MagicMock(), mock.MagicMock()
 
+        self.cli.set_debug = mock.Mock()
         self.cli.load_config = mock.Mock()
         self.cli.config = mock.Mock()
 
@@ -26,6 +28,11 @@ class TestCLIBaseEntry(object):
         ret = self.cli.entry()
 
         assert ret == self.runners[self.ns.command].return_value
+        self.cli.set_debug.assert_called_once_with(
+            sys.argv[1:],
+            self.cli.get_handlers.return_value[0],
+            self.cli.get_handlers.return_value[1],
+        )
         self.cli.load_config.assert_called_once_with()
         self.cli.build_parser.assert_called_once_with()
         cmd = self.runners[self.cli.config.command]
@@ -33,14 +40,6 @@ class TestCLIBaseEntry(object):
 
         for handler in self.cli.get_handlers.return_value:
             handler.applicationbound.assert_called_once_with()
-
-    def test_verbose_argument_sets_debug_log_level(self):
-        self.cli.config.verbose = True
-
-        self.cli.entry()
-
-        for logger in self.cli.get_handlers.return_value:
-            assert logger.level == logbook.DEBUG
 
     def test_no_command_runs_help(self):
         self.cli.config.command = False
@@ -109,3 +108,21 @@ class TestCLIBaseGetRunners(object):
         for cls in self.classes:
             cls.assert_called_once_with(self.cli.config)
             cls.return_value.compose.assert_called_once_with(self.sub)
+
+
+class TestCLIBaseSetDebug(object):
+    def setup_method(self, method):
+        self.cli = CLIBase('test', (mock.Mock(),))
+        self.loggers = mock.Mock(), mock.Mock(), mock.Mock()
+
+    def test_verbose_argument_sets_debug_log_level(self):
+        self.cli.set_debug(['--verbose', 'gospel'], *self.loggers)
+
+        for logger in self.loggers:
+            assert logger.level == logbook.DEBUG
+
+    def test_v_argument_sets_debug_log_level(self):
+        self.cli.set_debug(['-v', 'undertechnical'], *self.loggers)
+
+        for logger in self.loggers:
+            assert logger.level == logbook.DEBUG

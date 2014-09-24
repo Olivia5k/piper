@@ -74,7 +74,7 @@ class BuildConfig(object):
         self.log = logbook.Logger(self.__class__.__name__)
 
     def load(self):
-        self.log.info('Loading configuration')
+        self.log.debug('Loading configuration')
         self.load_config()
         self.validate_config()
         self.load_classes()

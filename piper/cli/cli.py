@@ -48,26 +48,29 @@ class CLIBase(object):
     def load_config(self):  # pragma: nocover
         self.config = config.BuildConfig().load()
 
+    def set_debug(self, args, *loggers):
+        # Lower the logging level if we're being verbose.
+        if '-v' in args or '--verbose' in args:
+            for logger in loggers:
+                logger.level = logbook.DEBUG
+
     def entry(self):
+        args = sys.argv[1:]
         stream, logfile = self.get_handlers()
 
         with stream.applicationbound():
             with logfile.applicationbound():
+                self.set_debug(args, stream, logfile)
                 self.load_config()
 
                 parser, runners = self.build_parser()
-                ns = parser.parse_args(sys.argv[1:])
+                ns = parser.parse_args(args)
                 self.config.merge_namespace(ns)
 
                 # Just running the command should print the help.
                 if not self.config.command:
                     parser.print_help()
                     return 0
-
-                # Lower the logging level if we're being verbose.
-                if self.config.verbose is True:
-                    stream.level = logbook.DEBUG
-                    logfile.level = logbook.DEBUG
 
                 # Actually execute the command
                 exitcode = runners[self.config.command]()
