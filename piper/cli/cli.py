@@ -17,6 +17,9 @@ class CLIBase(object):
         self.name = name
         self.classes = classes
 
+        self.config = None
+        self.log_handlers = None
+
     def build_parser(self):
         # Create the root parser
         parser = argparse.ArgumentParser(self.name)
@@ -42,36 +45,39 @@ class CLIBase(object):
     def get_runners(self, sub):
         return dict(cli(self.config).compose(sub) for cli in self.classes)
 
-    def get_handlers(self):  # pragma: nocover
-        return logging.get_handlers()
+    def get_handlers(self, args):  # pragma: nocover
+        debug = True if '-v' in args or '--verbose' in args else False
+        self.log_handlers = logging.get_handlers(debug)
 
     def load_config(self):  # pragma: nocover
         self.config = config.BuildConfig().load()
 
-    def set_debug(self, args, *loggers):
+    def set_debug(self, args):
         # Lower the logging level if we're being verbose.
         if '-v' in args or '--verbose' in args:
-            for logger in loggers:
-                logger.level = logbook.DEBUG
+            for handler in self.log_handlers:
+                handler.level = logbook.DEBUG
 
     def entry(self):
         args = sys.argv[1:]
-        stream, logfile = self.get_handlers()
+        self.get_handlers(args)
 
-        with stream.applicationbound():
-            with logfile.applicationbound():
-                self.set_debug(args, stream, logfile)
-                self.load_config()
+        for handler in self.log_handlers:
+            handler.push_application()
 
-                parser, runners = self.build_parser()
-                ns = parser.parse_args(args)
-                self.config.merge_namespace(ns)
+        self.set_debug(args)
+        self.load_config()
 
-                # Just running the command should print the help.
-                if not self.config.command:
-                    parser.print_help()
-                    return 0
+        parser, runners = self.build_parser()
+        ns = parser.parse_args(args)
+        self.config.merge_namespace(ns)
 
-                # Actually execute the command
-                exitcode = runners[self.config.command]()
-                return exitcode
+        # Just running the command should print the help.
+        if not self.config.command:
+            parser.print_help()
+            return 0
+
+        # Actually execute the command
+        exitcode = runners[self.config.command]()
+
+        return exitcode

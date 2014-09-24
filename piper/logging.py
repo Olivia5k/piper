@@ -198,13 +198,17 @@ class BlessingsStringFormatter(logbook.StringFormatter):
         return rc
 
 
-def get_handlers():  # pragma: nocover
+def get_handlers(debug=False):  # pragma: nocover
     # Remove the default logbook.StderrHandler so that we can actually hide
     # debug output when debug is False. If we don't remove it, it will
     # always print to stderr anyway.
     logbook.default_handler.pop_application()
 
-    stream = logbook.StreamHandler(sys.stdout, level=logbook.INFO, bubble=True)
+    level = logbook.INFO
+    if debug:
+        level = logbook.DEBUG
+
+    stream = logbook.StreamHandler(sys.stdout, level=level, bubble=True)
     stream.formatter = BlessingsStringFormatter(colorizers=COLORIZERS)
 
     utils.mkdir('logs/')
@@ -214,7 +218,7 @@ def get_handlers():  # pragma: nocover
     logfile = logbook.FileHandler(
         filename,
         format_string=DEFAULT_LOGFILE_FORMAT_STRING,
-        level=logbook.INFO,
+        level=level,
         bubble=True
     )
 
