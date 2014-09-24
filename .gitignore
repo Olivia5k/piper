@@ -25,11 +25,13 @@ logs/
 
 # Installer logs
 pip-log.txt
+*.log
 
 # Unit test / coverage reports
 .coverage
 .tox
 nosetests.xml
+coverage.xml
 
 # Translations
 *.mo

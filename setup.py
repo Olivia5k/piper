@@ -30,13 +30,27 @@ tests_require = (
 class PyTest(TestCommand):
     def finalize_options(self):
         TestCommand.finalize_options(self)
-        self.test_args = ['test', '--cov=piper']
+        self.test_args = [
+            'test',
+            '-v',
+            '--cov=piper',
+            '--cov-report=xml',
+            '--cov-report=term-missing',
+            '--result-log=pytest-results.log'
+        ]
         self.test_suite = True
 
     def run_tests(self):
         import pytest
         errno = pytest.main(self.test_args)
         sys.exit(errno)
+
+
+class PyTestIntegration(PyTest):
+    def finalize_options(self):
+        super(PyTestIntegration, self).finalize_options()
+        # Only run tests from classes that match "Integration"
+        self.test_args.append('-k Integration')
 
 
 setup(
@@ -57,7 +71,10 @@ setup(
             'piperd = piper.cli.cmd_piperd:entry',
         ],
     },
-    cmdclass={'test': PyTest},
+    cmdclass={
+        'test': PyTest,
+        'integration': PyTestIntegration,
+    },
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Environment :: Console',
