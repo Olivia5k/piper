@@ -2,10 +2,10 @@
 # coding: utf-8
 
 import re
+import os
 import sys
 import hashlib
 import logbook
-import datetime
 import blessings
 
 from piper import utils
@@ -211,15 +211,22 @@ def get_handlers(debug=False):  # pragma: nocover
     stream = logbook.StreamHandler(sys.stdout, level=level, bubble=True)
     stream.formatter = BlessingsStringFormatter(colorizers=COLORIZERS)
 
-    utils.mkdir('logs/')
-    filename = 'logs/piper-{0}.log'.format(
-        datetime.datetime.now().strftime('%Y%M%d.%H%M%S')
-    )
-    logfile = logbook.FileHandler(
+    date = utils.now().strftime('%Y-%m-%dT%H:%M:%S')
+    logfile = get_file_logger('logs/piper/session/{0}.log'.format(date), debug)
+
+    return stream, logfile
+
+
+def get_file_logger(filename, debug=False):  # pragma: nocover
+    level = logbook.INFO
+    if debug:
+        level = logbook.DEBUG
+
+    utils.mkdir(os.path.dirname(filename))
+
+    return logbook.FileHandler(
         filename,
         format_string=DEFAULT_LOGFILE_FORMAT_STRING,
         level=level,
         bubble=True
     )
-
-    return stream, logfile

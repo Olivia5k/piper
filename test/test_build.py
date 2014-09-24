@@ -15,10 +15,13 @@ class TestBuildSetup(BuildTestBase):
     def setup_method(self, method):
         self.methods = (
             'add_build',
+            'set_logfile',
             'set_version',
+
             'configure_env',
             'configure_steps',
             'configure_job',
+
             'setup_env',
         )
 
@@ -240,6 +243,7 @@ class TestBuildFinish(BuildTestBase):
     def setup_method(self, method):
         super(TestBuildFinish, self).setup_method(method)
         self.build.db = mock.Mock()
+        self.build.log_handler = mock.Mock()
 
     @mock.patch('ago.human')
     @mock.patch('piper.utils.now')
@@ -252,6 +256,32 @@ class TestBuildFinish(BuildTestBase):
             self.build,
             ended=now.return_value
         )
+
+
+class TestBuildSetLogfile(BuildTestBase):
+    def setup_method(self, method):
+        super(TestBuildSetLogfile, self).setup_method(method)
+        self.build.ref = mock.Mock()
+        self.build.log_handler = mock.Mock()
+
+    @mock.patch('piper.logging.get_file_logger')
+    def test_logger_is_set(self, gfl):
+        self.build.log = None
+        self.build.set_logfile()
+        assert self.build.log is not None
+
+    @mock.patch('piper.logging.get_file_logger')
+    def test_logfile_is_set(self, gfl):
+        self.build.logfile = None
+        self.build.set_logfile()
+        assert self.build.logfile is not None
+
+    @mock.patch('piper.logging.get_file_logger')
+    def test_log_handler_is_configured(self, gfl):
+        self.build.set_logfile()
+        assert gfl.call_count == 1
+        assert gfl.return_value is self.build.log_handler
+        self.build.log_handler.push_application.assert_called_once_with()
 
 
 class TestExecCLIRun(object):

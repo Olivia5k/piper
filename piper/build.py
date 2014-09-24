@@ -4,6 +4,7 @@ import logbook
 from piper.db.core import LazyDatabaseMixin
 from piper.vcs import GitVCS
 from piper import utils
+from piper import logging
 
 
 class Build(LazyDatabaseMixin):
@@ -67,6 +68,8 @@ class Build(LazyDatabaseMixin):
         )
         self.log.info('{0} {1}'.format(self.version, ts))
 
+        self.log_handler.pop_application()
+
     def setup(self):
         """
         Performs all setup steps
@@ -77,6 +80,7 @@ class Build(LazyDatabaseMixin):
         """
 
         self.add_build()
+        self.set_logfile()
         self.lock_agent()
         self.set_version()
 
@@ -95,6 +99,20 @@ class Build(LazyDatabaseMixin):
         """
 
         self.ref = self.db.add_build(self)
+
+    def set_logfile(self):
+        """
+        Set the log file to store the build log in.
+
+        """
+
+        self.log = logbook.Logger('{0}({1})'.format(
+            self.__class__.__name__, self.ref.id
+        ))
+
+        self.logfile = 'logs/piper/{0}.log'.format(self.ref.id)
+        self.log_handler = logging.get_file_logger(self.logfile)
+        self.log_handler.push_application()
 
     def set_version(self):
         """
