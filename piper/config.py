@@ -1,10 +1,13 @@
 import os
-import sys
 import yaml
 import logbook
 import jsonschema
 
 from piper.utils import dynamic_load
+
+
+class ConfigError(Exception):
+    pass
 
 
 class BuildConfig(object):
@@ -84,8 +87,9 @@ class BuildConfig(object):
         """
 
         if not os.path.isfile('piper.yml'):
-            self.log.error('Config file not found in $PWD. Aborting.')
-            return sys.exit(127)  # 'return' is for the tests to make sense
+            err = 'Config file not found in $PWD. Aborting.'
+            self.log.error(err)
+            raise ConfigError(err)
 
         with open('piper.yml') as config:
             file_data = config.read()
@@ -95,8 +99,9 @@ class BuildConfig(object):
 
             except yaml.parser.ParserError as exc:
                 self.log.error(exc)
-                self.log.error('Invalid YAML in piper.yml. Aborting.')
-                return sys.exit(126)
+                err = 'Invalid YAML in piper.yml. Aborting.'
+                self.log.error(err)
+                raise ConfigError(err)
 
         self.log.debug('Configuration file loaded.')
 

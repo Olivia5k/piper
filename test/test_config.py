@@ -5,6 +5,7 @@ import mock
 import copy
 
 from piper.config import BuildConfig
+from piper.config import ConfigError
 
 from test import utils
 
@@ -22,24 +23,20 @@ class TestBuildConfigLoadConfig(BuildConfigTestBase):
         self.data = 'lel: 10\ntest: wizard\n\n'
         super(TestBuildConfigLoadConfig, self).setup_method(method)
 
-    @mock.patch('sys.exit')
     @mock.patch('os.path.isfile')
-    def test_load_config_no_file(self, isfile, exit):
+    def test_load_config_no_file(self, isfile):
         isfile.return_value = False
-        self.config.load_config()
+        with pytest.raises(ConfigError):
+            self.config.load_config()
 
-        exit.assert_called_once_with(127)
-
-    @mock.patch('sys.exit')
     @mock.patch('os.path.isfile')
-    def test_load_config_invalid_yaml(self, isfile, exit):
+    def test_load_config_invalid_yaml(self, isfile):
         isfile.return_value = True
         fake = mock.mock_open(read_data='{')
 
         with mock.patch(utils.builtin('open'), fake):
-            self.config.load_config()
-
-        exit.assert_called_once_with(126)
+            with pytest.raises(ConfigError):
+                self.config.load_config()
 
     @mock.patch('yaml.safe_load')
     @mock.patch('os.path.isfile')
