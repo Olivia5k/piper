@@ -55,24 +55,17 @@ The meat of the application lies in the [YAML][yaml] configuration file
 `piper.yml`, found in the root of the repository. Its contents dictate what
 `piper` will do in its execution steps and in which order.
 
-### Piper()
+### Build()
 
-The main executor of the `piper` pipeline is the `Piper()` class. It's
-a singleton (shut up) that reads the configuration and uses that configuration
-to set and host a couple of other classes:
+The main executor of the `piper` pipeline is the `Build()` class. It reads the
+configuration and uses that configuration to configure some runner classes:
 
-* `Env()`: Creates and tears the execution env. The env can be a temporary
-  directory, an AWS machine, a schroot or something of the sort. Can optionally
-  provide a wrapper method for `Step()` that all execution will run through,
-  e.g. `schroot -c 'squeeze-amd64' -- {0}` to run something in a schroot.
-* `Step()`: Executes a build step. `Piper()` has a list of these and will
-  execute them in order. Each step can specify upstream and downstream steps
-  that will deterministically build a graph of steps.
-* `Notifier()`: Handles notifications and logging.
-
-These classes are all written to be subclassed for more specific cases, such as
-a `PythonStep()` class that builds Python projects, a `IRCNotifier()` class
-that does just that, etc.
-
+* `Env()`: Creates and tears the execution environemnt. The environment can be
+  a temporary directory, an AWS machine, a schroot or something of the sort.
+  Can optionally provide a wrapper method for `Step()` that all execution will
+  run through, e.g. `schroot -c 'squeeze-amd64' -- {0}` to run something in
+  a schroot.
+* `Step()`: A build step. `Build()` has a list of these and will
+  execute them in order.
 
 [yaml]: http://www.yaml.org/
