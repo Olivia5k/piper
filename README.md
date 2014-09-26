@@ -1,35 +1,53 @@
 # piper
 
-`piper` is a manifest-based build system which is completely controlled from
-configuration files local to a repository.
+`piper` is a build agent that you can run locally!
+
+## Huh?
+`piper` does two things:
+* It's a build agent. It recieves requests about things it should build and
+  subsequently builds it.
+* It's a build executor. It reads configuration files, figures out what to
+  execute, and executes it.
+
+
+### Selling points
+* Build configuration is in the repository. This gives it versioning and anyone
+  with the repository has access to the steps required to build it.
+* The project is the executor, the agent *and* the scheduler; you can run the
+  exact same steps locally as a build agent would.
+* Build pipelines are first-class citizens. Chaining builds together and
+  triggering other builds upon success is one of the main features.
+* The configuration is completely centered on running other command lines as
+  subprocesses. Whatever step is having troubles, you should be able to run the
+  same command yourself.
+* The main interface is the command line.
+* It's lightweight and starts in less than a second.
+* It's distributed; all agents can recieve requests to build anything, and they
+  will sort out which agent should execute what builds. The only central point
+  is a database.
+
+### Things piper lets other systems do better
+* Statistics and graphing
+* Artifact storage
+* Log storage and processing
+* VCS tracking
+* Issue tracking
+* Code and test introspection
+
+That said, `piper` has lots of helpful facilities to send data to the systems
+that do these things better.
+
 
 ## Installation
 
-As with any good Python project; `sudo pip install piper`.
+`pip install piper`
+
 
 ## Rationale
 
 *"Whatever you do, don't ever build a new build system. That would be the worst
 possible thing to do."* - one of my managers, not realizing that telling
 a hacker what they cannot do is the most inspiring thing that exists.
-
-This is a project inspired by working with different build systems full-time
-for a bit longer than a year. After trying to fit increasingly blob shaped pegs
-into increasingly opinionated holes, a couple of thoughts started to form:
-
-* Storing configuration anywhere but inside in the repository is a bad idea.
-* Most modern build systems have too many concerns they probably should not
-  have. The UNIX principle or anything like it was forgotten long ago. To this
-  end, all build steps should be command lines and not builtin wrappers in
-  whatever language the system is built in.
-* The system needs to be runnable locally in the same manner as it would happen
-  on any build agent, with actual execution if possible, or else in a dry-run
-  mode.
-* Inheritable templates are not the way to go, not at scale.
-* Why did we leave the terminal? Wouldn't a curses interface be fantastic if
-  done at least remotely right?
-* [It can't be that hard][hard] to build a pipeline - the difficulty of
-  the problem is overstated.
 
 ## Design
 
@@ -57,5 +75,4 @@ a `PythonStep()` class that builds Python projects, a `IRCNotifier()` class
 that does just that, etc.
 
 
-[hard]: https://github.com/thiderman/talk-hard
 [yaml]: http://www.yaml.org/
