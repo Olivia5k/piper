@@ -5,9 +5,11 @@
 ## Huh?
 `piper` does two things:
 * It's a build agent. It recieves requests about things it should build and
-  subsequently builds it.
+  subsequently builds it. If you run `piperd start` it will start in daemon
+  mode and start listnening for requests.
 * It's a build executor. It reads configuration files, figures out what to
-  execute, and executes it.
+  execute, and executes it. If you run `piper exec <pipeline>` it will build
+  that pipeline for you locally.
 
 
 ### Selling points
@@ -20,7 +22,7 @@
 * The configuration is completely centered on running other command lines as
   subprocesses. Whatever step is having troubles, you should be able to run the
   same command yourself.
-* The main interface is the command line.
+* The main interface is the command line, and there is completion!
 * It's lightweight and starts in less than a second.
 * It's distributed; all agents can recieve requests to build anything, and they
   will sort out which agent should execute what builds. The only central point
