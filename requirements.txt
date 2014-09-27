@@ -1,11 +1,2 @@
-# Remember to add to setup.py as well
-Logbook==0.7.0
-PyYAML==3.11
-jsonschema==2.3.0
-blessings==1.5.1
-six==1.7.3
-ago==0.0.6
-facterpy==0.1
-SQLAlchemy==0.9.7
-Flask==0.10.1
-Flask-RESTful==0.2.12
+--index-url https://pypi.python.org/simple/
+-e .
