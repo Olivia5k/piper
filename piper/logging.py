@@ -202,7 +202,13 @@ def get_handlers(debug=False):  # pragma: nocover
     # Remove the default logbook.StderrHandler so that we can actually hide
     # debug output when debug is False. If we don't remove it, it will
     # always print to stderr anyway.
-    logbook.default_handler.pop_application()
+    try:
+        logbook.default_handler.pop_application()
+    except AssertionError:
+        # The integration tests will try to pop it multiple times. This might
+        # not be 100% super, but it's also something the application should not
+        # have a problem with ever.
+        pass
 
     level = logbook.INFO
     if debug:
