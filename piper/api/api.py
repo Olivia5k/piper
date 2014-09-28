@@ -40,6 +40,6 @@ class ApiCLI(LazyDatabaseMixin):
                 resource.config = self.config
                 self.api.add_resource(resource, '/api' + resource.root)
 
-    def run(self, ns):
+    def run(self):
         self.setup()
         self.app.run(debug=True)

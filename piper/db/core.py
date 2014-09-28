@@ -51,7 +51,7 @@ class DatabaseBase(object):
 
         raise NotImplementedError()
 
-    def init(self, ns, config):
+    def init(self, config):
         """
         Create the tables needed for the application.
 

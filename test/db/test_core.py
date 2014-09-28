@@ -35,7 +35,7 @@ class TestDatabaseBase(object):
         self.mock = mock.Mock()
 
         self.missing('setup', self.mock)
-        self.missing('init', self.mock, self.mock)
+        self.missing('init', self.mock)
         self.missing('add_build', self.mock)
         self.missing('update_build', self.mock)
         self.missing('get_build', self.mock)

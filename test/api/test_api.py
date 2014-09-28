@@ -92,5 +92,5 @@ class TestApiCLIRun(object):
         self.cli.app = mock.Mock()
 
     def test_calls(self):
-        self.cli.run(self.config)
+        self.cli.run()
         self.cli.app.run.assert_called_once_with(debug=True)
