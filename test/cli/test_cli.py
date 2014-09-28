@@ -1,4 +1,3 @@
-import sys
 from piper.cli.cli import CLIBase
 import logbook
 
@@ -28,7 +27,7 @@ class TestCLIBaseEntry(object):
         ret = self.cli.entry()
 
         assert ret == self.runners[self.ns.command].return_value
-        self.cli.set_debug.assert_called_once_with(sys.argv[1:])
+        self.cli.set_debug.assert_called_once_with()
         self.cli.load_config.assert_called_once_with()
         self.cli.build_parser.assert_called_once_with()
         cmd = self.runners[self.cli.config.command]
@@ -112,13 +111,15 @@ class TestCLIBaseSetDebug(object):
         self.cli.log_handlers = mock.Mock(), mock.Mock(), mock.Mock()
 
     def test_verbose_argument_sets_debug_log_level(self):
-        self.cli.set_debug(['--verbose', 'gospel'])
+        self.cli.args = ['--verbose', 'gospel']
+        self.cli.set_debug()
 
         for logger in self.cli.log_handlers:
             assert logger.level == logbook.DEBUG
 
     def test_v_argument_sets_debug_log_level(self):
-        self.cli.set_debug(['-v', 'undertechnical'])
+        self.cli.args = ['-v', 'undertechnical']
+        self.cli.set_debug()
 
         for logger in self.cli.log_handlers:
             assert logger.level == logbook.DEBUG

@@ -8,8 +8,13 @@ import mock
 class TestEntry(object):
     @mock.patch('piper.cli.cmd_piper.CLIBase')
     def test_calls(self, clibase):
-        cmd_piper.entry()
-        clibase.assert_called_once_with('piper', (build.ExecCLI, db.DbCLI))
+        self.mock = mock.Mock()
+        cmd_piper.entry(self.mock)
+        clibase.assert_called_once_with(
+            'piper',
+            (build.ExecCLI, db.DbCLI),
+            args=self.mock
+        )
         clibase.return_value.entry.assert_called_once_with()
 
     @mock.patch('piper.cli.cmd_piper.CLIBase')
