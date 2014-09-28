@@ -21,7 +21,6 @@ class CLIBase(object):
         if not self.args:
             self.args = sys.argv[1:]
 
-        print(self.args)
         self.config = None
         self.log_handlers = None
 

@@ -175,7 +175,6 @@ class TestBuildConfigureJob(object):
         self.build = self.get_build(self.config)
         self.build.configure_job()
 
-        print(self.build.order)
         for x, _ in enumerate(self.step_keys):
             assert self.build.order[x] is self.steps[x]
 
