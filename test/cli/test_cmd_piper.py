@@ -32,3 +32,11 @@ class TestEntryIntegration(object):
         db.DbCLI.db = mock.Mock()
         cli.entry()
         db.DbCLI.db.init.assert_called_once_with(cli.config)
+
+    @mock.patch('piper.build.Build.run')
+    def test_exec(self, run):
+        args = ['exec']
+        cli = CLIBase('piper', (build.ExecCLI,), args=args)
+
+        cli.entry()
+        run.assert_called_once_with()
