@@ -72,12 +72,39 @@ class ConfigBase(object):
 
         self.log.debug('Configuration file loaded.')
 
+    def collect_classes(self):  # pragma: nocover
+        self.log.debug("No class collection defined")
+        return set()
+
+    def load_classes(self):
+        self.log.debug("Loading classes...")
+
+        for cls in self.collect_classes():
+            self.log.debug("Loading class '{0}()'".format(cls))
+            self.classes[cls] = dynamic_load(cls)
+
+        self.log.debug("Class loading done.")
+
     def validate_config(self):
-        self.log.debug('Validating root config...')
+        self.log.debug('Validating...')
         jsonschema.validate(self.raw, self.schema)
 
-    def load_classes(self):  # pragma: nocover
-        self.log.debug("No class loading definitions set")
+    def merge_namespace(self, ns):
+        """
+        Take an argparse namespace and merge whatever it had directly in to the
+        configuration object.
+
+        Before this, we used to shuffle around both, to mostly the same use.
+
+        """
+
+        self.log.debug('Merging argparse namespace')
+        for key in filter(lambda x: not x.startswith('_'), dir(ns)):
+            attr = getattr(ns, key)
+            setattr(self, key, attr)
+
+    def get_database(self):
+        return self.classes[self.raw['db']['class']]()
 
 
 class BuildConfig(ConfigBase):
@@ -123,9 +150,7 @@ class BuildConfig(ConfigBase):
 
         super(BuildConfig, self).__init__(filename)
 
-    def load_classes(self):
-        self.log.debug("Loading classes...")
-
+    def collect_classes(self):
         targets = set()
 
         targets.add(self.raw['version']['class'])
@@ -137,25 +162,4 @@ class BuildConfig(ConfigBase):
         for step in self.raw['steps'].values():
             targets.add(step['class'])
 
-        for cls in targets:
-            self.log.debug("Loading class '{0}()'".format(cls))
-            self.classes[cls] = dynamic_load(cls)
-
-        self.log.debug("Class loading done.")
-
-    def merge_namespace(self, ns):
-        """
-        Take an argparse namespace and merge whatever it had directly in to the
-        configuration object.
-
-        Before this, we used to shuffle around both, to mostly the same use.
-
-        """
-
-        self.log.debug('Merging argparse namespace')
-        for key in filter(lambda x: not x.startswith('_'), dir(ns)):
-            attr = getattr(ns, key)
-            setattr(self, key, attr)
-
-    def get_database(self):
-        return self.classes[self.raw['db']['class']]()
+        return targets
