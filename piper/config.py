@@ -6,11 +6,81 @@ import jsonschema
 from piper.utils import dynamic_load
 
 
+DB_SCHEMA = {
+    'description': 'Database configuration',
+    'type': 'object',
+    'required': ['host'],
+    'properties': {
+        'host': {
+            'description': 'The host to connect to',
+            'type': 'string',
+        },
+        'user': {
+            'description': 'The username used for authentication',
+            'type': ['string', 'null'],
+        },
+        'password': {
+            'description': 'The passord used for authentication',
+            'type': ['string', 'null'],
+        },
+    },
+}
+
+
 class ConfigError(Exception):
     pass
 
 
-class BuildConfig(object):
+class ConfigBase(object):
+    def __init__(self, filename):
+        self.filename = filename
+
+        self.raw = None
+        self.classes = {}
+
+        self.log = logbook.Logger(self.__class__.__name__)
+
+    def load(self):
+        self.log.debug('Loading configuration')
+        self.load_config()
+        self.validate_config()
+        self.load_classes()
+        return self
+
+    def load_config(self):
+        """
+        Parses the configuration file and dies in flames if there are errors.
+
+        """
+
+        if not os.path.isfile(self.filename):
+            err = 'Config file not found in $PWD. Aborting.'
+            self.log.error(err)
+            raise ConfigError(err)
+
+        with open(self.filename) as config:
+            file_data = config.read()
+
+            try:
+                self.raw = yaml.safe_load(file_data)
+
+            except yaml.parser.ParserError as exc:
+                self.log.error(exc)
+                err = 'Invalid YAML in {0}. Aborting.'.format(self.filename)
+                self.log.error(err)
+                raise ConfigError(err)
+
+        self.log.debug('Configuration file loaded.')
+
+    def validate_config(self):
+        self.log.debug('Validating root config...')
+        jsonschema.validate(self.raw, self.schema)
+
+    def load_classes(self):  # pragma: nocover
+        self.log.debug("No class loading definitions set")
+
+
+class BuildConfig(ConfigBase):
     schema = {
         "$schema": "http://json-schema.org/draft-04/schema",
         'type': 'object',
@@ -43,71 +113,15 @@ class BuildConfig(object):
                     'items': {'type': 'string'},
                 },
             },
-            'db': {
-                'description': 'Database configuration',
-                'type': 'object',
-                'required': ['host'],
-                'properties': {
-                    'host': {
-                        'description': 'The host to connect to',
-                        'type': 'string',
-                    },
-                    'user': {
-                        'description': 'The username used for authentication',
-                        'type': ['string', 'null'],
-                    },
-                    'password': {
-                        'description': 'The passord used for authentication',
-                        'type': ['string', 'null'],
-                    },
-                },
-            },
+            'db': DB_SCHEMA,
         },
     }
 
-    def __init__(self):
-        self.raw = None
+    def __init__(self, filename=None):
+        if not filename:
+            filename = 'piper.yml'
 
-        self.data = {}
-        self.classes = {}
-
-        self.log = logbook.Logger(self.__class__.__name__)
-
-    def load(self):
-        self.log.debug('Loading configuration')
-        self.load_config()
-        self.validate_config()
-        self.load_classes()
-        return self
-
-    def load_config(self):
-        """
-        Parses the configuration file and dies in flames if there are errors.
-
-        """
-
-        if not os.path.isfile('piper.yml'):
-            err = 'Config file not found in $PWD. Aborting.'
-            self.log.error(err)
-            raise ConfigError(err)
-
-        with open('piper.yml') as config:
-            file_data = config.read()
-
-            try:
-                self.raw = yaml.safe_load(file_data)
-
-            except yaml.parser.ParserError as exc:
-                self.log.error(exc)
-                err = 'Invalid YAML in piper.yml. Aborting.'
-                self.log.error(err)
-                raise ConfigError(err)
-
-        self.log.debug('Configuration file loaded.')
-
-    def validate_config(self):
-        self.log.debug('Validating root config...')
-        jsonschema.validate(self.raw, self.schema)
+        super(BuildConfig, self).__init__(filename)
 
     def load_classes(self):
         self.log.debug("Loading classes...")
