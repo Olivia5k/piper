@@ -1,0 +1,10 @@
+agent:
+  name: sto4-buildagent-a1
+  fqdn: sto4-buildagent-a1.piper.ninjaloot.se
+  active: true
+
+db:
+  class: piper.db.SQLAlchemyDB
+  host: sqlite:///data/piper.db
+  user:
+  password:
