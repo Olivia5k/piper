@@ -4,8 +4,9 @@ import pytest
 import mock
 import copy
 
-from piper.config import BuildConfig
 from piper.config import ConfigError
+from piper.config import BuildConfig
+from piper.config import AgentConfig
 
 from test import utils
 
@@ -16,6 +17,12 @@ class BuildConfigTestBase(object):
         # Without the deepcopy the tests that check for missing keys will
         # destroy everything for everyone!
         self.base_config = copy.deepcopy(utils.BASE_CONFIG)
+
+
+class AgentConfigTestBase(object):
+    def setup_method(self, method):
+        self.config = AgentConfig()
+        self.config.raw = copy.deepcopy(utils.AGENT_CONFIG)
 
 
 class TestBuildConfigLoadConfig(BuildConfigTestBase):
@@ -149,3 +156,26 @@ class TestBuildConfigMergeNamespace(BuildConfigTestBase):
 
         assert self.config.key == self.correct
         assert not hasattr(self.config, '_internal')
+
+
+class TestAgentConfigCollectClasses(AgentConfigTestBase):
+    def test_no_classes_are_collected(self):
+        ret = self.config.collect_classes()
+        assert ret == set()
+
+
+class TestAgentConfigValidateConfig(AgentConfigTestBase):
+    def check_missing_key(self, key):
+        del self.config.raw[key]
+        with pytest.raises(jsonschema.exceptions.ValidationError):
+            self.config.validate_config()
+
+    def test_passing_validation(self):
+        # Do nothing; if no exception happens, this is valid.
+        self.config.validate_config()
+
+    def test_no_agent_config(self):
+        self.check_missing_key('agent')
+
+    def test_no_db_config(self):
+        self.check_missing_key('db')

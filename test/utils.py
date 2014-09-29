@@ -6,6 +6,9 @@ import yaml
 with open('piper.yml') as f:
     BASE_CONFIG = yaml.safe_load(f.read())
 
+with open('piperd.yml') as f:
+    AGENT_CONFIG = yaml.safe_load(f.read())
+
 
 def builtin(target):
     """

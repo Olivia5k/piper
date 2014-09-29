@@ -167,3 +167,52 @@ class BuildConfig(ConfigBase):
             targets.add(step['class'])
 
         return targets
+
+
+class AgentConfig(ConfigBase):
+    schema = {
+        "$schema": "http://json-schema.org/draft-04/schema",
+        'type': 'object',
+        'additionalProperties': False,
+        'required': ['agent', 'db'],
+        'properties': {
+            'agent': {
+                'description': 'Agent configuration',
+                'type': 'object',
+                'additionalProperties': False,
+                'required': ['name', 'fqdn', 'active'],
+                'properties': {
+                    'name': {
+                        'description':
+                            'Descriptive name, used for display in interfaces',
+                        'type': 'string',
+                    },
+                    'fqdn': {
+                        'description':
+                            'Fully qualified domain name, used for network '
+                            'operations.',
+                        'type': 'string',
+                    },
+                    'active': {
+                        'description':
+                            'Decides if the agent is to be used for building '
+                            'or not. Inactive agents are connected and '
+                            'visible, but will not be considered for any '
+                            'tasks.',
+                        'type': 'boolean',
+                    },
+                },
+            },
+            'db': DB_SCHEMA,
+        },
+    }
+
+    def __init__(self, filename=None):
+        if not filename:
+            filename = 'piperd.yml'
+
+        super(AgentConfig, self).__init__(filename)
+
+    def collect_classes(self):
+        targets = set()
+        return targets
