@@ -9,8 +9,12 @@ from piper.utils import dynamic_load
 DB_SCHEMA = {
     'description': 'Database configuration',
     'type': 'object',
-    'required': ['host'],
+    'required': ['class', 'host'],
     'properties': {
+        'class': {
+            'description': 'The piper.db class to use as DB abstraction',
+            'type': 'string',
+        },
         'host': {
             'description': 'The host to connect to',
             'type': 'string',
