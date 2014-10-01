@@ -1,5 +1,6 @@
 from piper.cli import cmd_piperd
 from piper.api import api
+from piper.db import core as db
 
 import mock
 
@@ -11,7 +12,7 @@ class TestEntry(object):
         cmd_piperd.entry(self.mock)
         clibase.assert_called_once_with(
             'piperd',
-            (api.ApiCLI,),
+            (api.ApiCLI, db.DbCLI),
             args=self.mock
         )
         clibase.return_value.entry.assert_called_once_with()

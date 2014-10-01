@@ -13,7 +13,7 @@ class TestEntry(object):
         cmd_piper.entry(self.mock)
         clibase.assert_called_once_with(
             'piper',
-            (build.ExecCLI, db.DbCLI),
+            (build.ExecCLI,),
             args=self.mock
         )
         clibase.return_value.entry.assert_called_once_with()
