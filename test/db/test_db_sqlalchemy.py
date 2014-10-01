@@ -383,6 +383,20 @@ class TestSQLAlchemyDBGetBuilds(SQLAlchemyDBBase):
         session.return_value.expunge_all.assert_called_once_with()
 
 
+class TestSQLAlchemyDBSetupManagers(SQLAlchemyDBBase):
+    def test_set(self):
+        table, manager = mock.Mock(), mock.Mock()
+        table.__tablename__ = 'hehe'
+
+        self.db.tables = {
+            table: manager
+        }
+
+        self.db.setup_managers()
+
+        assert self.db.hehe is manager.return_value
+
+
 class TestInSessionInner(object):
     @mock.patch('piper.db.db_sqlalchemy.Session')
     def test_context_is_a_session(self, session):

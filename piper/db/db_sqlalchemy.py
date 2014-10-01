@@ -274,6 +274,8 @@ class SQLAlchemyDB(DatabaseBase):
         self.engine = create_engine(config.raw['db']['host'])
         Session.configure(bind=self.engine)
 
+        self.set_managers()
+
     def init(self, config):
         host = config.raw['db']['host']
         assert host is not None, 'No database configured'
@@ -283,6 +285,10 @@ class SQLAlchemyDB(DatabaseBase):
 
         self.log.info('Creating tables for {0}'.format(host))
         self.create_tables(host, echo=config.verbose)
+
+    def setup_managers(self):
+        for cls, man in self.tables.items():
+            setattr(self, cls.__tablename__, man())
 
     def handle_sqlite(self, host):
         target = os.path.dirname(host.replace(self.sqlite, ''))
