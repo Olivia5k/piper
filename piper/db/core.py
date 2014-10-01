@@ -144,6 +144,14 @@ class DatabaseBase(object):
 
         raise NotImplementedError()
 
+    def update_props(self):
+        """
+        Update agent properties.
+
+        """
+
+        raise NotImplementedError()
+
 
 class DbCLI(LazyDatabaseMixin):
     def __init__(self, config):

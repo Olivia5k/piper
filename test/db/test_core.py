@@ -45,6 +45,7 @@ class TestDatabaseBase(object):
         self.missing('get_agent')
         self.missing('lock_agent', self.mock)
         self.missing('unlock_agent', self.mock)
+        self.missing('update_props')
 
 
 class TestLazyDatabaseMixinDb(object):
