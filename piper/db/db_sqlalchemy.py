@@ -26,6 +26,35 @@ Base = declarative_base()
 Session = sessionmaker()
 
 
+class SQLAlchemyManager(object):
+    def get_or_create(self, session, model, expunge=False, keys=(), **kwargs):
+        """
+        Get or create an object.
+
+        A filter is done on the model with `kwargs`. If `keys` are specified,
+        only those keys will be used to do the filtering.
+
+        If `expunge` is True, the created object is detached from the session.
+        This is used if one get_or_create call calls another for its arguments
+        since the different calls would get different sessions.
+
+        """
+
+        filter = kwargs
+        if keys:
+            filter = dict((k, v) for k, v in kwargs.items() if k in keys)
+
+        instance = session.query(model).filter_by(**filter).first()
+        if not instance:
+            instance = model(**kwargs)
+            session.add(instance)
+
+        if expunge:
+            session.expunge(instance)
+
+        return instance
+
+
 class Agent(Base):
     __tablename__ = 'agent'
 
@@ -40,7 +69,7 @@ class Agent(Base):
     last_seen = Column(DateTime, default=utils.now)
 
 
-class AgentManager(object):
+class AgentManager(SQLAlchemyManager):
     pass
 
 
@@ -62,7 +91,7 @@ class Build(Base):
     ended = Column(DateTime)
 
 
-class BuildManager(object):
+class BuildManager(SQLAlchemyManager):
     pass
 
 
@@ -76,7 +105,7 @@ class Project(Base):
     created = Column(DateTime, default=utils.now)
 
 
-class ProjectManager(object):
+class ProjectManager(SQLAlchemyManager):
     pass
 
 
@@ -89,7 +118,7 @@ class VCSRoot(Base):
     created = Column(DateTime, default=utils.now)
 
 
-class VCSRootManager(object):
+class VCSRootManager(SQLAlchemyManager):
     pass
 
 
@@ -104,7 +133,7 @@ class Property(Base):
     created = Column(DateTime, default=utils.now)
 
 
-class PropertyManager(object):
+class PropertyManager(SQLAlchemyManager):
     pass
 
 
@@ -117,7 +146,7 @@ class PropertyNamespace(Base):
     created = Column(DateTime, default=utils.now)
 
 
-class PropertyNamespaceManager(object):
+class PropertyNamespaceManager(SQLAlchemyManager):
     pass
 
 
@@ -180,33 +209,6 @@ class SQLAlchemyDB(DatabaseBase):
             table.metadata.create_all()
 
         self.log.info('Database initialization complete.')
-
-    def get_or_create(self, session, model, expunge=False, keys=(), **kwargs):
-        """
-        Get or create an object.
-
-        A filter is done on the model with `kwargs`. If `keys` are specified,
-        only those keys will be used to do the filtering.
-
-        If `expunge` is True, the created object is detached from the session.
-        This is used if one get_or_create call calls another for its arguments
-        since the different calls would get different sessions.
-
-        """
-
-        filter = kwargs
-        if keys:
-            filter = dict((k, v) for k, v in kwargs.items() if k in keys)
-
-        instance = session.query(model).filter_by(**filter).first()
-        if not instance:
-            instance = model(**kwargs)
-            session.add(instance)
-
-        if expunge:
-            session.expunge(instance)
-
-        return instance
 
     def add_build(self, build):
         with in_session() as session:
