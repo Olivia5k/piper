@@ -1,9 +1,14 @@
 import facter
+from collections import MutableMapping
 
 from piper.abc import DynamicItem
 
 
 class PropBase(DynamicItem):
+    def __init__(self, config):
+        super(PropBase, self).__init__(config)
+        self._props = None
+
     @property
     def properties(self):
         """
@@ -12,6 +17,24 @@ class PropBase(DynamicItem):
         """
 
         raise NotImplementedError()
+
+    @property
+    def namespace(self):
+        return '.'.join((self.__module__, self.__class__.__name__))
+
+    # http://stackoverflow.com/questions/6027558
+    def flatten(self, d, parent_key='', sep='.'):
+        items = []
+
+        for k, v in d.items():
+            new_key = parent_key + sep + k if parent_key else k
+
+            if isinstance(v, MutableMapping):
+                items.extend(self.flatten(v, new_key).items())
+            else:
+                items.append((new_key, v))
+
+        return dict(items)
 
 
 class FacterProp(PropBase):
@@ -26,5 +49,8 @@ class FacterProp(PropBase):
 
     @property
     def properties(self):
-        # Facter has its own caching, so we can safely just always run this.
-        return facter.Facter().all
+        if self._props is None:
+            facts = facter.Facter().all
+            self._props = self.flatten(facts)
+
+        return self._props
