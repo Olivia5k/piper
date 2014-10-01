@@ -40,6 +40,10 @@ class Agent(Base):
     last_seen = Column(DateTime, default=utils.now)
 
 
+class AgentManager(object):
+    pass
+
+
 class Build(Base):
     __tablename__ = 'build'
 
@@ -58,6 +62,10 @@ class Build(Base):
     ended = Column(DateTime)
 
 
+class BuildManager(object):
+    pass
+
+
 class Project(Base):
     __tablename__ = 'project'
 
@@ -68,6 +76,10 @@ class Project(Base):
     created = Column(DateTime, default=utils.now)
 
 
+class ProjectManager(object):
+    pass
+
+
 class VCSRoot(Base):
     __tablename__ = 'vcs_root'
 
@@ -75,6 +87,10 @@ class VCSRoot(Base):
     name = Column(String(255))
     root_url = Column(String(255))
     created = Column(DateTime, default=utils.now)
+
+
+class VCSRootManager(object):
+    pass
 
 
 class Property(Base):
@@ -88,6 +104,10 @@ class Property(Base):
     created = Column(DateTime, default=utils.now)
 
 
+class PropertyManager(object):
+    pass
+
+
 class PropertyNamespace(Base):
     __tablename__ = 'property_namespace'
 
@@ -95,6 +115,10 @@ class PropertyNamespace(Base):
     properties = relationship('Property')
     name = Column(String(255))
     created = Column(DateTime, default=utils.now)
+
+
+class PropertyNamespaceManager(object):
+    pass
 
 
 @contextlib.contextmanager
@@ -111,7 +135,15 @@ def in_session():
 
 
 class SQLAlchemyDB(DatabaseBase):
-    tables = (Agent, Build, Project, VCSRoot, Property, PropertyNamespace)
+    tables = {
+        Agent: AgentManager,
+        Build: BuildManager,
+        Project: ProjectManager,
+        VCSRoot: VCSRootManager,
+        Property: PropertyManager,
+        PropertyNamespace: PropertyNamespaceManager,
+    }
+
     sqlite = 'sqlite:///'
 
     def setup(self, config):
