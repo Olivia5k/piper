@@ -36,8 +36,8 @@ class Agent(Base):
     busy = Column(Boolean())
     registered = Column(Boolean())
     properties = relationship('Property')
-    created = Column(DateTime, default=datetime.datetime.now)
-    last_seen = Column(DateTime, default=datetime.datetime.now)
+    created = Column(DateTime, default=utils.now)
+    last_seen = Column(DateTime, default=utils.now)
 
 
 class Build(Base):
@@ -53,8 +53,8 @@ class Build(Base):
     success = Column(Boolean())
     crashed = Column(Boolean())
     status = Column(String(255))
-    started = Column(DateTime, default=datetime.datetime.now)
-    updated = Column(DateTime, default=datetime.datetime.now)
+    started = Column(DateTime, default=utils.now)
+    updated = Column(DateTime, default=utils.now)
     ended = Column(DateTime)
 
 
@@ -65,7 +65,7 @@ class Project(Base):
     name = Column(String(255))
     vcs = relationship('VCSRoot')
     vcs_id = Column(Integer, ForeignKey('vcs_root.id'))
-    created = Column(DateTime, default=datetime.datetime.now)
+    created = Column(DateTime, default=utils.now)
 
 
 class VCSRoot(Base):
@@ -74,7 +74,7 @@ class VCSRoot(Base):
     id = Column(Integer(), primary_key=True)
     name = Column(String(255))
     root_url = Column(String(255))
-    created = Column(DateTime, default=datetime.datetime.now)
+    created = Column(DateTime, default=utils.now)
 
 
 class Property(Base):
@@ -85,7 +85,7 @@ class Property(Base):
     namespace_id = Column(Integer, ForeignKey('property_namespace.id'))
     key = Column(String(255))
     value = Column(String(255))
-    created = Column(DateTime, default=datetime.datetime.now)
+    created = Column(DateTime, default=utils.now)
 
 
 class PropertyNamespace(Base):
@@ -94,7 +94,7 @@ class PropertyNamespace(Base):
     id = Column(Integer(), primary_key=True)
     properties = relationship('Property')
     name = Column(String(255))
-    created = Column(DateTime, default=datetime.datetime.now)
+    created = Column(DateTime, default=utils.now)
 
 
 @contextlib.contextmanager
