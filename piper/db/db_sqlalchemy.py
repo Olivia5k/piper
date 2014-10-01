@@ -278,33 +278,32 @@ class SQLAlchemyDB(DatabaseBase):
 
             session.add(agent)
 
-    def sqla_json_encoder(self):  # pragma: nocover
-        class AlchemyEncoder(json.JSONEncoder):
-            cache = utils.LimitedSizeDict(size_limit=1000)
-
-            def default(self, obj):
-                if isinstance(obj.__class__, DeclarativeMeta):
-                    if obj in self.cache:
-                        return self.cache[obj]
-
-                    fields = {}
-                    for field in dir(obj):
-                        if not field.startswith('_') and field != 'metadata' \
-                                and not field.endswith('_id'):
-                            fields[field] = obj.__getattribute__(field)
-
-                    self.cache[obj] = fields
-                    return fields
-
-                elif isinstance(obj, datetime.datetime):
-                    return str(obj.isoformat())
-
-                return json.JSONEncoder.default(self, obj)
-        return AlchemyEncoder
-
     @property
     def json_settings(self):  # pragma: nocover
         return {
-            'cls': self.sqla_json_encoder(),
+            'cls': AlchemyEncoder,
             'check_circular': False,
         }
+
+
+class AlchemyEncoder(json.JSONEncoder):  # pragma: nocover
+    cache = utils.LimitedSizeDict(size_limit=1000)
+
+    def default(self, obj):
+        if isinstance(obj.__class__, DeclarativeMeta):
+            if obj in self.cache:
+                return self.cache[obj]
+
+            fields = {}
+            for field in dir(obj):
+                if not field.startswith('_') and field != 'metadata' \
+                        and not field.endswith('_id'):
+                    fields[field] = obj.__getattribute__(field)
+
+            self.cache[obj] = fields
+            return fields
+
+        elif isinstance(obj, datetime.datetime):
+            return str(obj.isoformat())
+
+        return json.JSONEncoder.default(self, obj)
