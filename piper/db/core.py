@@ -30,12 +30,126 @@ class LazyDatabaseMixin(object):
     db = property(_get_db, _set_db)
 
 
+class AgentManager(object):
+    def get(self):
+        """
+        Lazily get an agent.
+
+        """
+
+        raise NotImplementedError()
+
+    def lock(self, build):
+        """
+        Lock the agent to a build.
+
+        When an agent is locked, it will not accept other builds until it
+        unlocks itself.
+
+        """
+
+        raise NotImplementedError()
+
+    def unlock(self, build):
+        """
+        Unlock the agent from a build.
+
+        """
+
+        raise NotImplementedError()
+
+
+class BuildManager(object):
+    def add(self, build):
+        """
+        Register a build to the database.
+
+        Should return a reference to the build that other methods can access
+        via `self.ref`.
+
+        """
+
+        raise NotImplementedError()
+
+    def update(self, build):
+        """
+        Update the state of a build.
+
+        Uses `build.ref` as set by `add_build()`.
+
+        """
+
+        raise NotImplementedError()
+
+    def get(self, build_id):
+        """
+        Get a build and all its related fields.
+
+        Should return a Build object or None.
+
+        """
+
+        raise NotImplementedError()
+
+    def all(self):
+        """
+        Get all builds!
+
+        """
+
+        raise NotImplementedError()
+
+
+class ProjectManager(object):
+    def get(self, build):
+        """
+        Lazily get the project.
+
+        Create the project if it does not exist. If the VCS root for the
+        project does not exist, create that too.
+
+        """
+
+        raise NotImplementedError()
+
+
+class VCSRootManager(object):
+    def get(self, build):
+        """
+        Lazily get the VCS.
+
+        """
+
+        raise NotImplementedError()
+
+
+class PropertyManager(object):
+    def update(self):
+        """
+        Update agent properties.
+
+        """
+
+        raise NotImplementedError()
+
+
+class PropertyNamespaceManager(object):
+    pass
+
+
 # Let's name this DatabaseBase. 'tis a silly name.
 class DatabaseBase(object):
     """
     Abstract class representing a persistance layer
 
     """
+
+    agent = AgentManager()
+    build = BuildManager()
+    project = ProjectManager()
+    vcs = VCSRootManager()
+    property = PropertyManager()
+    propertynamespace = PropertyNamespaceManager()
 
     def __init__(self):
         self.log = logbook.Logger(self.__class__.__name__)
@@ -54,99 +168,6 @@ class DatabaseBase(object):
     def init(self, config):
         """
         Create the tables needed for the application.
-
-        """
-
-        raise NotImplementedError()
-
-    def add_build(self, build):
-        """
-        Register a build to the database.
-
-        Should return a reference to the build that other methods can access
-        via `self.ref`.
-
-        """
-
-        raise NotImplementedError()
-
-    def update_build(self, build):
-        """
-        Update the state of a build.
-
-        Uses `build.ref` as set by `add_build()`.
-
-        """
-
-        raise NotImplementedError()
-
-    def get_build(self, build_id):
-        """
-        Get a build and all its related fields.
-
-        Should return a Build object or None.
-
-        """
-
-        raise NotImplementedError()
-
-    def get_builds(self):
-        """
-        Get all builds!
-
-        """
-
-        raise NotImplementedError()
-
-    def get_project(self, build):
-        """
-        Lazily get the project.
-
-        Create the project if it does not exist. If the VCS root for the
-        project does not exist, create that too.
-
-        """
-
-        raise NotImplementedError()
-
-    def get_vcs(self, build):
-        """
-        Lazily get the VCS.
-
-        """
-
-        raise NotImplementedError()
-
-    def get_agent(self):
-        """
-        Lazily get an agent.
-
-        """
-
-        raise NotImplementedError()
-
-    def lock_agent(self, build):
-        """
-        Lock the agent to a build.
-
-        When an agent is locked, it will not accept other builds until it
-        unlocks itself.
-
-        """
-
-        raise NotImplementedError()
-
-    def unlock_agent(self, build):
-        """
-        Unlock the agent from a build.
-
-        """
-
-        raise NotImplementedError()
-
-    def update_props(self):
-        """
-        Update agent properties.
 
         """
 

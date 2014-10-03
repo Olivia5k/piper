@@ -27,25 +27,29 @@ class TestDatabaseBase(object):
     def setup_method(self, method):
         self.db = DatabaseBase()
 
-    def missing(self, name, *args, **kwargs):
+    def missing(self, ns, name, *args, **kwargs):
+        target = self.db
+        if ns is not None:
+            target = getattr(self.db, ns)
+
         with pytest.raises(NotImplementedError):
-            getattr(self.db, name)(*args, **kwargs)
+            getattr(target, name)(*args, **kwargs)
 
     def test_everything_raises_not_implemented_error(self):
         self.mock = mock.Mock()
 
-        self.missing('setup', self.mock)
-        self.missing('init', self.mock)
-        self.missing('add_build', self.mock)
-        self.missing('update_build', self.mock)
-        self.missing('get_build', self.mock)
-        self.missing('get_builds')
-        self.missing('get_project', self.mock)
-        self.missing('get_vcs', self.mock)
-        self.missing('get_agent')
-        self.missing('lock_agent', self.mock)
-        self.missing('unlock_agent', self.mock)
-        self.missing('update_props')
+        self.missing(None, 'setup', self.mock)
+        self.missing(None, 'init', self.mock)
+        self.missing('build', 'add', self.mock)
+        self.missing('build', 'update', self.mock)
+        self.missing('build', 'get', self.mock)
+        self.missing('build', 'all')
+        self.missing('project', 'get', self.mock)
+        self.missing('vcs', 'get', self.mock)
+        self.missing('agent', 'get')
+        self.missing('agent', 'lock', self.mock)
+        self.missing('agent', 'unlock', self.mock)
+        self.missing('property', 'update')
 
 
 class TestLazyDatabaseMixinDb(object):
