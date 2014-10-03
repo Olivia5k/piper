@@ -36,17 +36,27 @@ class ConfigError(Exception):
 
 
 class ConfigBase(object):
-    def __init__(self, filename):
-        self.filename = filename
+    def __init__(self, filename=None, raw=None):
+        args = (filename, raw)
+        assert any(args), 'Need to specify `filename` or `raw`'
+        assert not all(args), 'Cannot specify both ' + \
+            '`filename` and `raw` at the same time'
 
-        self.raw = None
+        self.filename = filename
+        self.raw = raw
+
         self.classes = {}
 
         self.log = logbook.Logger(self.__class__.__name__)
 
     def load(self):
         self.log.debug('Loading configuration')
-        self.load_config()
+
+        if self.filename:
+            self.load_config()
+        else:
+            self.log.debug('Using provided raw configuration.')
+
         self.validate_config()
         self.load_classes()
         return self
@@ -145,14 +155,18 @@ class BuildConfig(ConfigBase):
                 },
             },
             'db': DB_SCHEMA,
+            'job': {
+                'description': 'The key of the job to execute.',
+                'type': 'string',
+            },
         },
     }
 
-    def __init__(self, filename=None):
-        if not filename:
+    def __init__(self, filename=None, raw=None):
+        if raw is None and filename is None:
             filename = 'piper.yml'
 
-        super(BuildConfig, self).__init__(filename)
+        super(BuildConfig, self).__init__(filename, raw)
 
     def collect_classes(self):
         targets = set()

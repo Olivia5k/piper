@@ -35,8 +35,9 @@ class SQLAIntegration(SQLATest):
     def setup_method(self, method):
         super(SQLAIntegration, self).setup_method(method)
         self.db_file = 'test.db'
+        self.db_host = 'sqlite:///{0}'.format(self.db_file)
 
-        self.config.raw['db']['host'] = 'sqlite:///{0}'.format(self.db_file)
+        self.config.raw['db']['host'] = self.db_host
         self.config.verbose = False
 
         self.db.init(self.config)

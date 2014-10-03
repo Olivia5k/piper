@@ -34,7 +34,7 @@ class StaticVersion(Version):
         return self._schema
 
     def get_version(self):
-        return self.config.version
+        return self.config['version']
 
 
 class GitVersion(Version):

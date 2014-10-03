@@ -11,7 +11,7 @@ class Build(LazyDatabaseMixin):
     """
     The main pipeline runner.
 
-    This class loads the configurations, jobs up all other components,
+    This class loads the configurations, sets up all other components,
     executes them in whatever order they are supposed to happen in, collects
     data about the state of the pipeline and persists it, and finally tears
     down the components that needs tearing down.
@@ -55,7 +55,7 @@ class Build(LazyDatabaseMixin):
 
     def finish(self):
         self.end = utils.now()
-        self.db.update_build(self, ended=self.end)
+        self.db.build.update_build(self, ended=self.end)
 
         verb = 'finished successfully in'
         if not self.success:
@@ -98,7 +98,7 @@ class Build(LazyDatabaseMixin):
 
         """
 
-        self.ref = self.db.add_build(self)
+        self.ref = self.db.build.add_build(self)
 
     def set_logfile(self):
         """
@@ -197,7 +197,7 @@ class Build(LazyDatabaseMixin):
 
             # Update db status to show that we are running this build
             self.status = '{0}/{1}: {2}'.format(x, total, step.key)
-            self.db.update_build(self)
+            self.db.build.update_build(self)
 
             step.log.info('Running...')
             proc = self.env.execute(step)
@@ -250,11 +250,11 @@ class Build(LazyDatabaseMixin):
 
     def lock_agent(self):
         self.log.info('Locking agent')
-        self.db.lock_agent(self)
+        self.db.agent.lock_agent(self)
 
     def unlock_agent(self):
         self.log.info('Unlocking agent')
-        self.db.unlock_agent(self)
+        self.db.agent.unlock_agent(self)
 
 
 class ExecCLI(object):
