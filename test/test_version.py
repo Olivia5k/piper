@@ -10,10 +10,10 @@ import mock
 class StaticVersionBase(object):
     def setup_method(self, method):
         self.v = '32.1.12'
-        self.version = StaticVersion(mock.Mock(**{
+        self.version = StaticVersion({
             'class': 'hehe',
             'version': self.v,
-        }))
+        })
 
 
 class GitVersionBase(object):

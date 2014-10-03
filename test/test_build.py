@@ -238,8 +238,8 @@ class TestBuildAddBuild(BuildTestBase):
         self.build.db = mock.Mock()
         self.build.add_build()
 
-        assert self.build.ref is self.build.db.add_build.return_value
-        self.build.db.add_build.assert_called_once_with(self.build)
+        assert self.build.ref is self.build.db.build.add_build.return_value
+        self.build.db.build.add_build.assert_called_once_with(self.build)
 
 
 class TestBuildFinish(BuildTestBase):
@@ -255,7 +255,7 @@ class TestBuildFinish(BuildTestBase):
 
         assert self.build.end is now.return_value
         now.assert_called_once_with()
-        self.build.db.update_build.assert_called_once_with(
+        self.build.db.build.update_build.assert_called_once_with(
             self.build,
             ended=now.return_value
         )
@@ -294,7 +294,7 @@ class TestBuildLockAgent(BuildTestBase):
 
     def test_lock_db_call(self):
         self.build.lock_agent()
-        self.build.db.lock_agent.assert_called_once_with(self.build)
+        self.build.db.agent.lock_agent.assert_called_once_with(self.build)
 
 
 class TestBuildUnlockAgent(BuildTestBase):
@@ -304,7 +304,7 @@ class TestBuildUnlockAgent(BuildTestBase):
 
     def test_lock_db_call(self):
         self.build.unlock_agent()
-        self.build.db.unlock_agent.assert_called_once_with(self.build)
+        self.build.db.agent.unlock_agent.assert_called_once_with(self.build)
 
 
 class TestExecCLIRun(object):
