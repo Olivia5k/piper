@@ -53,21 +53,21 @@ class TestBuildManagerAddBuild(BuildManagerBase):
     @mock.patch('piper.db.db_sqlalchemy.Build')
     @mock.patch('piper.db.db_sqlalchemy.Session')
     def test_object_ref_is_returned(self, sess, table):
-        ret = self.manager.add_build(self.build)
+        ret = self.manager.add(self.build)
 
         assert ret is table.return_value
 
     @mock.patch('piper.db.db_sqlalchemy.Build')
     @mock.patch('piper.db.db_sqlalchemy.Session')
     def test_instance_added_to_session(self, sess, table):
-        self.manager.add_build(self.build)
+        self.manager.add(self.build)
 
         sess.return_value.add.assert_called_once_with(table.return_value)
 
     @mock.patch('piper.db.db_sqlalchemy.Build')
     @mock.patch('piper.db.db_sqlalchemy.Session')
     def test_instance_refreshed_and_expunged(self, sess, table):
-        self.manager.add_build(self.build)
+        self.manager.add(self.build)
 
         sess.return_value.refresh.assert_called_once_with(table.return_value)
         sess.return_value.expunge.assert_called_once_with(table.return_value)
@@ -82,7 +82,7 @@ class TestBuildManagerUpdateBuild(BuildManagerBase):
     @mock.patch('piper.db.db_sqlalchemy.Build')
     @mock.patch('piper.db.db_sqlalchemy.Session')
     def test_values(self, session, table, update):
-        self.manager.update_build(self.build, **self.extra)
+        self.manager.update(self.build, **self.extra)
 
         self.build.default_db_kwargs.assert_called_once_with()
         values = self.build.default_db_kwargs.return_value
@@ -97,7 +97,7 @@ class TestBuildManagerUpdateBuild(BuildManagerBase):
         # when it's magic.
         table.id.__eq__ = mock.Mock()
 
-        self.manager.update_build(self.build, **self.extra)
+        self.manager.update(self.build, **self.extra)
 
         args = self.build.default_db_kwargs.return_value
         where = update.return_value.where
@@ -112,7 +112,7 @@ class TestBuildManagerUpdateBuild(BuildManagerBase):
     @mock.patch('piper.db.db_sqlalchemy.Build')
     @mock.patch('piper.db.db_sqlalchemy.Session')
     def test_execution(self, session, table, update):
-        self.manager.update_build(self.build, **self.extra)
+        self.manager.update(self.build, **self.extra)
 
         stmt = update.return_value.where.return_value.values.return_value
         session.return_value.execute.assert_called_once_with(stmt)
@@ -126,27 +126,27 @@ class TestBuildManagerGetBuild(BuildManagerBase):
     @mock.patch('piper.db.db_sqlalchemy.Build')
     @mock.patch('piper.db.db_sqlalchemy.Session')
     def test_return_value(self, session, table):
-        ret = self.manager.get_build(self.build_id)
+        ret = self.manager.get(self.build_id)
         assert ret is session.return_value.query.return_value.get.return_value
 
     @mock.patch('piper.db.db_sqlalchemy.Build')
     @mock.patch('piper.db.db_sqlalchemy.Session')
     def test_result_is_expunged(self, session, table):
-        self.manager.get_build(self.build_id)
+        self.manager.get(self.build_id)
         session.return_value.expunge_all.assert_called_once_with()
 
 
-class TestBuildManagerGetBuilds(BuildManagerBase):
+class TestBuildManagerAll(BuildManagerBase):
     @mock.patch('piper.db.db_sqlalchemy.Build')
     @mock.patch('piper.db.db_sqlalchemy.Session')
     def test_return_value(self, session, table):
-        ret = self.manager.get_builds()
+        ret = self.manager.all()
         assert ret is session.return_value.query.return_value.all.return_value
 
     @mock.patch('piper.db.db_sqlalchemy.Build')
     @mock.patch('piper.db.db_sqlalchemy.Session')
     def test_result_is_expunged(self, session, table):
-        self.manager.get_builds()
+        self.manager.all()
         session.return_value.expunge_all.assert_called_once_with()
 
 
@@ -534,7 +534,7 @@ class TestSQLiteIntegration(SQLAIntegration):
         self.build.vcs.root_url = 'tokenring://wutheringheights.dk'
         self.build.vcs.get_project_name.return_value = 'mandatory/fun'
 
-        self.db.build.add_build(self.build)
+        self.db.build.add(self.build)
 
         with in_session() as session:
             # Yay integration

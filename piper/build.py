@@ -55,7 +55,7 @@ class Build(LazyDatabaseMixin):
 
     def finish(self):
         self.end = utils.now()
-        self.db.build.update_build(self, ended=self.end)
+        self.db.build.update(self, ended=self.end)
 
         verb = 'finished successfully in'
         if not self.success:
@@ -98,7 +98,7 @@ class Build(LazyDatabaseMixin):
 
         """
 
-        self.ref = self.db.build.add_build(self)
+        self.ref = self.db.build.add(self)
 
     def set_logfile(self):
         """
@@ -197,7 +197,7 @@ class Build(LazyDatabaseMixin):
 
             # Update db status to show that we are running this build
             self.status = '{0}/{1}: {2}'.format(x, total, step.key)
-            self.db.build.update_build(self)
+            self.db.build.update(self)
 
             step.log.info('Running...')
             proc = self.env.execute(step)

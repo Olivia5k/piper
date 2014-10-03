@@ -238,8 +238,8 @@ class TestBuildAddBuild(BuildTestBase):
         self.build.db = mock.Mock()
         self.build.add_build()
 
-        assert self.build.ref is self.build.db.build.add_build.return_value
-        self.build.db.build.add_build.assert_called_once_with(self.build)
+        assert self.build.ref is self.build.db.build.add.return_value
+        self.build.db.build.add.assert_called_once_with(self.build)
 
 
 class TestBuildFinish(BuildTestBase):
@@ -255,7 +255,7 @@ class TestBuildFinish(BuildTestBase):
 
         assert self.build.end is now.return_value
         now.assert_called_once_with()
-        self.build.db.build.update_build.assert_called_once_with(
+        self.build.db.build.update.assert_called_once_with(
             self.build,
             ended=now.return_value
         )

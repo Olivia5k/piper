@@ -122,7 +122,7 @@ class Build(Base):
 
 
 class BuildManager(SQLAlchemyManager):
-    def add_build(self, build):
+    def add(self, build):
         with in_session() as session:
             instance = Build(
                 agent=self.db.agent.get(),
@@ -141,7 +141,7 @@ class BuildManager(SQLAlchemyManager):
 
             return instance
 
-    def update_build(self, build, **extra):
+    def update(self, build, **extra):
         with in_session() as session:
             values = build.default_db_kwargs()
             values.update(extra)
@@ -149,7 +149,7 @@ class BuildManager(SQLAlchemyManager):
             stmt = update(Build).where(Build.id == build.ref.id).values(values)
             session.execute(stmt)
 
-    def get_build(self, build_id):
+    def get(self, build_id):
         with in_session() as session:
             build = session.query(Build).get(build_id)
             if build is not None:
@@ -161,7 +161,7 @@ class BuildManager(SQLAlchemyManager):
                 session.expunge_all()
             return build
 
-    def get_builds(self):
+    def all(self):
         with in_session() as session:
             builds = session.query(Build).all()
             for build in builds:  # pragma: nocover
