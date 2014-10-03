@@ -294,7 +294,7 @@ class TestBuildLockAgent(BuildTestBase):
 
     def test_lock_db_call(self):
         self.build.lock_agent()
-        self.build.db.agent.lock_agent.assert_called_once_with(self.build)
+        self.build.db.agent.lock.assert_called_once_with(self.build)
 
 
 class TestBuildUnlockAgent(BuildTestBase):
@@ -304,7 +304,7 @@ class TestBuildUnlockAgent(BuildTestBase):
 
     def test_lock_db_call(self):
         self.build.unlock_agent()
-        self.build.db.agent.unlock_agent.assert_called_once_with(self.build)
+        self.build.db.agent.unlock.assert_called_once_with(self.build)
 
 
 class TestExecCLIRun(object):

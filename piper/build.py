@@ -250,11 +250,11 @@ class Build(LazyDatabaseMixin):
 
     def lock_agent(self):
         self.log.info('Locking agent')
-        self.db.agent.lock_agent(self)
+        self.db.agent.lock(self)
 
     def unlock_agent(self):
         self.log.info('Unlocking agent')
-        self.db.agent.unlock_agent(self)
+        self.db.agent.unlock(self)
 
 
 class ExecCLI(object):

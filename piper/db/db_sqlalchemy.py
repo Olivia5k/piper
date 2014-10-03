@@ -73,7 +73,7 @@ class Agent(Base):
 
 
 class AgentManager(SQLAlchemyManager):
-    def get_agent(self):
+    def get(self):
         with in_session() as session:
             name = socket.gethostname()
             agent = self.get_or_create(
@@ -89,13 +89,13 @@ class AgentManager(SQLAlchemyManager):
 
             return agent
 
-    def lock_agent(self, build):
-        self.set_agent_lock(build, True)
+    def lock(self, build):
+        self.set_lock(build, True)
 
-    def unlock_agent(self, build):
-        self.set_agent_lock(build, False)
+    def unlock(self, build):
+        self.set_lock(build, False)
 
-    def set_agent_lock(self, build, locked):
+    def set_lock(self, build, locked):
         with in_session() as session:
             agent = session.query(Build).get(build.ref.id).agent
             agent.busy = locked
@@ -125,7 +125,7 @@ class BuildManager(SQLAlchemyManager):
     def add_build(self, build):
         with in_session() as session:
             instance = Build(
-                agent=self.db.agent.get_agent(),
+                agent=self.db.agent.get(),
                 project=self.db.project.get_project(build),
                 user=os.getenv('USER'),
                 **build.default_db_kwargs()

@@ -182,14 +182,14 @@ class TestAgentManagerGetAgent(AgentManagerBase):
     @mock.patch('socket.gethostname')
     @mock.patch('piper.db.db_sqlalchemy.Session')
     def test_return_value_is_agent(self, session, gh):
-        ret = self.manager.get_agent()
+        ret = self.manager.get()
         assert ret is self.manager.get_or_create.return_value
 
     @mock.patch('socket.gethostname')
     @mock.patch('piper.db.db_sqlalchemy.Agent')
     @mock.patch('piper.db.db_sqlalchemy.Session')
     def test_get_or_create_arguments(self, session, table, gh):
-        self.manager.get_agent()
+        self.manager.get()
 
         self.manager.get_or_create.assert_called_once_with(
             session.return_value,
@@ -206,27 +206,27 @@ class TestAgentManagerGetAgent(AgentManagerBase):
 class TestAgentManagerLockAgent(AgentManagerBase):
     def setup_method(self, method):
         super(TestAgentManagerLockAgent, self).setup_method(method)
-        self.manager.set_agent_lock = mock.Mock()
+        self.manager.set_lock = mock.Mock()
 
     def test_call(self):
-        self.manager.lock_agent(self.build)
-        self.manager.set_agent_lock.assert_called_once_with(self.build, True)
+        self.manager.lock(self.build)
+        self.manager.set_lock.assert_called_once_with(self.build, True)
 
 
 class TestAgentManagerUnlockAgent(AgentManagerBase):
     def setup_method(self, method):
         super(TestAgentManagerUnlockAgent, self).setup_method(method)
-        self.manager.set_agent_lock = mock.Mock()
+        self.manager.set_lock = mock.Mock()
 
     def test_call(self):
-        self.manager.unlock_agent(self.build)
-        self.manager.set_agent_lock.assert_called_once_with(self.build, False)
+        self.manager.unlock(self.build)
+        self.manager.set_lock.assert_called_once_with(self.build, False)
 
 
 class TestAgentManagerSetAgentLock(AgentManagerBase):
     def assert_lock(self, session, table, locked):
         table.id.__eq__ = mock.Mock()
-        self.manager.set_agent_lock(self.build, locked)
+        self.manager.set_lock(self.build, locked)
 
         agent = session.return_value.query.return_value.get.return_value.agent
 
@@ -236,7 +236,7 @@ class TestAgentManagerSetAgentLock(AgentManagerBase):
     @mock.patch('piper.db.db_sqlalchemy.Build')
     @mock.patch('piper.db.db_sqlalchemy.Session')
     def test_query_chain(self, session, table):
-        self.manager.set_agent_lock(self.build, True)
+        self.manager.set_lock(self.build, True)
 
         query = session.return_value.query
         get = query.return_value.get
@@ -496,7 +496,7 @@ class TestSQLiteIntegration(SQLAIntegration):
     def test_get_agent(self, gh):
         self.hostname = 'shadow.cabinet'
         gh.return_value = self.hostname
-        self.db.agent.get_agent()
+        self.db.agent.get()
 
         with in_session() as session:
             self.assert_agent(session)
