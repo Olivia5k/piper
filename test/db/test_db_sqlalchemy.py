@@ -2,6 +2,11 @@ import os
 import datetime
 
 from piper.db.db_sqlalchemy import SQLAlchemyDB
+from piper.db.db_sqlalchemy import SQLAlchemyManager
+from piper.db.db_sqlalchemy import AgentManager
+from piper.db.db_sqlalchemy import BuildManager
+from piper.db.db_sqlalchemy import ProjectManager
+from piper.db.db_sqlalchemy import VCSRootManager
 from piper.db.db_sqlalchemy import in_session
 
 from piper.db.db_sqlalchemy import Agent
@@ -23,6 +28,281 @@ class SQLAlchemyDBBase(object):
             }
         }
         self.build = mock.Mock()
+
+
+class BuildManagerBase(object):
+    def setup_method(self, method):
+        self.manager = BuildManager(mock.Mock())
+        self.build = mock.Mock()
+
+
+class ProjectManagerBase(object):
+    def setup_method(self, method):
+        self.manager = ProjectManager(mock.Mock())
+        self.build = mock.Mock()
+
+
+class AgentManagerBase(object):
+    def setup_method(self, method):
+        self.manager = AgentManager(mock.Mock())
+        self.build = mock.Mock()
+
+
+class VCSRootManagerBase(object):
+    def setup_method(self, method):
+        self.manager = VCSRootManager(mock.Mock())
+        self.build = mock.Mock()
+
+
+class TestBuildManagerAddBuild(BuildManagerBase):
+    def setup_method(self, method):
+        super(TestBuildManagerAddBuild, self).setup_method(method)
+        self.build.default_db_kwargs.return_value = {'cave': 'canem'}
+        self.manager.get_agent = mock.Mock()
+        self.manager.get_project = mock.Mock()
+
+    @mock.patch('piper.db.db_sqlalchemy.Build')
+    @mock.patch('piper.db.db_sqlalchemy.Session')
+    def test_object_ref_is_returned(self, sess, table):
+        ret = self.manager.add_build(self.build)
+
+        assert ret is table.return_value
+
+    @mock.patch('piper.db.db_sqlalchemy.Build')
+    @mock.patch('piper.db.db_sqlalchemy.Session')
+    def test_instance_added_to_session(self, sess, table):
+        self.manager.add_build(self.build)
+
+        sess.return_value.add.assert_called_once_with(table.return_value)
+
+    @mock.patch('piper.db.db_sqlalchemy.Build')
+    @mock.patch('piper.db.db_sqlalchemy.Session')
+    def test_instance_refreshed_and_expunged(self, sess, table):
+        self.manager.add_build(self.build)
+
+        sess.return_value.refresh.assert_called_once_with(table.return_value)
+        sess.return_value.expunge.assert_called_once_with(table.return_value)
+
+
+class TestBuildManagerUpdateBuild(BuildManagerBase):
+    def setup_method(self, method):
+        super(TestBuildManagerUpdateBuild, self).setup_method(method)
+        self.extra = {'island in the sun': 'only way for things to come'}
+
+    @mock.patch('piper.db.db_sqlalchemy.update')
+    @mock.patch('piper.db.db_sqlalchemy.Build')
+    @mock.patch('piper.db.db_sqlalchemy.Session')
+    def test_values(self, session, table, update):
+        self.manager.update_build(self.build, **self.extra)
+
+        self.build.default_db_kwargs.assert_called_once_with()
+        values = self.build.default_db_kwargs.return_value
+        values.update.assert_called_once_with(self.extra)
+
+    @mock.patch('piper.db.db_sqlalchemy.update')
+    @mock.patch('piper.db.db_sqlalchemy.Build')
+    @mock.patch('piper.db.db_sqlalchemy.Session')
+    def test_database_chain(self, session, table, update):
+        # Fake the comparison thingy that SQLAlchemy uses to make constructor
+        # objects. Default for the mock seems to be actually not mocked, even
+        # when it's magic.
+        table.id.__eq__ = mock.Mock()
+
+        self.manager.update_build(self.build, **self.extra)
+
+        args = self.build.default_db_kwargs.return_value
+        where = update.return_value.where
+        values = where.return_value.values
+
+        update.assert_called_once_with(table)
+        where.assert_called_once_with(table.id.__eq__.return_value)
+        values.assert_called_once_with(args)
+        table.id.__eq__.assert_called_once_with(self.build.ref.id)
+
+    @mock.patch('piper.db.db_sqlalchemy.update')
+    @mock.patch('piper.db.db_sqlalchemy.Build')
+    @mock.patch('piper.db.db_sqlalchemy.Session')
+    def test_execution(self, session, table, update):
+        self.manager.update_build(self.build, **self.extra)
+
+        stmt = update.return_value.where.return_value.values.return_value
+        session.return_value.execute.assert_called_once_with(stmt)
+
+
+class TestBuildManagerGetBuild(BuildManagerBase):
+    def setup_method(self, method):
+        super(TestBuildManagerGetBuild, self).setup_method(method)
+        self.build_id = 'phantom_moon'
+
+    @mock.patch('piper.db.db_sqlalchemy.Build')
+    @mock.patch('piper.db.db_sqlalchemy.Session')
+    def test_return_value(self, session, table):
+        ret = self.manager.get_build(self.build_id)
+        assert ret is session.return_value.query.return_value.get.return_value
+
+    @mock.patch('piper.db.db_sqlalchemy.Build')
+    @mock.patch('piper.db.db_sqlalchemy.Session')
+    def test_result_is_expunged(self, session, table):
+        self.manager.get_build(self.build_id)
+        session.return_value.expunge_all.assert_called_once_with()
+
+
+class TestBuildManagerGetBuilds(BuildManagerBase):
+    @mock.patch('piper.db.db_sqlalchemy.Build')
+    @mock.patch('piper.db.db_sqlalchemy.Session')
+    def test_return_value(self, session, table):
+        ret = self.manager.get_builds()
+        assert ret is session.return_value.query.return_value.all.return_value
+
+    @mock.patch('piper.db.db_sqlalchemy.Build')
+    @mock.patch('piper.db.db_sqlalchemy.Session')
+    def test_result_is_expunged(self, session, table):
+        self.manager.get_builds()
+        session.return_value.expunge_all.assert_called_once_with()
+
+
+class TestProjectManagerGetProject(ProjectManagerBase):
+    def setup_method(self, method):
+        super(TestProjectManagerGetProject, self).setup_method(method)
+        self.manager.get_vcs = mock.Mock()
+        self.manager.get_or_create = mock.Mock()
+
+    @mock.patch('piper.db.db_sqlalchemy.Session')
+    def test_return_value_is_project(self, session):
+        ret = self.manager.get_project(self.build)
+        assert ret is self.manager.get_or_create.return_value
+
+    @mock.patch('piper.db.db_sqlalchemy.Project')
+    @mock.patch('piper.db.db_sqlalchemy.Session')
+    def test_get_or_create_arguments(self, session, table):
+        self.manager.get_project(self.build)
+
+        self.manager.get_or_create.assert_called_once_with(
+            session.return_value,
+            table,
+            name=self.build.vcs.get_project_name.return_value,
+            vcs=self.manager.db.vcs_root.get_vcs.return_value
+        )
+
+
+class TestAgentManagerGetAgent(AgentManagerBase):
+    def setup_method(self, method):
+        super(TestAgentManagerGetAgent, self).setup_method(method)
+        self.manager.get_or_create = mock.Mock()
+
+    @mock.patch('socket.gethostname')
+    @mock.patch('piper.db.db_sqlalchemy.Session')
+    def test_return_value_is_agent(self, session, gh):
+        ret = self.manager.get_agent()
+        assert ret is self.manager.get_or_create.return_value
+
+    @mock.patch('socket.gethostname')
+    @mock.patch('piper.db.db_sqlalchemy.Agent')
+    @mock.patch('piper.db.db_sqlalchemy.Session')
+    def test_get_or_create_arguments(self, session, table, gh):
+        self.manager.get_agent()
+
+        self.manager.get_or_create.assert_called_once_with(
+            session.return_value,
+            table,
+            keys=('fqdn',),
+            name=gh.return_value,
+            fqdn=gh.return_value,
+            active=True,
+            busy=False,
+            registered=False,
+        )
+
+
+class TestAgentManagerLockAgent(AgentManagerBase):
+    def setup_method(self, method):
+        super(TestAgentManagerLockAgent, self).setup_method(method)
+        self.manager.set_agent_lock = mock.Mock()
+
+    def test_call(self):
+        self.manager.lock_agent(self.build)
+        self.manager.set_agent_lock.assert_called_once_with(self.build, True)
+
+
+class TestAgentManagerUnlockAgent(AgentManagerBase):
+    def setup_method(self, method):
+        super(TestAgentManagerUnlockAgent, self).setup_method(method)
+        self.manager.set_agent_lock = mock.Mock()
+
+    def test_call(self):
+        self.manager.unlock_agent(self.build)
+        self.manager.set_agent_lock.assert_called_once_with(self.build, False)
+
+
+class TestAgentManagerSetAgentLock(AgentManagerBase):
+    def assert_lock(self, session, table, locked):
+        table.id.__eq__ = mock.Mock()
+        self.manager.set_agent_lock(self.build, locked)
+
+        agent = session.return_value.query.return_value.get.return_value.agent
+
+        assert agent.busy is locked
+        session.return_value.add.assert_called_once_with(agent)
+
+    @mock.patch('piper.db.db_sqlalchemy.Build')
+    @mock.patch('piper.db.db_sqlalchemy.Session')
+    def test_query_chain(self, session, table):
+        self.manager.set_agent_lock(self.build, True)
+
+        query = session.return_value.query
+        get = query.return_value.get
+
+        query.assert_called_once_with(table)
+        get.assert_called_once_with(self.build.ref.id)
+
+    @mock.patch('piper.db.db_sqlalchemy.Build')
+    @mock.patch('piper.db.db_sqlalchemy.Session')
+    def test_agent_updated_to_locked(self, session, table):
+        self.assert_lock(session, table, True)
+
+    @mock.patch('piper.db.db_sqlalchemy.Build')
+    @mock.patch('piper.db.db_sqlalchemy.Session')
+    def test_agent_updated_to_unlocked(self, session, table):
+        self.assert_lock(session, table, False)
+
+
+class TestVCSRootManagerGetVcs(VCSRootManagerBase):
+    def setup_method(self, method):
+        super(TestVCSRootManagerGetVcs, self).setup_method(method)
+        self.manager.get_or_create = mock.Mock()
+
+    @mock.patch('piper.db.db_sqlalchemy.Session')
+    def test_return_value_is_vcs(self, session):
+        ret = self.manager.get_vcs(self.build)
+        assert ret is self.manager.get_or_create.return_value
+
+    @mock.patch('piper.db.db_sqlalchemy.VCSRoot')
+    @mock.patch('piper.db.db_sqlalchemy.Session')
+    def test_get_or_create_arguments(self, session, table):
+        self.manager.get_vcs(self.build)
+
+        self.manager.get_or_create.assert_called_once_with(
+            session.return_value,
+            table,
+            expunge=False,
+            keys=('root_url',),
+            root_url=self.build.vcs.root_url,
+            name=self.build.vcs.name,
+        )
+
+    @mock.patch('piper.db.db_sqlalchemy.VCSRoot')
+    @mock.patch('piper.db.db_sqlalchemy.Session')
+    def test_get_or_create_arguments_with_expunge(self, session, table):
+        self.manager.get_vcs(self.build, expunge=True)
+
+        self.manager.get_or_create.assert_called_once_with(
+            session.return_value,
+            table,
+            expunge=True,
+            keys=('root_url',),
+            root_url=self.build.vcs.root_url,
+            name=self.build.vcs.name,
+        )
 
 
 class TestSQLAlchemyDBSetup(SQLAlchemyDBBase):
@@ -94,9 +374,24 @@ class TestSQLAlchemyDBCreateTables(SQLAlchemyDBBase):
             table.metadata.create_all.assert_called_once_with()
 
 
-class TestSQLAlchemyDBGetOrCreate(SQLAlchemyDBBase):
+class TestSQLAlchemyDBSetupManagers(SQLAlchemyDBBase):
+    def test_set(self):
+        table, manager = mock.Mock(), mock.Mock()
+        table.__tablename__ = 'hehe'
+        manager.__name__ = 'manager'
+
+        self.db.tables = {
+            table: manager
+        }
+
+        self.db.setup_managers()
+
+        assert self.db.hehe is manager.return_value
+
+
+class TestSQLAlchemyManagerGetOrCreate(object):
     def setup_method(self, method):
-        super(TestSQLAlchemyDBGetOrCreate, self).setup_method(method)
+        self.manager = SQLAlchemyManager(mock.Mock())
         self.session = mock.Mock()
         self.model = mock.Mock()
         self.kwargs = {
@@ -108,7 +403,11 @@ class TestSQLAlchemyDBGetOrCreate(SQLAlchemyDBBase):
         self.filter = self.session.query.return_value.filter_by
 
     def test_already_exists(self):
-        ret = self.db.get_or_create(self.session, self.model, **self.kwargs)
+        ret = self.manager.get_or_create(
+            self.session,
+            self.model,
+            **self.kwargs
+        )
 
         assert ret is self.filter.return_value.first.return_value
         assert self.session.add.call_count == 0
@@ -116,285 +415,20 @@ class TestSQLAlchemyDBGetOrCreate(SQLAlchemyDBBase):
     def test_does_not_exist(self):
         self.filter.return_value.first.return_value = None
 
-        self.db.get_or_create(self.session, self.model, **self.kwargs)
+        self.manager.get_or_create(self.session, self.model, **self.kwargs)
 
         self.model.assert_called_once_with(**self.kwargs)
         self.session.add.assert_called_once_with(self.model.return_value)
 
     def test_filter_kwargs_without_keys(self):
-        self.db.get_or_create(self.session, self.model, **self.kwargs)
+        self.manager.get_or_create(self.session, self.model, **self.kwargs)
         self.filter.assert_called_once_with(**self.kwargs)
 
     def test_filter_kwargs_with_keys(self):
-        self.db.get_or_create(
+        self.manager.get_or_create(
             self.session, self.model, keys=self.keys, **self.kwargs
         )
         self.filter.assert_called_once_with(**self.filtered_keys)
-
-
-class TestSQLAlchemyDBAddBuild(SQLAlchemyDBBase):
-    def setup_method(self, method):
-        super(TestSQLAlchemyDBAddBuild, self).setup_method(method)
-        self.build.default_db_kwargs.return_value = {'cave': 'canem'}
-        self.db.get_agent = mock.Mock()
-        self.db.get_project = mock.Mock()
-
-    @mock.patch('piper.db.db_sqlalchemy.Build')
-    @mock.patch('piper.db.db_sqlalchemy.Session')
-    def test_object_ref_is_returned(self, sess, table):
-        ret = self.db.add_build(self.build)
-
-        assert ret is table.return_value
-
-    @mock.patch('piper.db.db_sqlalchemy.Build')
-    @mock.patch('piper.db.db_sqlalchemy.Session')
-    def test_instance_added_to_session(self, sess, table):
-        self.db.add_build(self.build)
-
-        sess.return_value.add.assert_called_once_with(table.return_value)
-
-    @mock.patch('piper.db.db_sqlalchemy.Build')
-    @mock.patch('piper.db.db_sqlalchemy.Session')
-    def test_instance_refreshed_and_expunged(self, sess, table):
-        self.db.add_build(self.build)
-
-        sess.return_value.refresh.assert_called_once_with(table.return_value)
-        sess.return_value.expunge.assert_called_once_with(table.return_value)
-
-
-class TestSQLAlchemyDBUpdateBuild(SQLAlchemyDBBase):
-    def setup_method(self, method):
-        super(TestSQLAlchemyDBUpdateBuild, self).setup_method(method)
-        self.extra = {'island in the sun': 'only way for things to come'}
-
-    @mock.patch('piper.db.db_sqlalchemy.update')
-    @mock.patch('piper.db.db_sqlalchemy.Build')
-    @mock.patch('piper.db.db_sqlalchemy.Session')
-    def test_values(self, session, table, update):
-        self.db.update_build(self.build, **self.extra)
-
-        self.build.default_db_kwargs.assert_called_once_with()
-        values = self.build.default_db_kwargs.return_value
-        values.update.assert_called_once_with(self.extra)
-
-    @mock.patch('piper.db.db_sqlalchemy.update')
-    @mock.patch('piper.db.db_sqlalchemy.Build')
-    @mock.patch('piper.db.db_sqlalchemy.Session')
-    def test_database_chain(self, session, table, update):
-        # Fake the comparison thingy that SQLAlchemy uses to make constructor
-        # objects. Default for the mock seems to be actually not mocked, even
-        # when it's magic.
-        table.id.__eq__ = mock.Mock()
-
-        self.db.update_build(self.build, **self.extra)
-
-        args = self.build.default_db_kwargs.return_value
-        where = update.return_value.where
-        values = where.return_value.values
-
-        update.assert_called_once_with(table)
-        where.assert_called_once_with(table.id.__eq__.return_value)
-        values.assert_called_once_with(args)
-        table.id.__eq__.assert_called_once_with(self.build.ref.id)
-
-    @mock.patch('piper.db.db_sqlalchemy.update')
-    @mock.patch('piper.db.db_sqlalchemy.Build')
-    @mock.patch('piper.db.db_sqlalchemy.Session')
-    def test_execution(self, session, table, update):
-        self.db.update_build(self.build, **self.extra)
-
-        stmt = update.return_value.where.return_value.values.return_value
-        session.return_value.execute.assert_called_once_with(stmt)
-
-
-class TestSQLAlchemyDBGetProject(SQLAlchemyDBBase):
-    def setup_method(self, method):
-        super(TestSQLAlchemyDBGetProject, self).setup_method(method)
-        self.db.get_vcs = mock.Mock()
-        self.db.get_or_create = mock.Mock()
-
-    @mock.patch('piper.db.db_sqlalchemy.Session')
-    def test_return_value_is_project(self, session):
-        ret = self.db.get_project(self.build)
-        assert ret is self.db.get_or_create.return_value
-
-    @mock.patch('piper.db.db_sqlalchemy.Project')
-    @mock.patch('piper.db.db_sqlalchemy.Session')
-    def test_get_or_create_arguments(self, session, table):
-        self.db.get_project(self.build)
-
-        self.db.get_or_create.assert_called_once_with(
-            session.return_value,
-            table,
-            name=self.build.vcs.get_project_name.return_value,
-            vcs=self.db.get_vcs.return_value
-        )
-
-
-class TestSQLAlchemyDBGetVcs(SQLAlchemyDBBase):
-    def setup_method(self, method):
-        super(TestSQLAlchemyDBGetVcs, self).setup_method(method)
-        self.db.get_or_create = mock.Mock()
-
-    @mock.patch('piper.db.db_sqlalchemy.Session')
-    def test_return_value_is_vcs(self, session):
-        ret = self.db.get_vcs(self.build)
-        assert ret is self.db.get_or_create.return_value
-
-    @mock.patch('piper.db.db_sqlalchemy.VCSRoot')
-    @mock.patch('piper.db.db_sqlalchemy.Session')
-    def test_get_or_create_arguments(self, session, table):
-        self.db.get_vcs(self.build)
-
-        self.db.get_or_create.assert_called_once_with(
-            session.return_value,
-            table,
-            expunge=False,
-            keys=('root_url',),
-            root_url=self.build.vcs.root_url,
-            name=self.build.vcs.name,
-        )
-
-    @mock.patch('piper.db.db_sqlalchemy.VCSRoot')
-    @mock.patch('piper.db.db_sqlalchemy.Session')
-    def test_get_or_create_arguments_with_expunge(self, session, table):
-        self.db.get_vcs(self.build, expunge=True)
-
-        self.db.get_or_create.assert_called_once_with(
-            session.return_value,
-            table,
-            expunge=True,
-            keys=('root_url',),
-            root_url=self.build.vcs.root_url,
-            name=self.build.vcs.name,
-        )
-
-
-class TestSQLAlchemyDBGetAgent(SQLAlchemyDBBase):
-    def setup_method(self, method):
-        super(TestSQLAlchemyDBGetAgent, self).setup_method(method)
-        self.db.get_or_create = mock.Mock()
-
-    @mock.patch('socket.gethostname')
-    @mock.patch('piper.db.db_sqlalchemy.Session')
-    def test_return_value_is_agent(self, session, gh):
-        ret = self.db.get_agent()
-        assert ret is self.db.get_or_create.return_value
-
-    @mock.patch('socket.gethostname')
-    @mock.patch('piper.db.db_sqlalchemy.Agent')
-    @mock.patch('piper.db.db_sqlalchemy.Session')
-    def test_get_or_create_arguments(self, session, table, gh):
-        self.db.get_agent()
-
-        self.db.get_or_create.assert_called_once_with(
-            session.return_value,
-            table,
-            keys=('fqdn',),
-            name=gh.return_value,
-            fqdn=gh.return_value,
-            active=True,
-            busy=False,
-            registered=False,
-        )
-
-
-class TestSQLAlchemyDBLockAgent(SQLAlchemyDBBase):
-    def setup_method(self, method):
-        super(TestSQLAlchemyDBLockAgent, self).setup_method(method)
-        self.db.set_agent_lock = mock.Mock()
-
-    def test_call(self):
-        self.db.lock_agent(self.build)
-        self.db.set_agent_lock.assert_called_once_with(self.build, True)
-
-
-class TestSQLAlchemyDBUnlockAgent(SQLAlchemyDBBase):
-    def setup_method(self, method):
-        super(TestSQLAlchemyDBUnlockAgent, self).setup_method(method)
-        self.db.set_agent_lock = mock.Mock()
-
-    def test_call(self):
-        self.db.unlock_agent(self.build)
-        self.db.set_agent_lock.assert_called_once_with(self.build, False)
-
-
-class TestSQLAlchemyDBSetAgentLock(SQLAlchemyDBBase):
-    def assert_lock(self, session, table, locked):
-        table.id.__eq__ = mock.Mock()
-        self.db.set_agent_lock(self.build, locked)
-
-        agent = session.return_value.query.return_value.get.return_value.agent
-
-        assert agent.busy is locked
-        session.return_value.add.assert_called_once_with(agent)
-
-    @mock.patch('piper.db.db_sqlalchemy.Build')
-    @mock.patch('piper.db.db_sqlalchemy.Session')
-    def test_query_chain(self, session, table):
-        self.db.set_agent_lock(self.build, True)
-
-        query = session.return_value.query
-        get = query.return_value.get
-
-        query.assert_called_once_with(table)
-        get.assert_called_once_with(self.build.ref.id)
-
-    @mock.patch('piper.db.db_sqlalchemy.Build')
-    @mock.patch('piper.db.db_sqlalchemy.Session')
-    def test_agent_updated_to_locked(self, session, table):
-        self.assert_lock(session, table, True)
-
-    @mock.patch('piper.db.db_sqlalchemy.Build')
-    @mock.patch('piper.db.db_sqlalchemy.Session')
-    def test_agent_updated_to_unlocked(self, session, table):
-        self.assert_lock(session, table, False)
-
-
-class TestSQLAlchemyDBGetBuild(SQLAlchemyDBBase):
-    def setup_method(self, method):
-        super(TestSQLAlchemyDBGetBuild, self).setup_method(method)
-        self.build_id = 'phantom_moon'
-
-    @mock.patch('piper.db.db_sqlalchemy.Build')
-    @mock.patch('piper.db.db_sqlalchemy.Session')
-    def test_return_value(self, session, table):
-        ret = self.db.get_build(self.build_id)
-        assert ret is session.return_value.query.return_value.get.return_value
-
-    @mock.patch('piper.db.db_sqlalchemy.Build')
-    @mock.patch('piper.db.db_sqlalchemy.Session')
-    def test_result_is_expunged(self, session, table):
-        self.db.get_build(self.build_id)
-        session.return_value.expunge_all.assert_called_once_with()
-
-
-class TestSQLAlchemyDBGetBuilds(SQLAlchemyDBBase):
-    @mock.patch('piper.db.db_sqlalchemy.Build')
-    @mock.patch('piper.db.db_sqlalchemy.Session')
-    def test_return_value(self, session, table):
-        ret = self.db.get_builds()
-        assert ret is session.return_value.query.return_value.all.return_value
-
-    @mock.patch('piper.db.db_sqlalchemy.Build')
-    @mock.patch('piper.db.db_sqlalchemy.Session')
-    def test_result_is_expunged(self, session, table):
-        self.db.get_builds()
-        session.return_value.expunge_all.assert_called_once_with()
-
-
-class TestSQLAlchemyDBSetupManagers(SQLAlchemyDBBase):
-    def test_set(self):
-        table, manager = mock.Mock(), mock.Mock()
-        table.__tablename__ = 'hehe'
-
-        self.db.tables = {
-            table: manager
-        }
-
-        self.db.setup_managers()
-
-        assert self.db.hehe is manager.return_value
 
 
 class TestInSessionInner(object):
@@ -482,7 +516,7 @@ class TestSQLiteIntegration(SQLAlchemyDBBase):
         self.build.vcs.name = 'oh sailor'
         self.build.vcs.root_url = 'fiona://extraordinary-machine.net'
 
-        self.db.get_vcs(self.build)
+        self.db.vcs_root.get_vcs(self.build)
 
         with in_session() as session:
             self.assert_vcs(session)
@@ -491,7 +525,7 @@ class TestSQLiteIntegration(SQLAlchemyDBBase):
     def test_get_agent(self, gh):
         self.hostname = 'shadow.cabinet'
         gh.return_value = self.hostname
-        self.db.get_agent()
+        self.db.agent.get_agent()
 
         with in_session() as session:
             self.assert_agent(session)
@@ -501,7 +535,7 @@ class TestSQLiteIntegration(SQLAlchemyDBBase):
         self.build.vcs.root_url = 'tokenring://wutheringheights.dk'
         self.build.vcs.get_project_name.return_value = 'mandatory/fun'
 
-        self.db.get_project(self.build)
+        self.db.project.get_project(self.build)
 
         with in_session() as session:
             self.assert_vcs(session)
@@ -529,7 +563,7 @@ class TestSQLiteIntegration(SQLAlchemyDBBase):
         self.build.vcs.root_url = 'tokenring://wutheringheights.dk'
         self.build.vcs.get_project_name.return_value = 'mandatory/fun'
 
-        self.db.add_build(self.build)
+        self.db.build.add_build(self.build)
 
         with in_session() as session:
             # Yay integration

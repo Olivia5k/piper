@@ -27,6 +27,9 @@ Session = sessionmaker()
 
 
 class SQLAlchemyManager(object):
+    def __init__(self, db):
+        self.db = db
+
     def get_or_create(self, session, model, expunge=False, keys=(), **kwargs):
         """
         Get or create an object.
@@ -122,8 +125,8 @@ class BuildManager(SQLAlchemyManager):
     def add_build(self, build):
         with in_session() as session:
             instance = Build(
-                agent=self.get_agent(),
-                project=self.get_project(build),
+                agent=self.db.agent.get_agent(),
+                project=self.db.project.get_project(build),
                 user=os.getenv('USER'),
                 **build.default_db_kwargs()
             )
@@ -186,7 +189,7 @@ class ProjectManager(SQLAlchemyManager):
                 session,
                 Project,
                 name=build.vcs.get_project_name(),
-                vcs=self.get_vcs(build, expunge=True),
+                vcs=self.db.vcs_root.get_vcs(build, expunge=True),
             )
 
             return project
@@ -274,7 +277,7 @@ class SQLAlchemyDB(DatabaseBase):
         self.engine = create_engine(config.raw['db']['host'])
         Session.configure(bind=self.engine)
 
-        self.set_managers()
+        self.setup_managers()
 
     def init(self, config):
         host = config.raw['db']['host']
@@ -288,7 +291,15 @@ class SQLAlchemyDB(DatabaseBase):
 
     def setup_managers(self):
         for cls, man in self.tables.items():
-            setattr(self, cls.__tablename__, man())
+            table = cls.__tablename__
+            self.log.debug(
+                'Creating manager {0} as db.{1}'.format(man.__name__, table)
+            )
+
+            # Initialize the manager with this db as first argument. That way
+            # they can all access each other in a clean way.
+            instance = man(self)
+            setattr(self, table, instance)
 
     def handle_sqlite(self, host):
         target = os.path.dirname(host.replace(self.sqlite, ''))
