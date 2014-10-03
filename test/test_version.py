@@ -42,7 +42,7 @@ class TestVersionValidate(object):
 
 class TestVersionGetVersion(object):
     def test_not_implemented(self):
-        version = Version(mock.Mock(the_final_countdown=True))
+        version = Version(mock.Mock())
         with pytest.raises(NotImplementedError):
             version.get_version()
 
