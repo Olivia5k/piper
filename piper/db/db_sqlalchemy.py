@@ -126,7 +126,7 @@ class BuildManager(SQLAlchemyManager):
         with in_session() as session:
             instance = Build(
                 agent=self.db.agent.get(),
-                project=self.db.project.get_project(build),
+                project=self.db.project.get(build),
                 user=os.getenv('USER'),
                 **build.default_db_kwargs()
             )
@@ -183,7 +183,7 @@ class Project(Base):
 
 
 class ProjectManager(SQLAlchemyManager):
-    def get_project(self, build):
+    def get(self, build):
         with in_session() as session:
             project = self.get_or_create(
                 session,
