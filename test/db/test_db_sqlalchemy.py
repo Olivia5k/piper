@@ -170,7 +170,7 @@ class TestProjectManagerGetProject(ProjectManagerBase):
             session.return_value,
             table,
             name=self.build.vcs.get_project_name.return_value,
-            vcs=self.manager.db.vcs_root.get_vcs.return_value
+            vcs=self.manager.db.vcs_root.get.return_value
         )
 
 
@@ -262,13 +262,13 @@ class TestVCSRootManagerGetVcs(VCSRootManagerBase):
 
     @mock.patch('piper.db.db_sqlalchemy.Session')
     def test_return_value_is_vcs(self, session):
-        ret = self.manager.get_vcs(self.build)
+        ret = self.manager.get(self.build)
         assert ret is self.manager.get_or_create.return_value
 
     @mock.patch('piper.db.db_sqlalchemy.VCSRoot')
     @mock.patch('piper.db.db_sqlalchemy.Session')
     def test_get_or_create_arguments(self, session, table):
-        self.manager.get_vcs(self.build)
+        self.manager.get(self.build)
 
         self.manager.get_or_create.assert_called_once_with(
             session.return_value,
@@ -282,7 +282,7 @@ class TestVCSRootManagerGetVcs(VCSRootManagerBase):
     @mock.patch('piper.db.db_sqlalchemy.VCSRoot')
     @mock.patch('piper.db.db_sqlalchemy.Session')
     def test_get_or_create_arguments_with_expunge(self, session, table):
-        self.manager.get_vcs(self.build, expunge=True)
+        self.manager.get(self.build, expunge=True)
 
         self.manager.get_or_create.assert_called_once_with(
             session.return_value,
@@ -487,7 +487,7 @@ class TestSQLiteIntegration(SQLAIntegration):
         self.build.vcs.name = 'oh sailor'
         self.build.vcs.root_url = 'fiona://extraordinary-machine.net'
 
-        self.db.vcs_root.get_vcs(self.build)
+        self.db.vcs_root.get(self.build)
 
         with in_session() as session:
             self.assert_vcs(session)

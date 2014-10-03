@@ -189,7 +189,7 @@ class ProjectManager(SQLAlchemyManager):
                 session,
                 Project,
                 name=build.vcs.get_project_name(),
-                vcs=self.db.vcs_root.get_vcs(build, expunge=True),
+                vcs=self.db.vcs_root.get(build, expunge=True),
             )
 
             return project
@@ -205,7 +205,7 @@ class VCSRoot(Base):
 
 
 class VCSRootManager(SQLAlchemyManager):
-    def get_vcs(self, build, expunge=False):
+    def get(self, build, expunge=False):
         with in_session() as session:
             vcs = self.get_or_create(
                 session,
