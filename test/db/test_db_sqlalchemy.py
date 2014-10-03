@@ -1,7 +1,5 @@
-import os
 import datetime
 
-from piper.db.db_sqlalchemy import SQLAlchemyDB
 from piper.db.db_sqlalchemy import SQLAlchemyManager
 from piper.db.db_sqlalchemy import AgentManager
 from piper.db.db_sqlalchemy import BuildManager
@@ -14,20 +12,11 @@ from piper.db.db_sqlalchemy import Build
 from piper.db.db_sqlalchemy import Project
 from piper.db.db_sqlalchemy import VCSRoot
 
+from test.utils import SQLATest
+from test.utils import SQLAIntegration
+
 import mock
 import pytest
-
-
-class SQLAlchemyDBBase(object):
-    def setup_method(self, method):
-        self.db = SQLAlchemyDB()
-        self.config = mock.Mock()
-        self.config.raw = {
-            'db': {
-                'host': 'localhost',
-            }
-        }
-        self.build = mock.Mock()
 
 
 class BuildManagerBase(object):
@@ -305,7 +294,7 @@ class TestVCSRootManagerGetVcs(VCSRootManagerBase):
         )
 
 
-class TestSQLAlchemyDBSetup(SQLAlchemyDBBase):
+class TestSQLAlchemyDBSetup(SQLATest):
     @mock.patch('piper.db.db_sqlalchemy.create_engine')
     @mock.patch('piper.db.db_sqlalchemy.Session')
     def test_setup(self, se, ce):
@@ -316,7 +305,7 @@ class TestSQLAlchemyDBSetup(SQLAlchemyDBBase):
         se.configure.assert_called_once_with(bind=ce.return_value)
 
 
-class TestSQLAlchemyDBInit(SQLAlchemyDBBase):
+class TestSQLAlchemyDBInit(SQLATest):
     def test_no_db(self):
         self.config.raw['db']['host'] = None
 
@@ -338,7 +327,7 @@ class TestSQLAlchemyDBInit(SQLAlchemyDBBase):
         )
 
 
-class TestSQLAlchemyDBHandleSqlite(SQLAlchemyDBBase):
+class TestSQLAlchemyDBHandleSqlite(SQLATest):
     @mock.patch('piper.utils.mkdir')
     @mock.patch('os.path.dirname')
     @mock.patch('os.path.exists')
@@ -350,7 +339,7 @@ class TestSQLAlchemyDBHandleSqlite(SQLAlchemyDBBase):
         mkdir.assert_called_once_with(dirname.return_value)
 
 
-class TestSQLAlchemyDBCreateTables(SQLAlchemyDBBase):
+class TestSQLAlchemyDBCreateTables(SQLATest):
     def setup_method(self, method):
         super(TestSQLAlchemyDBCreateTables, self).setup_method(method)
         self.db.tables = (mock.Mock(), mock.Mock())
@@ -374,7 +363,7 @@ class TestSQLAlchemyDBCreateTables(SQLAlchemyDBBase):
             table.metadata.create_all.assert_called_once_with()
 
 
-class TestSQLAlchemyDBSetupManagers(SQLAlchemyDBBase):
+class TestSQLAlchemyDBSetupManagers(SQLATest):
     def test_set(self):
         table, manager = mock.Mock(), mock.Mock()
         table.__tablename__ = 'hehe'
@@ -461,25 +450,7 @@ class TestInSessionInner(object):
         session.return_value.close.assert_called_once_with()
 
 
-class TestSQLiteIntegration(SQLAlchemyDBBase):
-    """
-    These are tests that actually create objects in the database and retrieve
-    them to check the validity.
-
-    """
-
-    def setup_method(self, method):
-        super(TestSQLiteIntegration, self).setup_method(method)
-
-        self.config.raw['db']['host'] = 'sqlite:///test.db'
-        self.config.verbose = False
-
-        self.db.init(self.config)
-        self.db.setup(self.config)
-
-    def teardown_method(self, method):
-        os.remove('test.db')
-
+class TestSQLiteIntegration(SQLAIntegration):
     def assert_vcs(self, session):
         assert session.query(VCSRoot).count() == 1
 

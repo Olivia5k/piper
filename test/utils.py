@@ -1,3 +1,4 @@
+import os
 import mock
 import yaml
 
@@ -8,6 +9,44 @@ with open('piper.yml') as f:
 
 with open('piperd.yml') as f:
     AGENT_CONFIG = yaml.safe_load(f.read())
+
+
+class SQLATest(object):
+    """
+    Test base for tests that want a database setup
+
+    """
+
+    def setup_method(self, method):
+        # Just to avoid any future kind of circular dependencies
+        from piper.db.db_sqlalchemy import SQLAlchemyDB
+
+        self.db = SQLAlchemyDB()
+        self.config = mock.Mock()
+        self.config.raw = {
+            'db': {
+                'host': 'localhost',
+            }
+        }
+        self.build = mock.Mock()
+
+
+class SQLAIntegration(SQLATest):
+    def setup_method(self, method):
+        super(SQLAIntegration, self).setup_method(method)
+        self.db_file = 'test.db'
+
+        self.config.raw['db']['host'] = 'sqlite:///{0}'.format(self.db_file)
+        self.config.verbose = False
+
+        self.db.init(self.config)
+        self.db.setup(self.config)
+
+    def teardown_method(self, method):
+        try:
+            os.remove(self.db_file)
+        except Exception:
+            pass
 
 
 def builtin(target):
