@@ -284,11 +284,13 @@ class PropertyNamespaceManager(SQLAlchemyManager):
             'name': name,
             'expunge': True,
         }
-        if session:
-            self.get_or_create(session, PropertyNamespace, **kwargs)
+        if session is not None:
+            ret = self.get_or_create(session, PropertyNamespace, **kwargs)
         else:
             with in_session() as session:
-                self.get_or_create(session, PropertyNamespace, **kwargs)
+                ret = self.get_or_create(session, PropertyNamespace, **kwargs)
+
+        return ret
 
 
 @contextlib.contextmanager

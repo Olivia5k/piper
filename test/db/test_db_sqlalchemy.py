@@ -6,6 +6,7 @@ from piper.db.db_sqlalchemy import BuildManager
 from piper.db.db_sqlalchemy import ProjectManager
 from piper.db.db_sqlalchemy import VCSManager
 from piper.db.db_sqlalchemy import PropertyManager
+from piper.db.db_sqlalchemy import PropertyNamespaceManager
 from piper.db.db_sqlalchemy import in_session
 
 from piper.db.db_sqlalchemy import Agent
@@ -56,6 +57,14 @@ class PropertyManagerTest(object):
                 ('key{0}'.format(x), 'value{0}'.format(x),)
             ]
             self.classes.append(cls)
+
+
+class PropertyNamespaceManagerTest(object):
+    def setup_method(self, method):
+        self.manager = PropertyNamespaceManager(mock.Mock())
+        self.manager.db = mock.Mock()
+        self.manager.get_or_create = mock.Mock()
+        self.name = 'down.to.the.devil'
 
 
 class TestBuildManagerAdd(BuildManagerTest):
@@ -353,6 +362,35 @@ class TestPropertyManagerUpdate(PropertyManagerTest):
 
         calls = [mock.call(first), mock.call(second)]
         session.return_value.add.assert_has_calls(calls)
+
+
+class TestPropertyNamespaceManagerGet(PropertyNamespaceManagerTest):
+    @mock.patch('piper.db.db_sqlalchemy.PropertyNamespace')
+    @mock.patch('piper.db.db_sqlalchemy.Session')
+    def test_without_session(self, session, table):
+        self.manager.get_or_create = mock.Mock()
+        ret = self.manager.get(self.name)
+
+        assert ret is self.manager.get_or_create.return_value
+        self.manager.get_or_create.assert_called_once_with(
+            session.return_value,
+            table,
+            name=self.name,
+            expunge=True,
+        )
+
+    @mock.patch('piper.db.db_sqlalchemy.PropertyNamespace')
+    def test_with_session(self, table):
+        self.session = mock.Mock()
+        ret = self.manager.get(self.name, self.session)
+
+        assert ret is self.manager.get_or_create.return_value
+        self.manager.get_or_create.assert_called_once_with(
+            self.session,
+            table,
+            name=self.name,
+            expunge=True,
+        )
 
 
 class TestSQLAlchemyDBSetup(SQLATest):
