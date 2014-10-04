@@ -43,9 +43,9 @@ class VCSRootManagerTest(object):
         self.build = mock.Mock()
 
 
-class TestBuildManagerAddBuild(BuildManagerTest):
+class TestBuildManagerAdd(BuildManagerTest):
     def setup_method(self, method):
-        super(TestBuildManagerAddBuild, self).setup_method(method)
+        super(TestBuildManagerAdd, self).setup_method(method)
         self.build.default_db_kwargs.return_value = {'cave': 'canem'}
         self.manager.get_agent = mock.Mock()
         self.manager.get_project = mock.Mock()
@@ -73,9 +73,9 @@ class TestBuildManagerAddBuild(BuildManagerTest):
         sess.return_value.expunge.assert_called_once_with(table.return_value)
 
 
-class TestBuildManagerUpdateBuild(BuildManagerTest):
+class TestBuildManagerUpdate(BuildManagerTest):
     def setup_method(self, method):
-        super(TestBuildManagerUpdateBuild, self).setup_method(method)
+        super(TestBuildManagerUpdate, self).setup_method(method)
         self.extra = {'island in the sun': 'only way for things to come'}
 
     @mock.patch('piper.db.db_sqlalchemy.update')
@@ -118,9 +118,9 @@ class TestBuildManagerUpdateBuild(BuildManagerTest):
         session.return_value.execute.assert_called_once_with(stmt)
 
 
-class TestBuildManagerGetBuild(BuildManagerTest):
+class TestBuildManagerGet(BuildManagerTest):
     def setup_method(self, method):
-        super(TestBuildManagerGetBuild, self).setup_method(method)
+        super(TestBuildManagerGet, self).setup_method(method)
         self.build_id = 'phantom_moon'
 
     @mock.patch('piper.db.db_sqlalchemy.Build')
@@ -150,9 +150,9 @@ class TestBuildManagerAll(BuildManagerTest):
         session.return_value.expunge_all.assert_called_once_with()
 
 
-class TestProjectManagerGetProject(ProjectManagerTest):
+class TestProjectManagerGet(ProjectManagerTest):
     def setup_method(self, method):
-        super(TestProjectManagerGetProject, self).setup_method(method)
+        super(TestProjectManagerGet, self).setup_method(method)
         self.manager.get_vcs = mock.Mock()
         self.manager.get_or_create = mock.Mock()
 
@@ -174,9 +174,9 @@ class TestProjectManagerGetProject(ProjectManagerTest):
         )
 
 
-class TestAgentManagerGetAgent(AgentManagerTest):
+class TestAgentManagerGet(AgentManagerTest):
     def setup_method(self, method):
-        super(TestAgentManagerGetAgent, self).setup_method(method)
+        super(TestAgentManagerGet, self).setup_method(method)
         self.manager.get_or_create = mock.Mock()
 
     @mock.patch('socket.gethostname')
@@ -204,9 +204,9 @@ class TestAgentManagerGetAgent(AgentManagerTest):
         )
 
 
-class TestAgentManagerLockAgent(AgentManagerTest):
+class TestAgentManagerLock(AgentManagerTest):
     def setup_method(self, method):
-        super(TestAgentManagerLockAgent, self).setup_method(method)
+        super(TestAgentManagerLock, self).setup_method(method)
         self.manager.set_lock = mock.Mock()
 
     def test_call(self):
@@ -214,9 +214,9 @@ class TestAgentManagerLockAgent(AgentManagerTest):
         self.manager.set_lock.assert_called_once_with(self.build, True)
 
 
-class TestAgentManagerUnlockAgent(AgentManagerTest):
+class TestAgentManagerUnlock(AgentManagerTest):
     def setup_method(self, method):
-        super(TestAgentManagerUnlockAgent, self).setup_method(method)
+        super(TestAgentManagerUnlock, self).setup_method(method)
         self.manager.set_lock = mock.Mock()
 
     def test_call(self):
@@ -256,9 +256,9 @@ class TestAgentManagerSetAgentLock(AgentManagerTest):
         self.assert_lock(session, table, False)
 
 
-class TestVCSRootManagerGetVcs(VCSRootManagerTest):
+class TestVCSRootManagerGet(VCSRootManagerTest):
     def setup_method(self, method):
-        super(TestVCSRootManagerGetVcs, self).setup_method(method)
+        super(TestVCSRootManagerGet, self).setup_method(method)
         self.manager.get_or_create = mock.Mock()
 
     @mock.patch('piper.db.db_sqlalchemy.Session')
