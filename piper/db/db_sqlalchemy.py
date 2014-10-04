@@ -279,7 +279,16 @@ class PropertyNamespace(Base):
 
 
 class PropertyNamespaceManager(SQLAlchemyManager):
-    pass
+    def get(self, name, session=None):
+        kwargs = {
+            'name': name,
+            'expunge': True,
+        }
+        if session:
+            self.get_or_create(session, PropertyNamespace, **kwargs)
+        else:
+            with in_session() as session:
+                self.get_or_create(session, PropertyNamespace, **kwargs)
 
 
 @contextlib.contextmanager
