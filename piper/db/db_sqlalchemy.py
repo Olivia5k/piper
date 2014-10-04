@@ -75,12 +75,13 @@ class Agent(Base):
 
 
 class AgentManager(SQLAlchemyManager):
-    def get(self):
+    def get(self, expunge=False):
         with in_session() as session:
             name = socket.gethostname()
             agent = self.get_or_create(
                 session,
                 Agent,
+                expunge=expunge,
                 keys=('fqdn',),
                 name=name,
                 fqdn=name,  # XXX

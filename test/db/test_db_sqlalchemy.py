@@ -195,6 +195,7 @@ class TestAgentManagerGetAgent(AgentManagerBase):
             session.return_value,
             table,
             keys=('fqdn',),
+            expunge=False,
             name=gh.return_value,
             fqdn=gh.return_value,
             active=True,
