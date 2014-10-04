@@ -4,17 +4,17 @@ import mock
 import pytest
 
 from piper.db.core import DbCLI
-from piper.db.core import DatabaseBase
+from piper.db.core import Database
 
 
-class DbCLIBase(object):
+class DbCLITest(object):
     def setup_method(self, method):
         self.config = mock.Mock()
         self.cli = DbCLI(self.config)
         self.cli.db = mock.Mock()
 
 
-class TestDbCLIRun(DbCLIBase):
+class TestDbCLIRun(DbCLITest):
     def test_plain_run(self):
         self.cli.db.init = mock.Mock()
         ret = self.cli.run()
@@ -23,9 +23,9 @@ class TestDbCLIRun(DbCLIBase):
         self.cli.db.init.assert_called_once_with(self.config)
 
 
-class TestDatabaseBase(object):
+class TestDatabase(object):
     def setup_method(self, method):
-        self.db = DatabaseBase()
+        self.db = Database()
 
     def missing(self, ns, name, *args, **kwargs):
         target = self.db

@@ -2,13 +2,13 @@ import jsonschema
 import pytest
 import mock
 
-from piper.env import EnvBase
+from piper.env import Env
 from piper.env import TempDirEnv
 
 
-class TestEnvBaseExecute(object):
+class TestEnvExecute(object):
     def setup_method(self, method):
-        self.env = EnvBase(mock.MagicMock())
+        self.env = Env(mock.MagicMock())
         self.step = mock.Mock()
 
     @mock.patch('piper.env.Process')
@@ -28,9 +28,9 @@ class TestEnvBaseExecute(object):
         assert ret is procobj
 
 
-class TestEnvBaseValidate(object):
+class TestEnvValidate(object):
     def setup_method(self, method):
-        self.env = EnvBase(mock.MagicMock())
+        self.env = Env(mock.MagicMock())
         self.env.config = mock.Mock()
 
     @mock.patch('jsonschema.validate')

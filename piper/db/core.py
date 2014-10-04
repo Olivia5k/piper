@@ -137,8 +137,7 @@ class PropertyNamespaceManager(object):
     pass
 
 
-# Let's name this DatabaseBase. 'tis a silly name.
-class DatabaseBase(object):
+class Database(object):
     """
     Abstract class representing a persistance layer
 

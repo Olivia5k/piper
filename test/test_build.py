@@ -8,13 +8,13 @@ from test.utils import BASE_CONFIG
 from test.utils import SQLAIntegration
 
 
-class BuildTestBase(object):
+class BuildTest(object):
     def setup_method(self, method):
         self.build = Build(mock.MagicMock())
         self.base_config = BASE_CONFIG
 
 
-class TestBuildSetup(BuildTestBase):
+class TestBuildSetup(BuildTest):
     def setup_method(self, method):
         self.methods = (
             'add_build',
@@ -41,7 +41,7 @@ class TestBuildSetup(BuildTestBase):
             getattr(self.build, method).assert_called_once_with()
 
 
-class TestBuildRun(BuildTestBase):
+class TestBuildRun(BuildTest):
     def setup_method(self, method):
         self.methods = ('setup', 'execute', 'teardown', 'finish')
 
@@ -208,7 +208,7 @@ class TestBuildExecute(object):
         assert self.build.success is False
 
 
-class TestBuildSetupEnv(BuildTestBase):
+class TestBuildSetupEnv(BuildTest):
     def setup_method(self, method):
         super(TestBuildSetupEnv, self).setup_method(method)
         self.build.env = mock.Mock()
@@ -218,7 +218,7 @@ class TestBuildSetupEnv(BuildTestBase):
         self.build.env.setup.assert_called_once_with()
 
 
-class TestBuildTeardown(BuildTestBase):
+class TestBuildTeardown(BuildTest):
     def setup_method(self, method):
         super(TestBuildTeardown, self).setup_method(method)
         self.build.env = mock.Mock()
@@ -233,7 +233,7 @@ class TestBuildTeardown(BuildTestBase):
         self.build.env.teardown.assert_called_once_with()
 
 
-class TestBuildAddBuild(BuildTestBase):
+class TestBuildAddBuild(BuildTest):
     def test_add_build(self):
         self.build.db = mock.Mock()
         self.build.add_build()
@@ -242,7 +242,7 @@ class TestBuildAddBuild(BuildTestBase):
         self.build.db.build.add.assert_called_once_with(self.build)
 
 
-class TestBuildFinish(BuildTestBase):
+class TestBuildFinish(BuildTest):
     def setup_method(self, method):
         super(TestBuildFinish, self).setup_method(method)
         self.build.db = mock.Mock()
@@ -261,7 +261,7 @@ class TestBuildFinish(BuildTestBase):
         )
 
 
-class TestBuildSetLogfile(BuildTestBase):
+class TestBuildSetLogfile(BuildTest):
     def setup_method(self, method):
         super(TestBuildSetLogfile, self).setup_method(method)
         self.build.ref = mock.Mock()
@@ -287,7 +287,7 @@ class TestBuildSetLogfile(BuildTestBase):
         self.build.log_handler.push_application.assert_called_once_with()
 
 
-class TestBuildLockAgent(BuildTestBase):
+class TestBuildLockAgent(BuildTest):
     def setup_method(self, method):
         super(TestBuildLockAgent, self).setup_method(method)
         self.build.db = mock.Mock()
@@ -297,7 +297,7 @@ class TestBuildLockAgent(BuildTestBase):
         self.build.db.agent.lock.assert_called_once_with(self.build)
 
 
-class TestBuildUnlockAgent(BuildTestBase):
+class TestBuildUnlockAgent(BuildTest):
     def setup_method(self, method):
         super(TestBuildUnlockAgent, self).setup_method(method)
         self.build.db = mock.Mock()
@@ -338,7 +338,7 @@ class TestBuildIntegration(SQLAIntegration):
             },
             'envs': {
                 'local': {
-                    'class': 'piper.env.EnvBase',
+                    'class': 'piper.env.Env',
                 }
             },
             'steps': {

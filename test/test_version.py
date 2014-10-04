@@ -7,7 +7,7 @@ import pytest
 import mock
 
 
-class StaticVersionBase(object):
+class StaticVersionTest(object):
     def setup_method(self, method):
         self.v = '32.1.12'
         self.version = StaticVersion({
@@ -16,7 +16,7 @@ class StaticVersionBase(object):
         })
 
 
-class GitVersionBase(object):
+class GitVersionTest(object):
     def setup_method(self, method):
         self.git = GitVersion({
             'class': 'piper.version.GitVersion',
@@ -47,13 +47,13 @@ class TestVersionGetVersion(object):
             version.get_version()
 
 
-class TestStaticVersionGetVersion(StaticVersionBase):
+class TestStaticVersionGetVersion(StaticVersionTest):
     def test_get_version(self):
         ret = self.version.get_version()
         assert ret == self.v
 
 
-class TestGitVersionGetVersion(GitVersionBase):
+class TestGitVersionGetVersion(GitVersionTest):
     @mock.patch('piper.version.oneshot')
     def test_get_version(self, os):
         flags = '--tags'

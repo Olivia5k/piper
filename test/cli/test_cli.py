@@ -1,12 +1,12 @@
-from piper.cli.cli import CLIBase
+from piper.cli.cli import CLI
 import logbook
 
 import mock
 
 
-class TestCLIBaseEntry(object):
+class TestCLIEntry(object):
     def setup_method(self, method):
-        self.cli = CLIBase('test', (mock.Mock(),), mock.Mock())
+        self.cli = CLI('test', (mock.Mock(),), mock.Mock())
 
         # Fake log handlers, needs to be macic mocks due to context managing
         self.cli.get_handlers = mock.Mock()
@@ -45,12 +45,12 @@ class TestCLIBaseEntry(object):
         self.parser.print_help.assert_called_once_with()
 
 
-class TestCLIBaseBuildParser(object):
+class TestCLIBuildParser(object):
     def setup_method(self, method):
         self.name = 'ophelia',
         self.classes = (mock.Mock(), mock.Mock())
 
-        self.cli = CLIBase(self.name, self.classes, mock.Mock())
+        self.cli = CLI(self.name, self.classes, mock.Mock())
 
         self.cli.config = mock.Mock()
         self.cli.global_arguments = mock.Mock()
@@ -77,7 +77,7 @@ class TestCLIBaseBuildParser(object):
         )
 
 
-class TestCLIBaseGetRunners(object):
+class TestCLIGetRunners(object):
     def setup_method(self, method):
         self.name = 'kai',
 
@@ -89,7 +89,7 @@ class TestCLIBaseGetRunners(object):
             cls.runner = mock.Mock()
             cls.return_value.compose.return_value = cls.key, cls.runner
 
-        self.cli = CLIBase(self.name, self.classes, mock.Mock())
+        self.cli = CLI(self.name, self.classes, mock.Mock())
         self.cli.config = mock.Mock()
 
         self.sub = mock.Mock()
@@ -105,9 +105,9 @@ class TestCLIBaseGetRunners(object):
             cls.return_value.compose.assert_called_once_with(self.sub)
 
 
-class TestCLIBaseSetDebug(object):
+class TestCLISetDebug(object):
     def setup_method(self, method):
-        self.cli = CLIBase('test', (mock.Mock(),), mock.Mock())
+        self.cli = CLI('test', (mock.Mock(),), mock.Mock())
         self.cli.log_handlers = mock.Mock(), mock.Mock(), mock.Mock()
 
     def test_verbose_argument_sets_debug_log_level(self):

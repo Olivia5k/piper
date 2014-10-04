@@ -3,7 +3,7 @@ import logbook
 from piper import utils
 
 
-class VCSBase(object):
+class VCS(object):
     def __init__(self, name, root_url):
         self.name = name
         self.root_url = root_url
@@ -19,7 +19,7 @@ class VCSBase(object):
         raise NotImplementedError()
 
 
-class GitVCS(VCSBase):
+class GitVCS(VCS):
     def get_project_name(self):
         name = utils.oneshot('git config remote.origin.url')
         return name.split(':')[1].replace('.git', '')

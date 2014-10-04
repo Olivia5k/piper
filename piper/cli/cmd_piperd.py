@@ -2,7 +2,7 @@ from piper.api import api
 from piper.db import core as db
 from piper import prop
 from piper import config
-from piper.cli.cli import CLIBase
+from piper.cli.cli import CLI
 
 
 def entry(args=None):
@@ -11,5 +11,5 @@ def entry(args=None):
         db.DbCLI,
         prop.PropCLI,
     )
-    cli = CLIBase('piperd', classes, config.AgentConfig, args=args)
+    cli = CLI('piperd', classes, config.AgentConfig, args=args)
     return cli.entry()

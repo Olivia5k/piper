@@ -8,7 +8,7 @@ import mock
 
 
 class TestEntry(object):
-    @mock.patch('piper.cli.cmd_piperd.CLIBase')
+    @mock.patch('piper.cli.cmd_piperd.CLI')
     def test_calls(self, clibase):
         self.mock = mock.Mock()
         cmd_piperd.entry(self.mock)
@@ -20,7 +20,7 @@ class TestEntry(object):
         )
         clibase.return_value.entry.assert_called_once_with()
 
-    @mock.patch('piper.cli.cmd_piperd.CLIBase')
+    @mock.patch('piper.cli.cmd_piperd.CLI')
     def test_return_value(self, clibase):
         ret = cmd_piperd.entry()
         assert ret is clibase.return_value.entry.return_value

@@ -1,27 +1,27 @@
 import pytest
 import mock
 
-from piper.prop import PropBase
+from piper.prop import Prop
 from piper.prop import FacterProp
 
 
-class PropBaseTestBase(object):
+class PropTest(object):
     def setup_method(self, method):
-        self.prop = PropBase()
+        self.prop = Prop()
 
 
-class TestPropBaseProperties(PropBaseTestBase):
+class TestPropProperties(PropTest):
     def test_properties_raises_notimplementederror(self):
         with pytest.raises(NotImplementedError):
             self.prop.properties
 
 
-class TestPropBaseNamespace(PropBaseTestBase):
+class TestPropNamespace(PropTest):
     def test_namespace(self):
-        assert self.prop.namespace == 'piper.prop.PropBase'
+        assert self.prop.namespace == 'piper.prop.Prop'
 
 
-class TestPropBaseFlatten(PropBaseTestBase):
+class TestPropFlatten(PropTest):
     def test_empty_dict(self):
         ret = self.prop.flatten({})
 

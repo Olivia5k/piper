@@ -5,7 +5,7 @@ import logbook
 from piper import logging
 
 
-class CLIBase(object):
+class CLI(object):
     """
     Semi-abstract class that sets up a argparse namespace and executes
     commands from pluggable CLI classes.

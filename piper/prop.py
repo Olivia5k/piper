@@ -5,9 +5,9 @@ from piper.abc import DynamicItem
 from piper.db.core import LazyDatabaseMixin
 
 
-class PropBase(DynamicItem):
+class Prop(DynamicItem):
     def __init__(self):
-        super(PropBase, self).__init__(None)
+        super(Prop, self).__init__(None)
         self._props = None
 
     @property
@@ -43,7 +43,7 @@ class PropBase(DynamicItem):
         return dict(items)
 
 
-class FacterProp(PropBase):
+class FacterProp(Prop):
     """
     Collect properties from facter via facterpy
 

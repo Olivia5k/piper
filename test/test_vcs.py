@@ -1,13 +1,13 @@
 import pytest
 import mock
 
-from piper.vcs import VCSBase
+from piper.vcs import VCS
 from piper.vcs import GitVCS
 
 
-class VCSBaseTestBase(object):
+class VCSTest(object):
     def setup_method(self, method):
-        self.vcs = VCSBase('name', 'root')
+        self.vcs = VCS('name', 'root')
         self.project = 'bourne'
         self.build = mock.Mock()
 
@@ -16,12 +16,12 @@ class VCSBaseTestBase(object):
             getattr(self.vcs, name)(*args, **kwargs)
 
 
-class TestVCSBaseGetProject(VCSBaseTestBase):
+class TestVCSGetProject(VCSTest):
     def test_raises_not_implemented_error(self):
             self.missing('get_project', self.project)
 
 
-class TestVCSBaseGetProjectName(VCSBaseTestBase):
+class TestVCSGetProjectName(VCSTest):
     def test_raises_not_implemented_error(self):
         self.missing('get_project_name', self.project)
 

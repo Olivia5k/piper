@@ -11,7 +11,7 @@ from piper.config import AgentConfig
 from test import utils
 
 
-class BuildConfigTestBase(object):
+class BuildConfigTest(object):
     def setup_method(self, method):
         self.config = BuildConfig()
         # Without the deepcopy the tests that check for missing keys will
@@ -19,13 +19,13 @@ class BuildConfigTestBase(object):
         self.base_config = copy.deepcopy(utils.BASE_CONFIG)
 
 
-class AgentConfigTestBase(object):
+class AgentConfigTest(object):
     def setup_method(self, method):
         self.config = AgentConfig()
         self.config.raw = copy.deepcopy(utils.AGENT_CONFIG)
 
 
-class TestBuildConfigLoadConfig(BuildConfigTestBase):
+class TestBuildConfigLoadConfig(BuildConfigTest):
     def setup_method(self, method):
         self.data = 'lel: 10\ntest: wizard\n\n'
         super(TestBuildConfigLoadConfig, self).setup_method(method)
@@ -58,7 +58,7 @@ class TestBuildConfigLoadConfig(BuildConfigTestBase):
         assert self.config.raw == sl.return_value
 
 
-class TestBuildConfigValidateConfig(BuildConfigTestBase):
+class TestBuildConfigValidateConfig(BuildConfigTest):
     def setup_method(self, method):
         super(TestBuildConfigValidateConfig, self).setup_method(method)
         self.config.raw = self.base_config
@@ -85,14 +85,14 @@ class TestBuildConfigValidateConfig(BuildConfigTestBase):
         self.check_missing_key('jobs')
 
 
-class TestBuildConfigLoadClasses(BuildConfigTestBase):
+class TestBuildConfigLoadClasses(BuildConfigTest):
     def setup_method(self, method):
         super(TestBuildConfigLoadClasses, self).setup_method(method)
         self.config.raw = self.base_config
 
         self.version = 'piper.version.GitVersion'
         self.step = 'piper.step.CommandLineStep'
-        self.env = 'piper.env.EnvBase'
+        self.env = 'piper.env.Env'
         self.db = 'piper.db.SQLAlchemyDB'
 
     @mock.patch('piper.config.dynamic_load')
@@ -112,7 +112,7 @@ class TestBuildConfigLoadClasses(BuildConfigTestBase):
         assert self.config.classes[self.db] is dl.return_value
 
 
-class TestBuildConfigLoad(BuildConfigTestBase):
+class TestBuildConfigLoad(BuildConfigTest):
     def test_calls(self):
         self.config.load_config = mock.Mock()
         self.config.validate_config = mock.Mock()
@@ -126,7 +126,7 @@ class TestBuildConfigLoad(BuildConfigTestBase):
         self.config.load_classes.assert_called_once_with()
 
 
-class TestBuildConfigGetDatabase(BuildConfigTestBase):
+class TestBuildConfigGetDatabase(BuildConfigTest):
     def setup_method(self, method):
         super(TestBuildConfigGetDatabase, self).setup_method(method)
         self.config.raw = self.base_config
@@ -139,7 +139,7 @@ class TestBuildConfigGetDatabase(BuildConfigTestBase):
         assert ret is self.mock.return_value
 
 
-class TestBuildConfigMergeNamespace(BuildConfigTestBase):
+class TestBuildConfigMergeNamespace(BuildConfigTest):
     def setup_method(self, method):
         super(TestBuildConfigMergeNamespace, self).setup_method(method)
         self.correct = 'happy for the rest of your life'
@@ -158,7 +158,7 @@ class TestBuildConfigMergeNamespace(BuildConfigTestBase):
         assert not hasattr(self.config, '_internal')
 
 
-class TestAgentConfigValidateConfig(AgentConfigTestBase):
+class TestAgentConfigValidateConfig(AgentConfigTest):
     def check_missing_key(self, key):
         del self.config.raw[key]
         with pytest.raises(jsonschema.exceptions.ValidationError):

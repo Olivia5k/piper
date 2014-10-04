@@ -1,19 +1,19 @@
-from piper.step import StepBase
+from piper.step import Step
 from piper.step import CommandLineStep
 
 import mock
 import pytest
 
 
-class StepTestBase(object):
+class StepTest(object):
     def setup_method(self, method):
-        self.step = StepBase(
+        self.step = Step(
             mock.Mock(**{'class': 'piper.step.Class'}),
             'key'
         )
 
 
-class TestStepBaseSetIndex(StepTestBase):
+class TestStepSetIndex(StepTest):
     def test_set_index(self):
         index, total = mock.Mock(), mock.Mock()
         self.step.set_index(index, total)
@@ -23,7 +23,7 @@ class TestStepBaseSetIndex(StepTestBase):
         assert self.step.log is not None
 
 
-class TestStepBaseGetCommand(StepTestBase):
+class TestStepGetCommand(StepTest):
     def test_get_command_raises_notimplementederror(self):
         with pytest.raises(NotImplementedError):
             self.step.get_command()

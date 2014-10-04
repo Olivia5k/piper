@@ -3,14 +3,14 @@ import logbook
 from piper.abc import DynamicItem
 
 
-class StepBase(DynamicItem):
+class Step(DynamicItem):
     """
     Abstract base class of an execution step.
 
     """
 
     def __init__(self, config, key):
-        super(StepBase, self).__init__(config)
+        super(Step, self).__init__(config)
 
         self.index = ('x', 'y')
         self.key = key
@@ -43,7 +43,7 @@ class StepBase(DynamicItem):
         raise NotImplementedError()
 
 
-class CommandLineStep(StepBase):
+class CommandLineStep(Step):
     """
     Step that simply runs a command line from the configuration file.
 

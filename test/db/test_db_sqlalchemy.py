@@ -19,31 +19,31 @@ import mock
 import pytest
 
 
-class BuildManagerBase(object):
+class BuildManagerTest(object):
     def setup_method(self, method):
         self.manager = BuildManager(mock.Mock())
         self.build = mock.Mock()
 
 
-class ProjectManagerBase(object):
+class ProjectManagerTest(object):
     def setup_method(self, method):
         self.manager = ProjectManager(mock.Mock())
         self.build = mock.Mock()
 
 
-class AgentManagerBase(object):
+class AgentManagerTest(object):
     def setup_method(self, method):
         self.manager = AgentManager(mock.Mock())
         self.build = mock.Mock()
 
 
-class VCSRootManagerBase(object):
+class VCSRootManagerTest(object):
     def setup_method(self, method):
         self.manager = VCSRootManager(mock.Mock())
         self.build = mock.Mock()
 
 
-class TestBuildManagerAddBuild(BuildManagerBase):
+class TestBuildManagerAddBuild(BuildManagerTest):
     def setup_method(self, method):
         super(TestBuildManagerAddBuild, self).setup_method(method)
         self.build.default_db_kwargs.return_value = {'cave': 'canem'}
@@ -73,7 +73,7 @@ class TestBuildManagerAddBuild(BuildManagerBase):
         sess.return_value.expunge.assert_called_once_with(table.return_value)
 
 
-class TestBuildManagerUpdateBuild(BuildManagerBase):
+class TestBuildManagerUpdateBuild(BuildManagerTest):
     def setup_method(self, method):
         super(TestBuildManagerUpdateBuild, self).setup_method(method)
         self.extra = {'island in the sun': 'only way for things to come'}
@@ -118,7 +118,7 @@ class TestBuildManagerUpdateBuild(BuildManagerBase):
         session.return_value.execute.assert_called_once_with(stmt)
 
 
-class TestBuildManagerGetBuild(BuildManagerBase):
+class TestBuildManagerGetBuild(BuildManagerTest):
     def setup_method(self, method):
         super(TestBuildManagerGetBuild, self).setup_method(method)
         self.build_id = 'phantom_moon'
@@ -136,7 +136,7 @@ class TestBuildManagerGetBuild(BuildManagerBase):
         session.return_value.expunge_all.assert_called_once_with()
 
 
-class TestBuildManagerAll(BuildManagerBase):
+class TestBuildManagerAll(BuildManagerTest):
     @mock.patch('piper.db.db_sqlalchemy.Build')
     @mock.patch('piper.db.db_sqlalchemy.Session')
     def test_return_value(self, session, table):
@@ -150,7 +150,7 @@ class TestBuildManagerAll(BuildManagerBase):
         session.return_value.expunge_all.assert_called_once_with()
 
 
-class TestProjectManagerGetProject(ProjectManagerBase):
+class TestProjectManagerGetProject(ProjectManagerTest):
     def setup_method(self, method):
         super(TestProjectManagerGetProject, self).setup_method(method)
         self.manager.get_vcs = mock.Mock()
@@ -174,7 +174,7 @@ class TestProjectManagerGetProject(ProjectManagerBase):
         )
 
 
-class TestAgentManagerGetAgent(AgentManagerBase):
+class TestAgentManagerGetAgent(AgentManagerTest):
     def setup_method(self, method):
         super(TestAgentManagerGetAgent, self).setup_method(method)
         self.manager.get_or_create = mock.Mock()
@@ -204,7 +204,7 @@ class TestAgentManagerGetAgent(AgentManagerBase):
         )
 
 
-class TestAgentManagerLockAgent(AgentManagerBase):
+class TestAgentManagerLockAgent(AgentManagerTest):
     def setup_method(self, method):
         super(TestAgentManagerLockAgent, self).setup_method(method)
         self.manager.set_lock = mock.Mock()
@@ -214,7 +214,7 @@ class TestAgentManagerLockAgent(AgentManagerBase):
         self.manager.set_lock.assert_called_once_with(self.build, True)
 
 
-class TestAgentManagerUnlockAgent(AgentManagerBase):
+class TestAgentManagerUnlockAgent(AgentManagerTest):
     def setup_method(self, method):
         super(TestAgentManagerUnlockAgent, self).setup_method(method)
         self.manager.set_lock = mock.Mock()
@@ -224,7 +224,7 @@ class TestAgentManagerUnlockAgent(AgentManagerBase):
         self.manager.set_lock.assert_called_once_with(self.build, False)
 
 
-class TestAgentManagerSetAgentLock(AgentManagerBase):
+class TestAgentManagerSetAgentLock(AgentManagerTest):
     def assert_lock(self, session, table, locked):
         table.id.__eq__ = mock.Mock()
         self.manager.set_lock(self.build, locked)
@@ -256,7 +256,7 @@ class TestAgentManagerSetAgentLock(AgentManagerBase):
         self.assert_lock(session, table, False)
 
 
-class TestVCSRootManagerGetVcs(VCSRootManagerBase):
+class TestVCSRootManagerGetVcs(VCSRootManagerTest):
     def setup_method(self, method):
         super(TestVCSRootManagerGetVcs, self).setup_method(method)
         self.manager.get_or_create = mock.Mock()

@@ -35,7 +35,7 @@ class ConfigError(Exception):
     pass
 
 
-class ConfigBase(object):
+class Config(object):
     def __init__(self, filename=None, raw=None):
         args = (filename, raw)
         assert any(args), 'Need to specify `filename` or `raw`'
@@ -121,7 +121,7 @@ class ConfigBase(object):
         return self.classes[self.raw['db']['class']]()
 
 
-class BuildConfig(ConfigBase):
+class BuildConfig(Config):
     schema = {
         "$schema": "http://json-schema.org/draft-04/schema",
         'type': 'object',
@@ -183,7 +183,7 @@ class BuildConfig(ConfigBase):
         return targets
 
 
-class AgentConfig(ConfigBase):
+class AgentConfig(Config):
     schema = {
         "$schema": "http://json-schema.org/draft-04/schema",
         'type': 'object',

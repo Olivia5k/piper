@@ -1,8 +1,8 @@
 from piper import build
 from piper import config
-from piper.cli.cli import CLIBase
+from piper.cli.cli import CLI
 
 
 def entry(args=None):
-    cli = CLIBase('piper', (build.ExecCLI,), config.BuildConfig, args=args)
+    cli = CLI('piper', (build.ExecCLI,), config.BuildConfig, args=args)
     return cli.entry()

@@ -20,7 +20,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import relationship
 
-from piper.db.core import DatabaseBase
+from piper.db.core import Database
 
 
 Base = declarative_base()
@@ -304,7 +304,7 @@ def in_session():
         session.close()
 
 
-class SQLAlchemyDB(DatabaseBase):
+class SQLAlchemyDB(Database):
     tables = {
         Agent: AgentManager,
         Build: BuildManager,

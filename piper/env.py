@@ -6,7 +6,7 @@ from piper.abc import DynamicItem
 from piper.process import Process
 
 
-class EnvBase(DynamicItem):
+class Env(DynamicItem):
     def setup(self):  # pragma: nocover
         pass
 
@@ -23,7 +23,7 @@ class EnvBase(DynamicItem):
         return proc
 
 
-class TempDirEnv(EnvBase):
+class TempDirEnv(Env):
     """
     Example implementation of an env, probably useful as well
 
