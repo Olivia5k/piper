@@ -5,8 +5,8 @@ from piper.abc import DynamicItem
 
 
 class PropBase(DynamicItem):
-    def __init__(self, config):
-        super(PropBase, self).__init__(config)
+    def __init__(self):
+        super(PropBase, self).__init__(None)
         self._props = None
 
     @property

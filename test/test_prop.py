@@ -7,7 +7,7 @@ from piper.prop import FacterProp
 
 class PropBaseTestBase(object):
     def setup_method(self, method):
-        self.prop = PropBase(mock.Mock())
+        self.prop = PropBase()
 
 
 class TestPropBaseProperties(PropBaseTestBase):
@@ -63,7 +63,7 @@ class TestPropBaseFlatten(PropBaseTestBase):
 class TestFacterPropProperties(object):
     @mock.patch('facter.Facter')
     def test_get_properties(self, Facter):
-        self.prop = FacterProp(mock.Mock())
+        self.prop = FacterProp()
         self.prop.flatten = mock.Mock()
 
         ret = self.prop.properties
