@@ -5,6 +5,7 @@ from piper.db.db_sqlalchemy import AgentManager
 from piper.db.db_sqlalchemy import BuildManager
 from piper.db.db_sqlalchemy import ProjectManager
 from piper.db.db_sqlalchemy import VCSManager
+from piper.db.db_sqlalchemy import PropertyManager
 from piper.db.db_sqlalchemy import in_session
 
 from piper.db.db_sqlalchemy import Agent
@@ -41,6 +42,20 @@ class VCSManagerTest(object):
     def setup_method(self, method):
         self.manager = VCSManager(mock.Mock())
         self.build = mock.Mock()
+
+
+class PropertyManagerTest(object):
+    def setup_method(self, method):
+        self.manager = PropertyManager(mock.Mock())
+        self.manager.db = mock.Mock()
+
+        self.classes = []
+        for x in range(2):
+            cls = mock.MagicMock()
+            cls.return_value.properties.items.return_value = [
+                ('key{0}'.format(x), 'value{0}'.format(x),)
+            ]
+            self.classes.append(cls)
 
 
 class TestBuildManagerAdd(BuildManagerTest):
@@ -293,6 +308,51 @@ class TestVCSManagerGet(VCSManagerTest):
             root_url=self.build.vcs.root_url,
             name=self.build.vcs.name,
         )
+
+
+class TestPropertyManagerUpdate(PropertyManagerTest):
+    @mock.patch('piper.db.db_sqlalchemy.Session')
+    def test_agent_is_gotten(self, session):
+        self.manager.update(self.classes)
+        self.manager.db.agent.get.assert_called_once_with(expunge=True)
+
+    @mock.patch('piper.db.db_sqlalchemy.Property')
+    @mock.patch('piper.db.db_sqlalchemy.Session')
+    def test_deletion_query_chain(self, session, table):
+        self.manager.update(self.classes)
+
+        query = session.return_value.query
+        filter = query.return_value.filter
+        delete = filter.return_value.delete
+
+        query.assert_called_once_with(table)
+        assert filter.call_count == 1
+        delete.assert_called_once_with()
+
+    @mock.patch('piper.db.db_sqlalchemy.Property')
+    @mock.patch('piper.db.db_sqlalchemy.Session')
+    def test_property_namespace_retrieval(self, session, table):
+        self.manager.update(self.classes)
+
+        calls = [
+            mock.call(self.classes[0].namespace),
+            mock.call(self.classes[1].namespace),
+        ]
+        self.manager.db.property_namespace.get.assert_has_calls(calls)
+
+    @mock.patch('piper.db.db_sqlalchemy.Property')
+    @mock.patch('piper.db.db_sqlalchemy.Session')
+    def test_properties_added_to_db(self, session, table):
+        self.manager.update(self.classes)
+
+        agent = self.manager.db.agent.get.return_value
+        ns = self.manager.db.property_namespace.get.return_value
+
+        first = table(value='value1', key='key1', agent=agent, namespace=ns)
+        second = table(value='value2', key='key2', agent=agent, namespace=ns)
+
+        calls = [mock.call(first), mock.call(second)]
+        session.return_value.add.assert_has_calls(calls)
 
 
 class TestSQLAlchemyDBSetup(SQLATest):
