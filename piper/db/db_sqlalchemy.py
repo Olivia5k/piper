@@ -70,8 +70,8 @@ class Agent(Base):
     busy = Column(Boolean())
     registered = Column(Boolean())
     properties = relationship('Property')
-    created = Column(DateTime, default=utils.now)
-    last_seen = Column(DateTime, default=utils.now)
+    created = Column(DateTime(), default=utils.now)
+    last_seen = Column(DateTime(), default=utils.now)
 
 
 class AgentManager(SQLAlchemyManager):
@@ -111,17 +111,17 @@ class Build(Base):
 
     id = Column(Integer(), primary_key=True)
     agent = relationship('Agent')
-    agent_id = Column(Integer, ForeignKey('agent.id'))
+    agent_id = Column(Integer(), ForeignKey('agent.id'))
     project = relationship('Project')
-    project_id = Column(Integer, ForeignKey('project.id'))
+    project_id = Column(Integer(), ForeignKey('project.id'))
 
     user = Column(String(255))
     success = Column(Boolean())
     crashed = Column(Boolean())
     status = Column(String(255))
-    started = Column(DateTime, default=utils.now)
-    updated = Column(DateTime, default=utils.now)
-    ended = Column(DateTime)
+    started = Column(DateTime(), default=utils.now)
+    updated = Column(DateTime(), default=utils.now)
+    ended = Column(DateTime())
 
 
 class BuildManager(SQLAlchemyManager):
@@ -181,8 +181,8 @@ class Project(Base):
     id = Column(Integer(), primary_key=True)
     name = Column(String(255))
     vcs = relationship('VCSRoot')
-    vcs_id = Column(Integer, ForeignKey('vcs_root.id'))
-    created = Column(DateTime, default=utils.now)
+    vcs_id = Column(Integer(), ForeignKey('vcs_root.id'))
+    created = Column(DateTime(), default=utils.now)
 
 
 class ProjectManager(SQLAlchemyManager):
@@ -204,7 +204,7 @@ class VCSRoot(Base):
     id = Column(Integer(), primary_key=True)
     name = Column(String(255))
     root_url = Column(String(255))
-    created = Column(DateTime, default=utils.now)
+    created = Column(DateTime(), default=utils.now)
 
 
 class VCSRootManager(SQLAlchemyManager):
@@ -227,12 +227,12 @@ class Property(Base):
 
     id = Column(Integer(), primary_key=True)
     agent = relationship('Agent')
-    agent_id = Column(Integer, ForeignKey('agent.id'))
+    agent_id = Column(Integer(), ForeignKey('agent.id'))
     namespace = relationship('PropertyNamespace')
-    namespace_id = Column(Integer, ForeignKey('property_namespace.id'))
+    namespace_id = Column(Integer(), ForeignKey('property_namespace.id'))
     key = Column(String(255))
     value = Column(String(255))
-    created = Column(DateTime, default=utils.now)
+    created = Column(DateTime(), default=utils.now)
 
 
 class PropertyManager(SQLAlchemyManager):
@@ -275,7 +275,7 @@ class PropertyNamespace(Base):
     id = Column(Integer(), primary_key=True)
     properties = relationship('Property')
     name = Column(String(255))
-    created = Column(DateTime, default=utils.now)
+    created = Column(DateTime(), default=utils.now)
 
 
 class PropertyNamespaceManager(SQLAlchemyManager):
