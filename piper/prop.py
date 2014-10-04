@@ -82,3 +82,5 @@ class PropCLI(LazyDatabaseMixin):
                     classes.append(cls)
 
             self.db.property.update(classes)
+
+        return 0

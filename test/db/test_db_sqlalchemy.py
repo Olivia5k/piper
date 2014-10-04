@@ -13,6 +13,8 @@ from piper.db.db_sqlalchemy import Agent
 from piper.db.db_sqlalchemy import Build
 from piper.db.db_sqlalchemy import Project
 from piper.db.db_sqlalchemy import VCS
+from piper.db.db_sqlalchemy import Property
+from piper.db.db_sqlalchemy import PropertyNamespace
 
 from test.utils import SQLATest
 from test.utils import SQLAIntegration
@@ -641,3 +643,17 @@ class TestSQLiteIntegration(SQLAIntegration):
             self.assert_agent(session)
             self.assert_vcs(session)
             self.assert_project(session)
+
+    def test_update_properties_from_cli(self):
+        from piper.cli.cmd_piperd import entry
+        ret = entry(['prop', 'update'])
+
+        assert ret == 0
+
+        with in_session() as session:
+            assert session.query(PropertyNamespace).count() == 1
+
+            # I don't really know how to test for these. They are _supposed_ to
+            # be different for all computers. The only real thing I can think
+            # of is to actually check that some of them were created.
+            assert session.query(Property).count() > 50
