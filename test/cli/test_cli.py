@@ -6,7 +6,7 @@ import mock
 
 class TestCLIBaseEntry(object):
     def setup_method(self, method):
-        self.cli = CLIBase('test', (mock.Mock(),))
+        self.cli = CLIBase('test', (mock.Mock(),), mock.Mock())
 
         # Fake log handlers, needs to be macic mocks due to context managing
         self.cli.get_handlers = mock.Mock()
@@ -50,7 +50,7 @@ class TestCLIBaseBuildParser(object):
         self.name = 'ophelia',
         self.classes = (mock.Mock(), mock.Mock())
 
-        self.cli = CLIBase(self.name, self.classes)
+        self.cli = CLIBase(self.name, self.classes, mock.Mock())
 
         self.cli.config = mock.Mock()
         self.cli.global_arguments = mock.Mock()
@@ -89,7 +89,7 @@ class TestCLIBaseGetRunners(object):
             cls.runner = mock.Mock()
             cls.return_value.compose.return_value = cls.key, cls.runner
 
-        self.cli = CLIBase(self.name, self.classes)
+        self.cli = CLIBase(self.name, self.classes, mock.Mock())
         self.cli.config = mock.Mock()
 
         self.sub = mock.Mock()
@@ -107,7 +107,7 @@ class TestCLIBaseGetRunners(object):
 
 class TestCLIBaseSetDebug(object):
     def setup_method(self, method):
-        self.cli = CLIBase('test', (mock.Mock(),))
+        self.cli = CLIBase('test', (mock.Mock(),), mock.Mock())
         self.cli.log_handlers = mock.Mock(), mock.Mock(), mock.Mock()
 
     def test_verbose_argument_sets_debug_log_level(self):

@@ -2,7 +2,6 @@ import sys
 import argparse
 import logbook
 
-from piper import config
 from piper import logging
 
 
@@ -13,9 +12,10 @@ class CLIBase(object):
 
     """
 
-    def __init__(self, name, classes, args=()):
+    def __init__(self, name, classes, config_class, args=()):
         self.name = name
         self.classes = classes
+        self.config_class = config_class
         self.args = args
 
         if not self.args:
@@ -57,7 +57,7 @@ class CLIBase(object):
         self.log_handlers = logging.get_handlers(debug)
 
     def load_config(self):  # pragma: nocover
-        self.config = config.BuildConfig().load()
+        self.config = self.config_class().load()
 
     def set_debug(self):
         # Lower the logging level if we're being verbose.
