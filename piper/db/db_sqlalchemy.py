@@ -226,7 +226,9 @@ class Property(Base):
     __tablename__ = 'property'
 
     id = Column(Integer(), primary_key=True)
+    agent = relationship('Agent')
     agent_id = Column(Integer, ForeignKey('agent.id'))
+    namespace = relationship('PropertyNamespace')
     namespace_id = Column(Integer, ForeignKey('property_namespace.id'))
     key = Column(String(255))
     value = Column(String(255))
