@@ -44,7 +44,7 @@ class Build(LazyDatabaseMixin):
 
         """
 
-        self.log.info('Setting up {0}...'.format(self.config.job))
+        self.log.info('Setting up {0}...'.format(self.config.pipeline))
 
         self.setup()
         self.execute()
@@ -86,7 +86,7 @@ class Build(LazyDatabaseMixin):
 
         self.configure_env()
         self.configure_steps()
-        self.configure_job()
+        self.configure_pipeline()
 
         self.setup_env()
 
@@ -116,7 +116,7 @@ class Build(LazyDatabaseMixin):
 
     def set_version(self):
         """
-        Set the version for this job
+        Set the version for this pipeline
 
         """
 
@@ -158,13 +158,13 @@ class Build(LazyDatabaseMixin):
             step.log.debug('Step configured.')
             self.steps[step_key] = step
 
-    def configure_job(self):
+    def configure_pipeline(self):
         """
-        Places steps in proper order according to the chosen set.
+        Places steps in proper order according to the pipeline.
 
         """
 
-        for step_key in self.config.raw['jobs'][self.config.job]:
+        for step_key in self.config.raw['pipelines'][self.config.pipeline]:
             step = self.steps[step_key]
             self.order.append(step)
 
@@ -190,7 +190,7 @@ class Build(LazyDatabaseMixin):
         """
 
         total = len(self.order)
-        self.log.info('Running {0}...'.format(self.config.job))
+        self.log.info('Running {0}...'.format(self.config.pipeline))
 
         for x, step in enumerate(self.order, start=1):
             step.set_index(x, total)
@@ -206,7 +206,8 @@ class Build(LazyDatabaseMixin):
                 step.log.info('Step complete.')
             else:
                 # If the success is not positive, bail and stop running.
-                step.log.error('Step "{0}" failed.'.format(self.config.job))
+                step.log.error('Step failed.')
+                self.log.error('{0} failed.'.format(self.config.pipeline))
                 self.success = False
                 break
 
@@ -262,13 +263,13 @@ class ExecCLI(object):
         self.config = config
 
     def compose(self, parser):  # pragma: nocover
-        cli = parser.add_parser('exec', help='Execute a job')
+        cli = parser.add_parser('exec', help='Execute a pipeline')
 
         cli.add_argument(
-            'job',
+            'pipeline',
             nargs='?',
             default='build',
-            help='The job to execute',
+            help='The pipeline to execute',
         )
 
         cli.add_argument(

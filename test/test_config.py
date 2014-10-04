@@ -81,8 +81,8 @@ class TestBuildConfigValidateConfig(BuildConfigTest):
     def test_no_steps_specified(self):
         self.check_missing_key('steps')
 
-    def test_no_jobs_specified(self):
-        self.check_missing_key('jobs')
+    def test_no_pipelines_specified(self):
+        self.check_missing_key('pipelines')
 
 
 class TestBuildConfigLoadClasses(BuildConfigTest):

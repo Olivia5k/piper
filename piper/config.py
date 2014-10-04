@@ -126,12 +126,12 @@ class BuildConfig(Config):
         "$schema": "http://json-schema.org/draft-04/schema",
         'type': 'object',
         'additionalProperties': False,
-        'required': ['version', 'envs', 'steps', 'jobs'],
+        'required': ['version', 'envs', 'steps', 'pipelines'],
         'properties': {
             'version': {
                 'description':
                     'Versioning setup for this project. This sets up what '
-                    'commands to run to determine the version of the job '
+                    'commands to run to determine the version of the pipeline '
                     'being executed',
                 'type': 'object',
             },
@@ -146,7 +146,7 @@ class BuildConfig(Config):
                 'description': 'Definitions of executable build steps.',
                 'type': 'object',
             },
-            'jobs': {
+            'pipelines': {
                 'description': 'Runnable collections of steps.',
                 'type': 'object',
                 'additionalProperties': {
@@ -155,8 +155,8 @@ class BuildConfig(Config):
                 },
             },
             'db': DB_SCHEMA,
-            'job': {
-                'description': 'The key of the job to execute.',
+            'pipeline': {
+                'description': 'The key of the pipeline to execute.',
                 'type': 'string',
             },
         },

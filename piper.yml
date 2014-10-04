@@ -17,7 +17,7 @@ steps:
     class: 'piper.step.CommandLineStep'
     command: 'python setup.py sdist'
 
-jobs:
+pipelines:
   test:
     - 'test'
   lint:

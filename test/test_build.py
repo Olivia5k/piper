@@ -24,7 +24,7 @@ class TestBuildSetup(BuildTest):
 
             'configure_env',
             'configure_steps',
-            'configure_job',
+            'configure_pipeline',
 
             'setup_env',
         )
@@ -130,7 +130,7 @@ class TestBuildConfigureSteps(object):
             },
         }
 
-        self.build = Build(mock.Mock(job=self.step_key))
+        self.build = Build(mock.Mock(pipeline=self.step_key))
         self.build.config = mock.Mock()
         self.build.config.classes = {}
         self.build.config.raw = self.raw
@@ -153,16 +153,16 @@ class TestBuildConfigureSteps(object):
             cls.return_value.validate.assert_called_once_with()
 
 
-class TestBuildConfigureJob(object):
+class TestBuildConfigurePipeline(object):
     def setup_method(self, method):
         self.step_keys = ('bidubidappa', 'dubop', 'schuwappa')
-        self.job_key = 'mmmbop'
+        self.pipeline_key = 'mmmbop'
 
         self.config = mock.MagicMock()
-        self.config.job = self.job_key
+        self.config.pipeline = self.pipeline_key
         self.config.raw = {
-            'job': self.job_key,
-            'jobs': {self.job_key: self.step_keys}
+            'pipeline': self.pipeline_key,
+            'pipelines': {self.pipeline_key: self.step_keys}
         }
         self.steps = (mock.Mock(), mock.Mock(), mock.Mock())
 
@@ -174,9 +174,9 @@ class TestBuildConfigureJob(object):
         build.steps = dict(zip(self.step_keys, self.steps))
         return build
 
-    def test_configure_job(self):
+    def test_configure_pipeline(self):
         self.build = self.get_build(self.config)
-        self.build.configure_job()
+        self.build.configure_pipeline()
 
         for x, _ in enumerate(self.step_keys):
             assert self.build.order[x] is self.steps[x]
@@ -347,7 +347,7 @@ class TestBuildIntegration(SQLAIntegration):
                     'command': 'true',
                 },
             },
-            'jobs': {
+            'pipelines': {
                 'test': [
                     'test',
                 ],
@@ -361,7 +361,7 @@ class TestBuildIntegration(SQLAIntegration):
         self.config = BuildConfig(raw=self.raw_config).load()
 
     def test_build_with_one_successful_step(self):
-        self.config.job = 'test'
+        self.config.pipeline = 'test'
         self.config.env = 'local'
         self.build = Build(self.config)
 
