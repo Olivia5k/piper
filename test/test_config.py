@@ -158,12 +158,6 @@ class TestBuildConfigMergeNamespace(BuildConfigTestBase):
         assert not hasattr(self.config, '_internal')
 
 
-class TestAgentConfigCollectClasses(AgentConfigTestBase):
-    def test_no_classes_are_collected(self):
-        ret = self.config.collect_classes()
-        assert ret == set()
-
-
 class TestAgentConfigValidateConfig(AgentConfigTestBase):
     def check_missing_key(self, key):
         del self.config.raw[key]
