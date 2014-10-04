@@ -113,7 +113,7 @@ class ProjectManager(object):
         raise NotImplementedError()
 
 
-class VCSRootManager(object):
+class VCSManager(object):
     def get(self, build):
         """
         Lazily get the VCS.
@@ -146,7 +146,7 @@ class Database(object):
     agent = AgentManager()
     build = BuildManager()
     project = ProjectManager()
-    vcs = VCSRootManager()
+    vcs = VCSManager()
     property = PropertyManager()
     propertynamespace = PropertyNamespaceManager()
 

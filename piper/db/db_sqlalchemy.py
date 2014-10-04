@@ -180,8 +180,8 @@ class Project(Base):
 
     id = Column(Integer(), primary_key=True)
     name = Column(String(255))
-    vcs = relationship('VCSRoot')
-    vcs_id = Column(Integer(), ForeignKey('vcs_root.id'))
+    vcs = relationship('VCS')
+    vcs_id = Column(Integer(), ForeignKey('vcs.id'))
     created = Column(DateTime(), default=utils.now)
 
 
@@ -192,14 +192,14 @@ class ProjectManager(SQLAlchemyManager):
                 session,
                 Project,
                 name=build.vcs.get_project_name(),
-                vcs=self.db.vcs_root.get(build, expunge=True),
+                vcs=self.db.vcs.get(build, expunge=True),
             )
 
             return project
 
 
-class VCSRoot(Base):
-    __tablename__ = 'vcs_root'
+class VCS(Base):
+    __tablename__ = 'vcs'
 
     id = Column(Integer(), primary_key=True)
     name = Column(String(255))
@@ -207,12 +207,12 @@ class VCSRoot(Base):
     created = Column(DateTime(), default=utils.now)
 
 
-class VCSRootManager(SQLAlchemyManager):
+class VCSManager(SQLAlchemyManager):
     def get(self, build, expunge=False):
         with in_session() as session:
             vcs = self.get_or_create(
                 session,
-                VCSRoot,
+                VCS,
                 expunge=expunge,
                 keys=('root_url',),
                 root_url=build.vcs.root_url,
@@ -309,7 +309,7 @@ class SQLAlchemyDB(Database):
         Agent: AgentManager,
         Build: BuildManager,
         Project: ProjectManager,
-        VCSRoot: VCSRootManager,
+        VCS: VCSManager,
         Property: PropertyManager,
         PropertyNamespace: PropertyNamespaceManager,
     }

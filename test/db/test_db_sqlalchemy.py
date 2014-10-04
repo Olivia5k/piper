@@ -4,13 +4,13 @@ from piper.db.db_sqlalchemy import SQLAlchemyManager
 from piper.db.db_sqlalchemy import AgentManager
 from piper.db.db_sqlalchemy import BuildManager
 from piper.db.db_sqlalchemy import ProjectManager
-from piper.db.db_sqlalchemy import VCSRootManager
+from piper.db.db_sqlalchemy import VCSManager
 from piper.db.db_sqlalchemy import in_session
 
 from piper.db.db_sqlalchemy import Agent
 from piper.db.db_sqlalchemy import Build
 from piper.db.db_sqlalchemy import Project
-from piper.db.db_sqlalchemy import VCSRoot
+from piper.db.db_sqlalchemy import VCS
 
 from test.utils import SQLATest
 from test.utils import SQLAIntegration
@@ -37,9 +37,9 @@ class AgentManagerTest(object):
         self.build = mock.Mock()
 
 
-class VCSRootManagerTest(object):
+class VCSManagerTest(object):
     def setup_method(self, method):
-        self.manager = VCSRootManager(mock.Mock())
+        self.manager = VCSManager(mock.Mock())
         self.build = mock.Mock()
 
 
@@ -170,7 +170,7 @@ class TestProjectManagerGet(ProjectManagerTest):
             session.return_value,
             table,
             name=self.build.vcs.get_project_name.return_value,
-            vcs=self.manager.db.vcs_root.get.return_value
+            vcs=self.manager.db.vcs.get.return_value
         )
 
 
@@ -256,9 +256,9 @@ class TestAgentManagerSetAgentLock(AgentManagerTest):
         self.assert_lock(session, table, False)
 
 
-class TestVCSRootManagerGet(VCSRootManagerTest):
+class TestVCSManagerGet(VCSManagerTest):
     def setup_method(self, method):
-        super(TestVCSRootManagerGet, self).setup_method(method)
+        super(TestVCSManagerGet, self).setup_method(method)
         self.manager.get_or_create = mock.Mock()
 
     @mock.patch('piper.db.db_sqlalchemy.Session')
@@ -266,7 +266,7 @@ class TestVCSRootManagerGet(VCSRootManagerTest):
         ret = self.manager.get(self.build)
         assert ret is self.manager.get_or_create.return_value
 
-    @mock.patch('piper.db.db_sqlalchemy.VCSRoot')
+    @mock.patch('piper.db.db_sqlalchemy.VCS')
     @mock.patch('piper.db.db_sqlalchemy.Session')
     def test_get_or_create_arguments(self, session, table):
         self.manager.get(self.build)
@@ -280,7 +280,7 @@ class TestVCSRootManagerGet(VCSRootManagerTest):
             name=self.build.vcs.name,
         )
 
-    @mock.patch('piper.db.db_sqlalchemy.VCSRoot')
+    @mock.patch('piper.db.db_sqlalchemy.VCS')
     @mock.patch('piper.db.db_sqlalchemy.Session')
     def test_get_or_create_arguments_with_expunge(self, session, table):
         self.manager.get(self.build, expunge=True)
@@ -453,9 +453,9 @@ class TestInSessionInner(object):
 
 class TestSQLiteIntegration(SQLAIntegration):
     def assert_vcs(self, session):
-        assert session.query(VCSRoot).count() == 1
+        assert session.query(VCS).count() == 1
 
-        vcs = session.query(VCSRoot).first()
+        vcs = session.query(VCS).first()
         assert vcs.name == self.build.vcs.name
         assert vcs.root_url == self.build.vcs.root_url
 
@@ -488,7 +488,7 @@ class TestSQLiteIntegration(SQLAIntegration):
         self.build.vcs.name = 'oh sailor'
         self.build.vcs.root_url = 'fiona://extraordinary-machine.net'
 
-        self.db.vcs_root.get(self.build)
+        self.db.vcs.get(self.build)
 
         with in_session() as session:
             self.assert_vcs(session)
