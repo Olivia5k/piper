@@ -251,7 +251,7 @@ class PropertyManager(SQLAlchemyManager):
             for cls in classes:
                 prop_class = cls()
                 prop_class.log.info('Loading properties')
-                ns = self.db.property_namespace.get(cls.namespace)
+                ns = self.db.property_namespace.get(prop_class.namespace)
 
                 for key, value in prop_class.properties.items():
                     prop_class.log.debug('{0}: {1}'.format(key, value))
