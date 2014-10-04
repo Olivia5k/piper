@@ -218,6 +218,18 @@ class AgentConfig(ConfigBase):
                 },
             },
             'db': DB_SCHEMA,
+            'properties': {
+                'description': 'Agent property configuration',
+                'type': 'object',
+                'additionalProperties': False,
+                'required': ['classes'],
+                'properties': {
+                    'classes': {
+                        'description': 'Classes to use for property loading',
+                        'type': 'array',
+                    },
+                },
+            },
         },
     }
 
@@ -229,4 +241,8 @@ class AgentConfig(ConfigBase):
 
     def collect_classes(self):
         targets = set()
+
+        targets.add(self.raw['db']['class'])
+        targets.update(cls for cls in self.raw['properties']['classes'])
+
         return targets

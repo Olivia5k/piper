@@ -3,6 +3,10 @@ agent:
   fqdn: sto4-buildagent-a1.piper.ninjaloot.se
   active: true
 
+properties:
+  classes:
+    - piper.prop.FacterProp
+
 db:
   class: piper.db.SQLAlchemyDB
   host: sqlite:///data/piper.db
