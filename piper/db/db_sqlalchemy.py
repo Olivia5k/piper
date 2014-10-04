@@ -236,7 +236,37 @@ class Property(Base):
 
 
 class PropertyManager(SQLAlchemyManager):
-    pass
+    def update(self, classes):
+        self.log.info('Updating properties')
+
+        with in_session() as session:
+            agent = self.db.agent.get(expunge=True)
+
+            # Clear existing properties.
+            # FIXME: This is probably not a very effective way of doing things.
+            query = session.query(Property).filter(Property.agent == agent)
+            query.delete()
+            self.log.debug('Cleared old properties')
+
+            for cls in classes:
+                prop_class = cls()
+                prop_class.log.info('Loading properties')
+                ns = self.db.property_namespace.get(cls.__class__.__name__)
+
+                for key, value in prop_class.properties.items():
+                    prop_class.log.debug('{0}: {1}'.format(key, value))
+                    kwargs = {
+                        'value': value,
+                        'agent': agent,
+                        'namespace': ns,
+                        'key': key,
+                    }
+
+                    session.add(Property(**kwargs))
+
+                prop_class.log.info('Properties loaded')
+
+            self.log.info('Property updating complete')
 
 
 class PropertyNamespace(Base):
