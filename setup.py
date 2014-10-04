@@ -59,6 +59,13 @@ class PyTestIntegration(PyTest):
         self.test_args.append('-k Integration')
 
 
+class PyTestUnit(PyTest):
+    def finalize_options(self):
+        super(PyTestUnit, self).finalize_options()
+        # Only run tests from classes that do not match "Integration"
+        self.test_args.append('-k not Integration')
+
+
 setup(
     name='piper',
     version='0.0.1',
@@ -80,6 +87,7 @@ setup(
     cmdclass={
         'test': PyTest,
         'integration': PyTestIntegration,
+        'unit': PyTestUnit,
     },
     classifiers=[
         'Development Status :: 3 - Alpha',
