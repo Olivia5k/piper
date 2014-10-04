@@ -3,6 +3,7 @@ import datetime
 import socket
 import contextlib
 import json
+import logbook
 
 from piper import utils
 
@@ -29,6 +30,7 @@ Session = sessionmaker()
 class SQLAlchemyManager(object):
     def __init__(self, db):
         self.db = db
+        self.log = logbook.Logger(self.__class__.__name__)
 
     def get_or_create(self, session, model, expunge=False, keys=(), **kwargs):
         """
