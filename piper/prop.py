@@ -31,6 +31,11 @@ class PropBase(DynamicItem):
 
             if isinstance(v, MutableMapping):
                 items.extend(self.flatten(v, new_key).items())
+            elif isinstance(v, list):
+                # Make lists have keys like 'foo.bar.x'
+                for x, item in enumerate(v):
+                    key = '{2}{0}{1}'.format(sep, x, new_key)
+                    items.append((key, item))
             else:
                 items.append((new_key, v))
 
