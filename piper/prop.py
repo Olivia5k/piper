@@ -2,6 +2,7 @@ import facter
 from collections import MutableMapping
 
 from piper.abc import DynamicItem
+from piper.db.core import LazyDatabaseMixin
 
 
 class PropBase(DynamicItem):
@@ -59,3 +60,25 @@ class FacterProp(PropBase):
             self._props = self.flatten(facts)
 
         return self._props
+
+
+class PropCLI(LazyDatabaseMixin):
+    def __init__(self, config):
+        self.config = config
+
+    def compose(self, parser):  # pragma: nocover
+        api = parser.add_parser('prop', help='Control agent properties')
+
+        sub = api.add_subparsers(help='Prop commands', dest="prop_command")
+        sub.add_parser('update', help='Update properties')
+
+        return 'prop', self.run
+
+    def run(self):
+        if self.config.prop_command == 'update':
+            classes = []
+            for key, cls in self.config.classes.items():
+                if key.startswith('piper.prop.'):
+                    classes.append(cls)
+
+            self.db.property.update(classes)
