@@ -189,3 +189,9 @@ class TestAgentConfigValidateConfig(AgentConfigTest):
 
     def test_no_db_config(self):
         self.check_missing_key('db')
+
+
+class TestAgentConfigCollectClasses(AgentConfigTest):
+    def test_collection(self):
+        ret = self.config.collect_classes()
+        assert ret == set(['piper.db.SQLAlchemyDB', 'piper.prop.FacterProp'])
