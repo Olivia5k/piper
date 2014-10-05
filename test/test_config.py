@@ -4,6 +4,7 @@ import pytest
 import mock
 import copy
 
+from piper.config import Config
 from piper.config import ConfigError
 from piper.config import BuildConfig
 from piper.config import AgentConfig
@@ -23,6 +24,21 @@ class AgentConfigTest(object):
     def setup_method(self, method):
         self.config = AgentConfig()
         self.config.raw = copy.deepcopy(utils.AGENT_CONFIG)
+
+
+class TestConfigLoad(object):
+    def test_raw_configuration(self):
+        self.raw = {
+            'tiger army': 'pain',
+        }
+        self.config = Config(raw=self.raw)
+        self.config.load_config = mock.Mock()
+        self.config.validate_config = mock.Mock()  # Config() has no schema
+
+        self.config.load()
+
+        assert self.config.load_config.call_count == 0
+        assert self.config.raw == self.raw
 
 
 class TestBuildConfigLoadConfig(BuildConfigTest):
