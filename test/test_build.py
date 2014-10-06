@@ -84,7 +84,10 @@ class TestBuildSetVersion(object):
     def test_set_version(self):
         self.build.set_version()
 
-        self.cls.assert_called_once_with(self.build.config.raw['version'])
+        self.cls.assert_called_once_with(
+            self.build,
+            self.build.config.raw['version'],
+        )
         self.cls.return_value.validate.assert_called_once_with()
 
 
@@ -111,7 +114,8 @@ class TestBuildConfigureEnv(object):
         self.build.configure_env()
 
         self.cls.assert_called_once_with(
-            self.build.config.raw['envs'][self.config.env]
+            self.build,
+            self.build.config.raw['envs'][self.config.env],
         )
         self.cls.return_value.validate.assert_called_once_with()
 
@@ -147,6 +151,7 @@ class TestBuildConfigureSteps(object):
 
             cls = self.build.config.classes[cls_key]
             cls.assert_called_once_with(
+                self.build,
                 self.build.config.raw['steps'][key],
                 key
             )

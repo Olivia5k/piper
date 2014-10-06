@@ -12,8 +12,10 @@ class DynamicItem(object):
 
     """
 
-    def __init__(self, config):
+    def __init__(self, build, config):
+        self.build = build
         self.config = config
+
         self.log = logbook.Logger(self.__class__.__name__)
 
         # Set missing optional keys to None or default values

@@ -7,6 +7,7 @@ import pytest
 
 class StepTest(object):
     def setup_method(self, method):
+        self.build = mock.Mock()
         self.key = 'test'
         self.schema = {
             'class': 'piper.step.Step',
@@ -17,11 +18,12 @@ class StepTest(object):
                 'equals': 'Morning Glory',
             },
         }
-        self.step = Step(self.schema, self.key)
+        self.step = Step(self.build, self.schema, self.key)
 
 
 class CommandLineStepTest(object):
     def setup_method(self, method):
+        self.build = mock.Mock()
         self.key = 'test'
         self.command = '/usr/bin/empathy'
         self.schema = {
@@ -34,7 +36,7 @@ class CommandLineStepTest(object):
                 'equals': 'Morning Glory',
             },
         }
-        self.step = CommandLineStep(self.schema, self.key)
+        self.step = CommandLineStep(self.build, self.schema, self.key)
 
 
 class TestStepSchema(StepTest):

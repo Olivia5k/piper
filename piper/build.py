@@ -124,7 +124,7 @@ class Build(LazyDatabaseMixin):
         ver_config = self.config.raw['version']
         cls = self.config.classes[ver_config['class']]
 
-        self.version = cls(ver_config)
+        self.version = cls(self, ver_config)
         self.version.validate()
         self.log.info(str(self.version))
 
@@ -138,7 +138,7 @@ class Build(LazyDatabaseMixin):
         env_config = self.config.raw['envs'][self.config.env]
         cls = self.config.classes[env_config['class']]
 
-        self.env = cls(env_config)
+        self.env = cls(self, env_config)
         self.log.debug('Validating env config...')
         self.env.validate()
         self.env.log.debug('Environment configured.')
@@ -152,7 +152,7 @@ class Build(LazyDatabaseMixin):
         for step_key, step_config in self.config.raw['steps'].items():
             cls = self.config.classes[step_config['class']]
 
-            step = cls(step_config, step_key)
+            step = cls(self, step_config, step_key)
             step.log.debug('Validating config...')
             step.validate()
             step.log.debug('Step configured.')

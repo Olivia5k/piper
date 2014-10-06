@@ -10,7 +10,8 @@ from test.utils import BASE_CONFIG
 
 class EnvTest(object):
     def setup_method(self, method):
-        self.env = Env(BASE_CONFIG['envs']['local'])
+        self.build = mock.Mock()
+        self.env = Env(self.build, BASE_CONFIG['envs']['local'])
         self.step = mock.Mock()
 
 
@@ -43,7 +44,8 @@ class TestEnvExecute(EnvTest):
 
 class TestTempDirEnvSetup(object):
     def setup_method(self, method):
-        self.env = TempDirEnv(mock.MagicMock())
+        self.build = mock.Mock()
+        self.env = TempDirEnv(self.build, mock.MagicMock())
 
     @mock.patch('shutil.copytree')
     @mock.patch('os.chdir')
@@ -57,7 +59,7 @@ class TestTempDirEnvSetup(object):
         assert self.env.dir == mkdtemp.return_value
 
     def test_validation_extra_field(self):
-        self.env = TempDirEnv(mock.MagicMock(**{
+        self.env = TempDirEnv(self.build, mock.MagicMock(**{
             'class': 'hehe',
             'heart': 'black.as.night',
         }))
@@ -68,7 +70,8 @@ class TestTempDirEnvSetup(object):
 
 class TestTempDirEnvTeardown(object):
     def setup_method(self, method):
-        self.env = TempDirEnv(mock.MagicMock())
+        self.build = mock.Mock()
+        self.env = TempDirEnv(self.build, mock.MagicMock())
         self.env.dir = '/dir'
 
     @mock.patch('shutil.rmtree')
@@ -89,7 +92,8 @@ class TestTempDirEnvTeardown(object):
 
 class TestTempDirEnvExecute(object):
     def setup_method(self, method):
-        self.env = TempDirEnv(mock.MagicMock())
+        self.build = mock.Mock()
+        self.env = TempDirEnv(self.build, mock.MagicMock())
         self.env.dir = '/'
         self.env.cwd = '/repo'
         self.step = mock.Mock()

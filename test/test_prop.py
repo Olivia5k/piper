@@ -8,7 +8,8 @@ from piper.prop import PropCLI
 
 class PropTest(object):
     def setup_method(self, method):
-        self.prop = Prop()
+        self.build = mock.Mock()
+        self.prop = Prop(self.build)
 
 
 class PropCLITest(object):
@@ -84,7 +85,7 @@ class TestPropFlatten(PropTest):
 class TestFacterPropProperties(object):
     @mock.patch('facter.Facter')
     def test_get_properties(self, Facter):
-        self.prop = FacterProp()
+        self.prop = FacterProp(mock.Mock())
         self.prop.flatten = mock.Mock()
 
         ret = self.prop.properties

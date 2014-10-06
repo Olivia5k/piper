@@ -6,8 +6,10 @@ from piper.db.core import LazyDatabaseMixin
 
 
 class Prop(DynamicItem):
-    def __init__(self):
-        super(Prop, self).__init__(None)
+    def __init__(self, build):
+        self.build = build
+
+        super(Prop, self).__init__(build, None)
         self._props = None
 
     @property

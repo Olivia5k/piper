@@ -9,40 +9,34 @@ import mock
 
 class StaticVersionTest(object):
     def setup_method(self, method):
+        self.build = mock.Mock()
         self.v = '32.1.12'
-        self.version = StaticVersion({
+        self.raw = {
             'class': 'hehe',
             'version': self.v,
-        })
+        }
+        self.version = StaticVersion(self.build, self.raw)
 
 
 class GitVersionTest(object):
     def setup_method(self, method):
-        self.git = GitVersion({
+        self.build = mock.Mock()
+        self.raw = {
             'class': 'piper.version.GitVersion',
-        })
+        }
+        self.git = GitVersion(self.build, self.raw)
 
 
 class TestVersionValidate(object):
-    @mock.patch('jsonschema.validate')
-    def test_validate(self, jv):
-        version = Version(mock.Mock(version='hehe'))
-        version.validate()
-
-        jv.assert_called_once_with(
-            version.config,
-            version.schema
-        )
-
     def test_broken_schema(self):
-        version = Version(mock.Mock(the_final_countdown=True))
+        version = Version(mock.Mock(), mock.Mock(the_final_countdown=True))
         with pytest.raises(jsonschema.exceptions.ValidationError):
             version.validate()
 
 
 class TestVersionGetVersion(object):
     def test_not_implemented(self):
-        version = Version(mock.Mock())
+        version = Version(mock.Mock(), mock.Mock())
         with pytest.raises(NotImplementedError):
             version.get_version()
 

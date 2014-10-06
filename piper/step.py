@@ -10,8 +10,8 @@ class Step(DynamicItem):
 
     """
 
-    def __init__(self, config, key):
-        super(Step, self).__init__(config)
+    def __init__(self, build, config, key):
+        super(Step, self).__init__(build, config)
 
         self.index = ('x', 'y')
         self.key = key
