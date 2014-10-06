@@ -20,6 +20,23 @@ class StepTest(object):
         self.step = Step(self.schema, self.key)
 
 
+class CommandLineStepTest(object):
+    def setup_method(self, method):
+        self.key = 'test'
+        self.command = '/usr/bin/empathy'
+        self.schema = {
+            'class': 'piper.step.CommandLineStep',
+            'command': self.command,
+            'requirements': {
+                'reason': 'You can fly, reach for the sky',
+                'class': 'edguy.hellfire.Glory',
+                'key': 'Rise Of The',
+                'equals': 'Morning Glory',
+            },
+        }
+        self.step = CommandLineStep(self.schema, self.key)
+
+
 class TestStepSchema(StepTest):
     def test_validate(self):
         self.step.validate()
@@ -45,14 +62,16 @@ class TestStepGetCommand(StepTest):
             self.step.get_command()
 
 
-class TestCommandLineStepGetCommand(object):
-    def setup_method(self, method):
-        self.command = '/usr/bin/empathy'
-        self.step = CommandLineStep(
-            {'command': self.command},
-            'key',
-        )
+class TestCommandLineStepSchema(CommandLineStepTest):
+    def test_validate(self):
+        self.step.validate()
 
+    def test_validate_with_no_requirements(self):
+        self.step.config['requirements'] = None
+        self.step.validate()
+
+
+class TestCommandLineStepGetCommand(CommandLineStepTest):
     def test_get_command(self):
         ret = self.step.get_command()
         assert ret == self.command
