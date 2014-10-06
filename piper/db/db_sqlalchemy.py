@@ -54,8 +54,8 @@ class SQLAlchemyManager(object):
             instance = model(**kwargs)
             session.add(instance)
 
-        if expunge:
-            session.expunge(instance)
+            if expunge:
+                session.expunge(instance)
 
         return instance
 

@@ -520,6 +520,19 @@ class TestSQLAlchemyManagerGetOrCreate(object):
         )
         self.filter.assert_called_once_with(**self.filtered_keys)
 
+    def test_expungning_when_not_creating(self):
+        self.filter.return_value.first.return_value = None
+        self.manager.get_or_create(
+            self.session, self.model, expunge=True,
+        )
+        self.session.expunge.assert_called_once_with(self.model.return_value)
+
+    def test_expungning_when_creating(self):
+        self.manager.get_or_create(
+            self.session, self.model, expunge=True,
+        )
+        assert self.session.expunge.call_count == 0
+
 
 class TestInSessionInner(object):
     @mock.patch('piper.db.db_sqlalchemy.Session')
