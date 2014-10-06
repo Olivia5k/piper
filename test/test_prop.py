@@ -59,6 +59,19 @@ class TestPropFlatten(PropTest):
             'reverend.horton.heat': True
         }
 
+    def test_flattening_list_items(self):
+        d = {
+            'reverend': {
+                'horton': ['trouble', 'brucie'],
+            }
+        }
+        ret = self.prop.flatten(d)
+
+        assert ret == {
+            'reverend.horton.0': 'trouble',
+            'reverend.horton.1': 'brucie',
+        }
+
 
 class TestFacterPropProperties(object):
     @mock.patch('facter.Facter')
