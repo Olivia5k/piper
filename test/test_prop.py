@@ -3,11 +3,19 @@ import mock
 
 from piper.prop import Prop
 from piper.prop import FacterProp
+from piper.prop import PropCLI
 
 
 class PropTest(object):
     def setup_method(self, method):
         self.prop = Prop()
+
+
+class PropCLITest(object):
+    def setup_method(self, method):
+        self.config = mock.Mock()
+        self.cli = PropCLI(self.config)
+        self.cli.db = mock.Mock()
 
 
 class TestPropProperties(PropTest):
@@ -86,3 +94,36 @@ class TestFacterPropProperties(object):
         assert Facter.call_count == 1
 
         self.prop.flatten.assert_called_once_with(Facter.return_value.all)
+
+
+class TestPropCLIRun(PropCLITest):
+    def test_return_value(self):
+        ret = self.cli.run()
+        assert ret == 0
+
+    def test_update(self):
+        self.cli.config.prop_command = 'update'
+
+        self.prop = mock.Mock()
+        self.cli.config.classes = {
+            'piper.prop.Test': self.prop,
+        }
+
+        ret = self.cli.run()
+        assert ret == 0
+
+        self.cli.db.property.update.assert_called_once_with([self.prop])
+
+    def test_update_skips_non_prop_classes(self):
+        self.cli.config.prop_command = 'update'
+
+        self.prop = mock.Mock()
+        self.cli.config.classes = {
+            'piper.prop.Test': self.prop,
+            'gotthard.bang.BangBang': None,
+        }
+
+        ret = self.cli.run()
+        assert ret == 0
+
+        self.cli.db.property.update.assert_called_once_with([self.prop])
