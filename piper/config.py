@@ -86,9 +86,21 @@ class Config(object):
 
         self.log.debug('Configuration file loaded.')
 
-    def collect_classes(self):  # pragma: nocover
-        self.log.debug("No class collection defined")
-        return set()
+    def collect_classes(self):
+        def traverse(data):
+            # yield from :'(
+            ret = []
+            for key, value in data.items():
+                if key == 'class':
+                    ret.append(value)
+                elif key == 'classes':
+                    ret.extend(value)
+                elif isinstance(value, dict):
+                    ret.extend(traverse(value))
+
+            return ret
+
+        return set(traverse(self.raw))
 
     def load_classes(self):
         self.log.debug("Loading classes...")
@@ -168,20 +180,6 @@ class BuildConfig(Config):
 
         super(BuildConfig, self).__init__(filename, raw)
 
-    def collect_classes(self):
-        targets = set()
-
-        targets.add(self.raw['version']['class'])
-        targets.add(self.raw['db']['class'])
-
-        for env in self.raw['envs'].values():
-            targets.add(env['class'])
-
-        for step in self.raw['steps'].values():
-            targets.add(step['class'])
-
-        return targets
-
 
 class AgentConfig(Config):
     schema = {
@@ -238,11 +236,3 @@ class AgentConfig(Config):
             filename = 'piperd.yml'
 
         super(AgentConfig, self).__init__(filename)
-
-    def collect_classes(self):
-        targets = set()
-
-        targets.add(self.raw['db']['class'])
-        targets.update(cls for cls in self.raw['properties']['classes'])
-
-        return targets

@@ -243,7 +243,6 @@ class PropertyManager(SQLAlchemyManager):
             agent = self.db.agent.get(expunge=True)
 
             # Clear existing properties.
-            # FIXME: This is probably not a very effective way of doing things.
             query = session.query(Property).filter(Property.agent == agent)
             query.delete()
             self.log.debug('Cleared old properties')

@@ -41,6 +41,27 @@ class TestConfigLoad(object):
         assert self.config.raw == self.raw
 
 
+class TestConfigCollectClasses(object):
+    def test_load_classes_loads_nested(self):
+        self.raw = {
+            'avantasia': {
+                'class': 'seven.angels',
+            },
+            'opera': {
+                'vandroy': {
+                    'class': 'million.empty.brains',
+                },
+                'gabriel': {
+                    'class': 'million.empty.brains',
+                },
+            },
+        }
+        self.config = Config(raw=self.raw)
+
+        ret = self.config.collect_classes()
+        assert ret == set(['seven.angels', 'million.empty.brains'])
+
+
 class TestBuildConfigLoadConfig(BuildConfigTest):
     def setup_method(self, method):
         self.data = 'lel: 10\ntest: wizard\n\n'
