@@ -2,14 +2,23 @@ import pytest
 import mock
 
 from piper.prop import Prop
-from piper.prop import FacterProp
+from piper.prop import PropSource
+from piper.prop import FacterPropSource
 from piper.prop import PropCLI
 
 
 class PropTest(object):
     def setup_method(self, method):
+        self.source = mock.Mock()
+        self.key = 'nocturnal.rites'
+        self.value = 'awakening'
+        self.prop = Prop(self.source, self.key, self.value)
+
+
+class PropSourceTest(object):
+    def setup_method(self, method):
         self.build = mock.Mock()
-        self.prop = Prop(self.build)
+        self.prop = PropSource()
 
 
 class PropCLITest(object):
@@ -19,18 +28,28 @@ class PropCLITest(object):
         self.cli.db = mock.Mock()
 
 
-class TestPropProperties(PropTest):
+class TestPropEquals(PropTest):
+    def test_truth(self):
+        ret = self.prop.equals('awakening')
+        assert ret is True
+
+    def test_lies(self):
+        ret = self.prop.equals('new.world.messiah')
+        assert ret is False
+
+
+class TestPropSourceGenerate(PropSourceTest):
     def test_properties_raises_notimplementederror(self):
         with pytest.raises(NotImplementedError):
-            self.prop.properties
+            self.prop.generate()
 
 
-class TestPropNamespace(PropTest):
+class TestPropSourceNamespace(PropSourceTest):
     def test_namespace(self):
-        assert self.prop.namespace == 'piper.prop.Prop'
+        assert self.prop.namespace == 'piper.prop.PropSource'
 
 
-class TestPropFlatten(PropTest):
+class TestPropSourceFlatten(PropSourceTest):
     def test_empty_dict(self):
         ret = self.prop.flatten({})
 
@@ -82,17 +101,27 @@ class TestPropFlatten(PropTest):
         }
 
 
-class TestFacterPropProperties(object):
+class TestFacterPropGenerate(object):
+    @mock.patch('piper.prop.FacterProp')
     @mock.patch('facter.Facter')
-    def test_get_properties(self, Facter):
-        self.prop = FacterProp(mock.Mock())
+    def test_generate(self, Facter, FacterProp):
+        self.prop = FacterPropSource()
         self.prop.flatten = mock.Mock()
+        self.prop.flatten.return_value = {
+            'meredith.brooks': 'bitch',
+        }
 
-        ret = self.prop.properties
+        ret = self.prop.generate()
 
-        assert ret is self.prop._props
-        assert ret is self.prop.flatten.return_value
         assert Facter.call_count == 1
+        assert ret is self.prop._props
+        assert ret == [FacterProp.return_value]
+
+        FacterProp.assert_called_once_with(
+            self.prop,
+            'meredith.brooks',
+            'bitch',
+        )
 
         self.prop.flatten.assert_called_once_with(Facter.return_value.all)
 

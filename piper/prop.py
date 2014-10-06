@@ -1,19 +1,24 @@
 import facter
 from collections import MutableMapping
 
-from piper.abc import DynamicItem
 from piper.db.core import LazyDatabaseMixin
 
 
-class Prop(DynamicItem):
-    def __init__(self, build):
-        self.build = build
+class Prop(object):
+    def __init__(self, source, key, value):
+        self.source = source
+        self.key = key
+        self.value = value
 
-        super(Prop, self).__init__(build, None)
+    def equals(self, other):
+        return self.value == other
+
+
+class PropSource(object):
+    def __init__(self):
         self._props = None
 
-    @property
-    def properties(self):
+    def generate(self):
         """
         Collect system properties and return a dictionary of them
 
@@ -46,6 +51,10 @@ class Prop(DynamicItem):
 
 
 class FacterProp(Prop):
+    pass
+
+
+class FacterPropSource(PropSource):
     """
     Collect properties from facter via facterpy
 
@@ -55,11 +64,13 @@ class FacterProp(Prop):
 
     """
 
-    @property
-    def properties(self):
+    def generate(self):
         if self._props is None:
+            self._props = []
             facts = facter.Facter().all
-            self._props = self.flatten(facts)
+
+            for key, value in self.flatten(facts).items():
+                self._props.append(FacterProp(self, key, value))
 
         return self._props
 
