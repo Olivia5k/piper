@@ -30,6 +30,7 @@ Session = sessionmaker()
 class SQLAlchemyManager(object):
     def __init__(self, db):
         self.db = db
+
         self.log = logbook.Logger(self.__class__.__name__)
 
     def get_or_create(self, session, model, expunge=False, keys=(), **kwargs):
@@ -247,23 +248,23 @@ class PropertyManager(SQLAlchemyManager):
             query.delete()
             self.log.debug('Cleared old properties')
 
-            for cls in classes:
-                prop_class = cls()
-                prop_class.log.info('Loading properties')
-                ns = self.db.property_namespace.get(prop_class.namespace)
+            for prop_class in classes:
+                prop_source = prop_class.source()
+                prop_source.log.info('Loading properties')
+                prop_source.ns = self.db.property_namespace.get(
+                    prop_source.namespace
+                )
 
-                for key, value in prop_class.properties.items():
-                    prop_class.log.debug('{0}: {1}'.format(key, value))
-                    kwargs = {
-                        'value': value,
-                        'agent': agent,
-                        'namespace': ns,
-                        'key': key,
-                    }
+                for prop in prop_source.generate():
+                    prop_source.log.debug(str(prop))
 
-                    session.add(Property(**kwargs))
+                    obj = Property(**prop.to_kwargs(
+                        agent=agent,
+                        namespace=prop_source.ns,
+                    ))
+                    session.add(obj)
 
-                prop_class.log.info('Properties loaded')
+                prop_source.log.info('Properties loaded')
 
             self.log.info('Property updating complete')
 

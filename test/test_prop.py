@@ -38,6 +38,23 @@ class TestPropEquals(PropTest):
         assert ret is False
 
 
+class TestPropToKwargs(PropTest):
+    def test_no_extra(self):
+        ret = self.prop.to_kwargs()
+        assert ret == {
+            'value': self.value,
+            'key': self.key,
+        }
+
+    def test_with_extra(self):
+        ret = self.prop.to_kwargs(hehe='hehe')
+        assert ret == {
+            'value': self.value,
+            'key': self.key,
+            'hehe': 'hehe',
+        }
+
+
 class TestPropSourceGenerate(PropSourceTest):
     def test_properties_raises_notimplementederror(self):
         with pytest.raises(NotImplementedError):
@@ -46,7 +63,7 @@ class TestPropSourceGenerate(PropSourceTest):
 
 class TestPropSourceNamespace(PropSourceTest):
     def test_namespace(self):
-        assert self.prop.namespace == 'piper.prop.PropSource'
+        assert self.prop.namespace == 'piper.prop.Prop'
 
 
 class TestPropSourceFlatten(PropSourceTest):

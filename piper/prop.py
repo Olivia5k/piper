@@ -1,22 +1,15 @@
 import facter
+import logbook
 from collections import MutableMapping
 
 from piper.db.core import LazyDatabaseMixin
 
 
-class Prop(object):
-    def __init__(self, source, key, value):
-        self.source = source
-        self.key = key
-        self.value = value
-
-    def equals(self, other):
-        return self.value == other
-
-
 class PropSource(object):
     def __init__(self):
         self._props = None
+
+        self.log = logbook.Logger(self.__class__.__name__)
 
     def generate(self):
         """
@@ -28,7 +21,9 @@ class PropSource(object):
 
     @property
     def namespace(self):
-        return '.'.join((self.__module__, self.__class__.__name__))
+        return '.'.join((
+            self.__module__, self.__class__.__name__.replace('Source', '')
+        ))
 
     # http://stackoverflow.com/questions/6027558
     def flatten(self, d, parent_key='', sep='.'):
@@ -50,8 +45,27 @@ class PropSource(object):
         return dict(items)
 
 
-class FacterProp(Prop):
-    pass
+class Prop(object):
+    source = PropSource
+
+    def __init__(self, source, key, value):
+        self.source = source
+        self.key = key
+        self.value = value
+
+    def __str__(self):  # pragma: nocover
+        return '{0}: {1}'.format(self.key, self.value)
+
+    def to_kwargs(self, **extra):
+        kwargs = {
+            'value': self.value,
+            'key': self.key,
+        }
+        kwargs.update(extra)
+        return kwargs
+
+    def equals(self, other):
+        return self.value == other
 
 
 class FacterPropSource(PropSource):
@@ -71,8 +85,13 @@ class FacterPropSource(PropSource):
 
             for key, value in self.flatten(facts).items():
                 self._props.append(FacterProp(self, key, value))
+            self._props = sorted(self._props, key=lambda x: x.key)
 
         return self._props
+
+
+class FacterProp(Prop):
+    source = FacterPropSource
 
 
 class PropCLI(LazyDatabaseMixin):
