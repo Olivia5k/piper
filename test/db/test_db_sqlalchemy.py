@@ -491,6 +491,7 @@ class TestSQLAlchemyManagerGetOrCreate(object):
         self.keys = ['stanton']
         self.filtered_keys = {'stanton': 'creed'}
         self.filter = self.session.query.return_value.filter_by
+        self.instance = self.filter.return_value.first.return_value
 
     def test_already_exists(self):
         ret = self.manager.get_or_create(
@@ -499,7 +500,7 @@ class TestSQLAlchemyManagerGetOrCreate(object):
             **self.kwargs
         )
 
-        assert ret is self.filter.return_value.first.return_value
+        assert ret is self.instance
         assert self.session.add.call_count == 0
 
     def test_does_not_exist(self):
@@ -531,7 +532,7 @@ class TestSQLAlchemyManagerGetOrCreate(object):
         self.manager.get_or_create(
             self.session, self.model, expunge=True,
         )
-        assert self.session.expunge.call_count == 0
+        self.session.expunge.assert_called_once_with(self.instance)
 
 
 class TestInSessionInner(object):
