@@ -5,12 +5,25 @@ import mock
 from piper.env import Env
 from piper.env import TempDirEnv
 
+from test.utils import BASE_CONFIG
 
-class TestEnvExecute(object):
+
+class EnvTest(object):
     def setup_method(self, method):
-        self.env = Env(mock.MagicMock())
+        self.env = Env(BASE_CONFIG['envs']['local'])
         self.step = mock.Mock()
 
+
+class TestEnvSchema(EnvTest):
+    def test_validate(self):
+        self.env.validate()
+
+    def test_validate_with_no_requirements(self):
+        self.env.config['requirements'] = None
+        self.env.validate()
+
+
+class TestEnvExecute(EnvTest):
     @mock.patch('piper.env.Process')
     def test_execute_plain(self, proc):
         ret = self.env.execute(self.step)
@@ -26,17 +39,6 @@ class TestEnvExecute(object):
         )
         procobj.run.assert_called_once_with()
         assert ret is procobj
-
-
-class TestEnvValidate(object):
-    def setup_method(self, method):
-        self.env = Env(mock.MagicMock())
-        self.env.config = mock.Mock()
-
-    @mock.patch('jsonschema.validate')
-    def test_validate(self, jv):
-        self.env.validate()
-        jv.assert_called_once_with(self.env.config, self.env.schema)
 
 
 class TestTempDirEnvSetup(object):

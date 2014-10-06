@@ -5,6 +5,12 @@ version:
 envs:
   local:
     class: 'piper.env.Env'
+    requirements:
+      is_not_virtual:
+        reason: 'The base environment cannot run if virtualized'
+        class: 'piper.prop.FacterProp'
+        key: 'virtual'
+        equals: 'physical'
 
 steps:
   test:

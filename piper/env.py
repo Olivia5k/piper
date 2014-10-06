@@ -7,6 +7,42 @@ from piper.process import Process
 
 
 class Env(DynamicItem):
+    @property
+    def schema(self):
+        if not hasattr(self, '_schema'):
+            self._schema = super(Env, self).schema
+            self._schema['required'].append('requirements')
+            self._schema['properties']['requirements'] = {
+                'description': 'A set of requirement definitions',
+                'type': ['object', 'null'],
+                'addtionalProperties': {
+                    'required': ['reason', 'class', 'key', 'equals'],
+                    'properties': {
+                        'reason': {
+                            'description':
+                                'Human-readable motivation for this '
+                                'requirement.',
+                            'type': 'string',
+                        },
+                        'class': {
+                            'description': 'Dynamic class to load.',
+                            'type': 'string',
+                        },
+                        'key': {
+                            'description': 'The key for lookup.',
+                            'type': 'string',
+                        },
+                        'equals': {
+                            'description':
+                                'The value to compare the lookup with.',
+                            'type': 'string',
+                        },
+                    },
+                }
+            }
+
+        return self._schema
+
     def setup(self):  # pragma: nocover
         pass
 
