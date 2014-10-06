@@ -1,6 +1,7 @@
 import logbook
 
 from piper.abc import DynamicItem
+from piper.schema import REQUIREMENT_SCHEMA
 
 
 class Step(DynamicItem):
@@ -19,6 +20,15 @@ class Step(DynamicItem):
 
     def __repr__(self):  # pragma: nocover
         return "<{0} {1}>".format(self.__class__.__name__, self.key)
+
+    @property
+    def schema(self):
+        if not hasattr(self, '_schema'):
+            self._schema = super(Step, self).schema
+            self._schema['required'].append('requirements')
+            self._schema['properties']['requirements'] = REQUIREMENT_SCHEMA
+
+        return self._schema
 
     def set_index(self, cur, tot):
         """

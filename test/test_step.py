@@ -7,10 +7,26 @@ import pytest
 
 class StepTest(object):
     def setup_method(self, method):
-        self.step = Step(
-            mock.Mock(**{'class': 'piper.step.Class'}),
-            'key'
-        )
+        self.key = 'test'
+        self.schema = {
+            'class': 'piper.step.Step',
+            'requirements': {
+                'reason': 'You can fly, reach for the sky',
+                'class': 'edguy.hellfire.Glory',
+                'key': 'Rise Of The',
+                'equals': 'Morning Glory',
+            },
+        }
+        self.step = Step(self.schema, self.key)
+
+
+class TestStepSchema(StepTest):
+    def test_validate(self):
+        self.step.validate()
+
+    def test_validate_with_no_requirements(self):
+        self.step.config['requirements'] = None
+        self.step.validate()
 
 
 class TestStepSetIndex(StepTest):

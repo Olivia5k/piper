@@ -16,12 +16,15 @@ steps:
   test:
     class: 'piper.step.CommandLineStep'
     command: 'tox'
+    requirements: null
   lint:
     class: 'piper.step.CommandLineStep'
     command: 'flake8 -v piper/ test/'
+    requirements: null
   build:
     class: 'piper.step.CommandLineStep'
     command: 'python setup.py sdist'
+    requirements: null
 
 pipelines:
   test:
