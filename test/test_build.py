@@ -344,12 +344,14 @@ class TestBuildIntegration(SQLAIntegration):
             'envs': {
                 'local': {
                     'class': 'piper.env.Env',
+                    'requirements': None,
                 }
             },
             'steps': {
                 'test': {
                     'class': 'piper.step.CommandLineStep',
                     'command': 'true',
+                    'requirements': None,
                 },
             },
             'pipelines': {
