@@ -136,6 +136,7 @@ class BuildManager(SQLAlchemyManager, db.BuildManager):
             instance = Build(
                 agent=self.db.agent.get(),
                 project=self.db.project.get(build),
+                config=self.db.config.register(build.config),
                 user=os.getenv('USER'),
                 **build.default_db_kwargs()
             )
@@ -195,7 +196,6 @@ class ConfigManager(SQLAlchemyManager, db.ConfigManager):
             return self.get_or_create(
                 session,
                 Config,
-                expunge=True,
                 json=json.dumps(config.raw),
             )
 
@@ -335,6 +335,7 @@ class SQLAlchemyDB(db.Database):
     tables = {
         Agent: AgentManager,
         Build: BuildManager,
+        Config: ConfigManager,
         Project: ProjectManager,
         VCS: VCSManager,
         Property: PropertyManager,
@@ -344,7 +345,7 @@ class SQLAlchemyDB(db.Database):
     sqlite = 'sqlite:///'
 
     def setup(self, config):
-        self.config = config
+        self._config = config
         self.engine = create_engine(config.raw['db']['host'])
         Session.configure(bind=self.engine)
 

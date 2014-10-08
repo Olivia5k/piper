@@ -1,3 +1,4 @@
+import json
 import datetime
 
 from piper.db.db_sqlalchemy import SQLAlchemyManager
@@ -12,6 +13,7 @@ from piper.db.db_sqlalchemy import in_session
 
 from piper.db.db_sqlalchemy import Agent
 from piper.db.db_sqlalchemy import Build
+from piper.db.db_sqlalchemy import Config
 from piper.db.db_sqlalchemy import Project
 from piper.db.db_sqlalchemy import VCS
 from piper.db.db_sqlalchemy import Property
@@ -86,25 +88,43 @@ class TestBuildManagerAdd(BuildManagerTest):
 
     @mock.patch('piper.db.db_sqlalchemy.Build')
     @mock.patch('piper.db.db_sqlalchemy.Session')
-    def test_object_ref_is_returned(self, sess, table):
+    def test_object_ref_is_returned(self, Session, Build):
         ret = self.manager.add(self.build)
 
-        assert ret is table.return_value
+        assert ret is Build.return_value
 
     @mock.patch('piper.db.db_sqlalchemy.Build')
     @mock.patch('piper.db.db_sqlalchemy.Session')
-    def test_instance_added_to_session(self, sess, table):
+    def test_instance_added_to_session(self, Session, Build):
         self.manager.add(self.build)
 
-        sess.return_value.add.assert_called_once_with(table.return_value)
+        Session.return_value.add.assert_called_once_with(Build.return_value)
 
     @mock.patch('piper.db.db_sqlalchemy.Build')
     @mock.patch('piper.db.db_sqlalchemy.Session')
-    def test_instance_refreshed_and_expunged(self, sess, table):
+    def test_instance_refreshed_and_expunged(self, Session, Build):
         self.manager.add(self.build)
 
-        sess.return_value.refresh.assert_called_once_with(table.return_value)
-        sess.return_value.expunge.assert_called_once_with(table.return_value)
+        Session.return_value.refresh.assert_called_once_with(
+            Build.return_value
+        )
+        Session.return_value.expunge.assert_called_once_with(
+            Build.return_value
+        )
+
+    @mock.patch('os.getenv')
+    @mock.patch('piper.db.db_sqlalchemy.Build')
+    @mock.patch('piper.db.db_sqlalchemy.Session')
+    def test_properties(self, Session, Build, getenv):
+        self.manager.add(self.build)
+
+        Build.assert_called_once_with(
+            agent=self.manager.db.agent.get.return_value,
+            project=self.manager.db.project.get.return_value,
+            config=self.manager.db.config.register.return_value,
+            user=getenv.return_value,
+            **self.build.default_db_kwargs()
+        )
 
 
 class TestBuildManagerUpdate(BuildManagerTest):
@@ -195,7 +215,6 @@ class TestConfigManagerRegister(ConfigManagerTest):
         self.manager.get_or_create.assert_called_once_with(
             Session.return_value,
             Config,
-            expunge=True,
             json=dumps.return_value,
         )
 
@@ -419,7 +438,7 @@ class TestSQLAlchemyDBSetup(SQLATest):
     def test_setup(self, se, ce):
         self.db.setup(self.config)
 
-        assert self.db.config is self.config
+        assert self.db._config is self.config
         ce.assert_called_once_with(self.config.raw['db']['host'])
         se.configure.assert_called_once_with(bind=ce.return_value)
 
@@ -616,6 +635,12 @@ class TestSQLiteIntegration(SQLAIntegration):
         assert build.status == self.status
         assert build.updated == self.now
 
+    def assert_config(self, session):
+        assert session.query(Config).count() == 1
+
+        config = session.query(Config).first()
+        assert config.json == json.dumps(self.config.raw)
+
     def test_get_vcs(self):
         self.build.vcs.name = 'oh sailor'
         self.build.vcs.root_url = 'fiona://extraordinary-machine.net'
@@ -645,6 +670,12 @@ class TestSQLiteIntegration(SQLAIntegration):
             self.assert_vcs(session)
             self.assert_project(session)
 
+    def test_register_config(self):
+        self.db.config.register(self.build.config)
+
+        with in_session() as session:
+            self.assert_config(session)
+
     @mock.patch('os.getenv')
     @mock.patch('socket.gethostname')
     def test_add_build(self, gh, getenv):
@@ -672,6 +703,7 @@ class TestSQLiteIntegration(SQLAIntegration):
         with in_session() as session:
             # Yay integration
             self.assert_build(session)
+            self.assert_config(session)
             self.assert_agent(session)
             self.assert_vcs(session)
             self.assert_project(session)
