@@ -99,6 +99,17 @@ class BuildManager(object):
 
         raise NotImplementedError()
 
+    def get_agents(self, build_id, compatible=True):
+        """
+        Return a list of agents that meet the requirements of this build
+
+        The `compatible` boolean dictates whether compatible or incompatible
+        agents should be returned.
+
+        """
+
+        raise NotImplementedError()
+
 
 class ProjectManager(object):
     def get(self, build):

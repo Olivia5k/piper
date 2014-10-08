@@ -44,6 +44,7 @@ class TestDatabase(object):
         self.missing('build', 'update', self.mock)
         self.missing('build', 'get', self.mock)
         self.missing('build', 'all')
+        self.missing('build', 'get_agents', self.mock)
         self.missing('project', 'get', self.mock)
         self.missing('vcs', 'get', self.mock)
         self.missing('agent', 'get')
