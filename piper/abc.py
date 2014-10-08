@@ -48,3 +48,22 @@ class DynamicItem(object):
 
     def validate(self):
         jsonschema.validate(self.config, self.schema)
+
+    def validate_requirements(self):
+        """
+        Validate the requirements of this object
+
+        Raises an PropValidationError() if something does not validate.
+
+        """
+
+        reqs = self.config.get('requirements')
+
+        # No requirements, so this is valid by default.
+        if not reqs:
+            return
+
+        for key, req in reqs.items():
+            prop_cls = self.build.config.classes[req['class']]
+
+            prop_cls(req['key']).validate(req)

@@ -6,7 +6,8 @@ from piper.db.core import LazyDatabaseMixin
 
 
 class PropValidationError(Exception):
-    def __init__(self, msg, key=None, value=None, other=None, namespace=None):
+    def __init__(self, msg="", key=None, value=None, other=None,
+                 namespace=None):
         self.msg = msg
         self.key = key
         self.value = value
