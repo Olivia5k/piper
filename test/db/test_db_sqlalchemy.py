@@ -347,8 +347,8 @@ class TestPropertyManagerUpdate(PropertyManagerTest):
         self.manager.update(self.classes)
 
         calls = [
-            mock.call(self.classes[0].source.return_value.namespace),
-            mock.call(self.classes[1].source.return_value.namespace),
+            mock.call(self.classes[0].source.namespace),
+            mock.call(self.classes[1].source.namespace),
         ]
         self.manager.db.property_namespace.get.assert_has_calls(calls)
 

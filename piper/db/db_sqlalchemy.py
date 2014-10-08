@@ -249,7 +249,7 @@ class PropertyManager(SQLAlchemyManager):
             self.log.debug('Cleared old properties')
 
             for prop_class in classes:
-                prop_source = prop_class.source()
+                prop_source = prop_class.source
                 prop_source.log.info('Loading properties')
                 prop_source.ns = self.db.property_namespace.get(
                     prop_source.namespace

@@ -5,6 +5,17 @@ from collections import MutableMapping
 from piper.db.core import LazyDatabaseMixin
 
 
+class PropValidationError(Exception):
+    def __init__(self, msg, key=None, value=None, other=None, namespace=None):
+        self.msg = msg
+        self.key = key
+        self.value = value
+        self.other = other
+        self.namespace = namespace
+
+        super(PropValidationError, self).__init__(self.msg)
+
+
 class PropSource(object):
     def __init__(self):
         self._props = None
@@ -45,16 +56,25 @@ class PropSource(object):
         return dict(items)
 
 
-class Prop(object):
-    source = PropSource
+class Prop(LazyDatabaseMixin):
+    source = PropSource()
 
-    def __init__(self, source, key, value):
-        self.source = source
+    def __init__(self, key, value=None):
         self.key = key
-        self.value = value
+        self._value = value
 
     def __str__(self):  # pragma: nocover
         return '{0}: {1}'.format(self.key, self.value)
+
+    @property
+    def value(self):
+        if self._value is None:
+            self._value = self.db.property.get(
+                self.source.namespace,
+                self.key
+            )
+
+        return self._value
 
     def to_kwargs(self, **extra):
         kwargs = {
@@ -64,8 +84,29 @@ class Prop(object):
         kwargs.update(extra)
         return kwargs
 
+    def validate(self, schema):
+        for field in schema:
+            if field not in ('reason', 'class', 'key'):
+                break
+
+        method = getattr(self, field, None)
+        if method is None:
+            raise NotImplementedError(
+                '`{0}` is not a known validation method'.format(field)
+            )
+
+        # Call the comparison method with the value provided.
+        method(schema[field])
+
     def equals(self, other):
-        return self.value == other
+        if not self.value == other:
+            raise PropValidationError(
+                '`{0}` does not equal `{1}`'.format(self.value, other),
+                key=self.key,
+                value=self.value,
+                other=other,
+                namespace=self.source.namespace
+            )
 
 
 class FacterPropSource(PropSource):
@@ -84,14 +125,14 @@ class FacterPropSource(PropSource):
             facts = facter.Facter().all
 
             for key, value in self.flatten(facts).items():
-                self._props.append(FacterProp(self, key, value))
+                self._props.append(FacterProp(key, value))
             self._props = sorted(self._props, key=lambda x: x.key)
 
         return self._props
 
 
 class FacterProp(Prop):
-    source = FacterPropSource
+    source = FacterPropSource()
 
 
 class PropCLI(LazyDatabaseMixin):

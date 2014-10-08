@@ -5,14 +5,16 @@ from piper.prop import Prop
 from piper.prop import PropSource
 from piper.prop import FacterPropSource
 from piper.prop import PropCLI
+from piper.prop import PropValidationError
 
 
 class PropTest(object):
     def setup_method(self, method):
-        self.source = mock.Mock()
         self.key = 'nocturnal.rites'
         self.value = 'awakening'
-        self.prop = Prop(self.source, self.key, self.value)
+
+        self.prop = Prop(self.key, self.value)
+        self.prop.db = mock.Mock()
 
 
 class PropSourceTest(object):
@@ -28,14 +30,49 @@ class PropCLITest(object):
         self.cli.db = mock.Mock()
 
 
+class TestPropValue(PropTest):
+    def test_grab(self):
+        self.prop._value = None
+        ret = self.prop.value
+
+        get = self.prop.db.property.get
+
+        assert ret is get.return_value
+        get.assert_called_once_with(self.prop.source.namespace, self.prop.key)
+
+    def test_cached(self):
+        ret = self.prop.value
+        assert ret is self.value
+
+
 class TestPropEquals(PropTest):
     def test_truth(self):
-        ret = self.prop.equals('awakening')
-        assert ret is True
+        self.prop.equals('awakening')
 
     def test_lies(self):
-        ret = self.prop.equals('new.world.messiah')
-        assert ret is False
+        with pytest.raises(PropValidationError):
+            self.prop.equals('new.world.messiah')
+
+
+class TestPropValidate(PropTest):
+    def setup_method(self, method):
+        super(TestPropValidate, self).setup_method(method)
+        self.schema = {
+            'reason': "John Wayne is not dead, he's frozen",
+            'class': 'denisleary.cancer',
+            'key': 'virtual',
+            'equals': 'physical',
+        }
+
+    def test_passing_validation(self):
+        self.prop.equals = mock.Mock()
+        self.prop.validate(self.schema)
+
+        self.prop.equals.assert_called_once_with('physical')
+
+    def test_not_implemented_method(self):
+        with pytest.raises(NotImplementedError):
+            self.prop.validate({'hehe': None})
 
 
 class TestPropToKwargs(PropTest):
@@ -135,7 +172,6 @@ class TestFacterPropGenerate(object):
         assert ret == [FacterProp.return_value]
 
         FacterProp.assert_called_once_with(
-            self.prop,
             'meredith.brooks',
             'bitch',
         )
