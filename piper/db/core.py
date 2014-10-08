@@ -111,6 +111,16 @@ class BuildManager(object):
         raise NotImplementedError()
 
 
+class ConfigManager(object):
+    def add(self, config):
+        """
+        Register a configuration to the database.
+
+        """
+
+        raise NotImplementedError()
+
+
 class ProjectManager(object):
     def get(self, build):
         """
@@ -156,6 +166,7 @@ class Database(object):
 
     agent = AgentManager()
     build = BuildManager()
+    config = ConfigManager()
     project = ProjectManager()
     vcs = VCSManager()
     property = PropertyManager()
