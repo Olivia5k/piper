@@ -20,7 +20,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import relationship
 
-from piper.db.core import Database
+from piper.db import core as db
 
 
 Base = declarative_base()
@@ -75,7 +75,7 @@ class Agent(Base):
     last_seen = Column(DateTime(), default=utils.now)
 
 
-class AgentManager(SQLAlchemyManager):
+class AgentManager(SQLAlchemyManager, db.AgentManager):
     def get(self, expunge=False):
         with in_session() as session:
             name = socket.gethostname()
@@ -125,7 +125,7 @@ class Build(Base):
     ended = Column(DateTime())
 
 
-class BuildManager(SQLAlchemyManager):
+class BuildManager(SQLAlchemyManager, db.BuildManager):
     def add(self, build):
         with in_session() as session:
             instance = Build(
@@ -186,7 +186,7 @@ class Project(Base):
     created = Column(DateTime(), default=utils.now)
 
 
-class ProjectManager(SQLAlchemyManager):
+class ProjectManager(SQLAlchemyManager, db.ProjectManager):
     def get(self, build):
         with in_session() as session:
             project = self.get_or_create(
@@ -208,7 +208,7 @@ class VCS(Base):
     created = Column(DateTime(), default=utils.now)
 
 
-class VCSManager(SQLAlchemyManager):
+class VCSManager(SQLAlchemyManager, db.VCSManager):
     def get(self, build, expunge=False):
         with in_session() as session:
             vcs = self.get_or_create(
@@ -236,7 +236,7 @@ class Property(Base):
     created = Column(DateTime(), default=utils.now)
 
 
-class PropertyManager(SQLAlchemyManager):
+class PropertyManager(SQLAlchemyManager, db.PropertyManager):
     def update(self, classes):
         self.log.info('Updating properties')
         self.log.debug(classes)
@@ -279,7 +279,7 @@ class PropertyNamespace(Base):
     created = Column(DateTime(), default=utils.now)
 
 
-class PropertyNamespaceManager(SQLAlchemyManager):
+class PropertyNamespaceManager(SQLAlchemyManager, db.PropertyNamespaceManager):
     def get(self, name, session=None):
         kwargs = {
             'name': name,
@@ -307,7 +307,7 @@ def in_session():
         session.close()
 
 
-class SQLAlchemyDB(Database):
+class SQLAlchemyDB(db.Database):
     tables = {
         Agent: AgentManager,
         Build: BuildManager,
