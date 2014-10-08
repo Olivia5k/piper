@@ -13,6 +13,7 @@ from sqlalchemy import DateTime
 from sqlalchemy import ForeignKey
 from sqlalchemy import Integer
 from sqlalchemy import String
+from sqlalchemy import Text
 from sqlalchemy import create_engine
 from sqlalchemy import update
 from sqlalchemy.ext.declarative import DeclarativeMeta
@@ -111,18 +112,22 @@ class Build(Base):
     __tablename__ = 'build'
 
     id = Column(Integer(), primary_key=True)
-    agent = relationship('Agent')
     agent_id = Column(Integer(), ForeignKey('agent.id'))
-    project = relationship('Project')
     project_id = Column(Integer(), ForeignKey('project.id'))
+    config_id = Column(Integer(), ForeignKey('config.id'))
+
+    agent = relationship('Agent', backref='builds')
+    project = relationship('Project', backref='builds')
+    config = relationship('Config', backref='builds')
 
     user = Column(String(255))
     success = Column(Boolean())
     crashed = Column(Boolean())
     status = Column(String(255))
-    started = Column(DateTime(), default=utils.now)
-    updated = Column(DateTime(), default=utils.now)
+    started = Column(DateTime())
     ended = Column(DateTime())
+    updated = Column(DateTime(), default=utils.now)
+    created = Column(DateTime(), default=utils.now)
 
 
 class BuildManager(SQLAlchemyManager, db.BuildManager):
@@ -174,6 +179,25 @@ class BuildManager(SQLAlchemyManager, db.BuildManager):
 
             session.expunge_all()
             return builds
+
+
+class Config(Base):
+    __tablename__ = 'config'
+
+    id = Column(Integer(), primary_key=True)
+    json = Column(Text())
+    created = Column(DateTime(), default=utils.now)
+
+
+class ConfigManager(SQLAlchemyManager, db.ConfigManager):
+    def register(self, config):
+        with in_session() as session:
+            return self.get_or_create(
+                session,
+                Config,
+                expunge=True,
+                json=json.dumps(config.raw),
+            )
 
 
 class Project(Base):

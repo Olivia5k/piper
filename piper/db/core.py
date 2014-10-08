@@ -112,7 +112,7 @@ class BuildManager(object):
 
 
 class ConfigManager(object):
-    def add(self, config):
+    def register(self, config):
         """
         Register a configuration to the database.
 

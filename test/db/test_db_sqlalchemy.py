@@ -3,6 +3,7 @@ import datetime
 from piper.db.db_sqlalchemy import SQLAlchemyManager
 from piper.db.db_sqlalchemy import AgentManager
 from piper.db.db_sqlalchemy import BuildManager
+from piper.db.db_sqlalchemy import ConfigManager
 from piper.db.db_sqlalchemy import ProjectManager
 from piper.db.db_sqlalchemy import VCSManager
 from piper.db.db_sqlalchemy import PropertyManager
@@ -27,6 +28,12 @@ class BuildManagerTest(object):
     def setup_method(self, method):
         self.manager = BuildManager(mock.Mock())
         self.build = mock.Mock()
+
+
+class ConfigManagerTest(object):
+    def setup_method(self, method):
+        self.manager = ConfigManager(mock.Mock())
+        self.config = mock.Mock()
 
 
 class ProjectManagerTest(object):
@@ -175,6 +182,22 @@ class TestBuildManagerAll(BuildManagerTest):
     def test_result_is_expunged(self, session, table):
         self.manager.all()
         session.return_value.expunge_all.assert_called_once_with()
+
+
+class TestConfigManagerRegister(ConfigManagerTest):
+    @mock.patch('json.dumps')
+    @mock.patch('piper.db.db_sqlalchemy.Config')
+    @mock.patch('piper.db.db_sqlalchemy.Session')
+    def test_get_or_create_arguments(self, Session, Config, dumps):
+        self.manager.get_or_create = mock.Mock()
+        self.manager.register(self.config)
+
+        self.manager.get_or_create.assert_called_once_with(
+            Session.return_value,
+            Config,
+            expunge=True,
+            json=dumps.return_value,
+        )
 
 
 class TestProjectManagerGet(ProjectManagerTest):
