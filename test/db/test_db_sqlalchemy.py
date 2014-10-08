@@ -57,7 +57,7 @@ class PropertyManagerTest(object):
             cls = mock.MagicMock()
             prop = mock.Mock()
             prop.to_kwargs.return_value = {}
-            cls.source.return_value.generate.return_value = [prop]
+            cls.source.generate.return_value = [prop]
 
             self.classes.append(cls)
 
@@ -351,6 +351,14 @@ class TestPropertyManagerUpdate(PropertyManagerTest):
             mock.call(self.classes[1].source.namespace),
         ]
         self.manager.db.property_namespace.get.assert_has_calls(calls)
+
+    @mock.patch('piper.db.db_sqlalchemy.Property')
+    @mock.patch('piper.db.db_sqlalchemy.Session')
+    def test_properties_added_to_db(self, session, table):
+        self.manager.update(self.classes)
+
+        calls = [mock.call(table()), mock.call(table())]
+        session.return_value.add.assert_has_calls(calls)
 
 
 class TestPropertyNamespaceManagerGet(PropertyNamespaceManagerTest):

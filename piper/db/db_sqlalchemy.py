@@ -239,6 +239,7 @@ class Property(Base):
 class PropertyManager(SQLAlchemyManager):
     def update(self, classes):
         self.log.info('Updating properties')
+        self.log.debug(classes)
 
         with in_session() as session:
             agent = self.db.agent.get(expunge=True)
