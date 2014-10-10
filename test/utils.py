@@ -34,6 +34,7 @@ class SQLATest(object):
 class SQLAIntegration(SQLATest):
     def setup_method(self, method):
         from piper.db.db_sqlalchemy import SQLAlchemyDB
+        from piper.db.db_sqlalchemy import SQLAlchemyManager
         from piper.config import BuildConfig
 
         self.db = SQLAlchemyDB()
@@ -42,6 +43,8 @@ class SQLAIntegration(SQLATest):
         self.config = BuildConfig(raw=BASE_CONFIG)
         self.config.raw['db']['host'] = self.db_host
         self.config.verbose = False
+
+        self.sql = SQLAlchemyManager(self.db)
 
         self.build = mock.Mock(config=self.config)
 

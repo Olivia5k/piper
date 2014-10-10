@@ -61,6 +61,25 @@ class SQLAlchemyManager(object):
 
         return instance
 
+    @contextlib.contextmanager
+    def in_session(self, session=None):
+        if session is not None:
+            self.log.debug('Re-using session `{0}`'.format(session))
+            yield session
+            return
+
+        session = Session()
+        self.log.debug('Creating new session `{0}`'.format(session))
+
+        try:
+            yield session
+            session.commit()
+        except:
+            session.rollback()
+            raise
+        finally:
+            session.close()
+
 
 class Agent(Base):
     __tablename__ = 'agent'
@@ -78,7 +97,7 @@ class Agent(Base):
 
 class AgentManager(SQLAlchemyManager, db.AgentManager):
     def get(self, expunge=False):
-        with in_session() as session:
+        with self.in_session() as session:
             name = socket.gethostname()
             agent = self.get_or_create(
                 session,
@@ -101,7 +120,7 @@ class AgentManager(SQLAlchemyManager, db.AgentManager):
         self.set_lock(build, False)
 
     def set_lock(self, build, locked):
-        with in_session() as session:
+        with self.in_session() as session:
             agent = session.query(Build).get(build.ref.id).agent
             agent.busy = locked
 
@@ -132,7 +151,7 @@ class Build(Base):
 
 class BuildManager(SQLAlchemyManager, db.BuildManager):
     def add(self, build):
-        with in_session() as session:
+        with self.in_session() as session:
             instance = Build(
                 agent=self.db.agent.get(),
                 project=self.db.project.get(build),
@@ -152,7 +171,7 @@ class BuildManager(SQLAlchemyManager, db.BuildManager):
             return instance
 
     def update(self, build, **extra):
-        with in_session() as session:
+        with self.in_session() as session:
             values = build.default_db_kwargs()
             values.update(extra)
 
@@ -160,7 +179,7 @@ class BuildManager(SQLAlchemyManager, db.BuildManager):
             session.execute(stmt)
 
     def get(self, build_id):
-        with in_session() as session:
+        with self.in_session() as session:
             build = session.query(Build).get(build_id)
             if build is not None:
                 # Aight, so this is obviously bad and wrong.
@@ -172,7 +191,7 @@ class BuildManager(SQLAlchemyManager, db.BuildManager):
             return build
 
     def all(self):
-        with in_session() as session:
+        with self.in_session() as session:
             builds = session.query(Build).all()
             for build in builds:  # pragma: nocover
                 build.agent.properties
@@ -194,7 +213,7 @@ class Config(Base):
 
 class ConfigManager(SQLAlchemyManager, db.ConfigManager):
     def register(self, build, project=None):
-        with in_session() as session:
+        with self.in_session() as session:
             if project is None:
                 project = self.db.project.get(build, expunge=True)
 
@@ -218,7 +237,7 @@ class Project(Base):
 
 class ProjectManager(SQLAlchemyManager, db.ProjectManager):
     def get(self, build, expunge=False):
-        with in_session() as session:
+        with self.in_session() as session:
             project = self.get_or_create(
                 session,
                 Project,
@@ -241,7 +260,7 @@ class VCS(Base):
 
 class VCSManager(SQLAlchemyManager, db.VCSManager):
     def get(self, build, expunge=False):
-        with in_session() as session:
+        with self.in_session() as session:
             vcs = self.get_or_create(
                 session,
                 VCS,
@@ -272,7 +291,7 @@ class PropertyManager(SQLAlchemyManager, db.PropertyManager):
         self.log.info('Updating properties')
         self.log.debug(classes)
 
-        with in_session() as session:
+        with self.in_session() as session:
             agent = self.db.agent.get(expunge=True)
 
             # Clear existing properties.
@@ -316,26 +335,10 @@ class PropertyNamespaceManager(SQLAlchemyManager, db.PropertyNamespaceManager):
             'name': name,
             'expunge': True,
         }
-        if session is not None:
+        with self.in_session(session) as session:
             ret = self.get_or_create(session, PropertyNamespace, **kwargs)
-        else:
-            with in_session() as session:
-                ret = self.get_or_create(session, PropertyNamespace, **kwargs)
 
         return ret
-
-
-@contextlib.contextmanager
-def in_session():
-    session = Session()
-    try:
-        yield session
-        session.commit()
-    except:
-        session.rollback()
-        raise
-    finally:
-        session.close()
 
 
 class SQLAlchemyDB(db.Database):

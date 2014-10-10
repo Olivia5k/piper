@@ -9,7 +9,6 @@ from piper.db.db_sqlalchemy import ProjectManager
 from piper.db.db_sqlalchemy import VCSManager
 from piper.db.db_sqlalchemy import PropertyManager
 from piper.db.db_sqlalchemy import PropertyNamespaceManager
-from piper.db.db_sqlalchemy import in_session
 
 from piper.db.db_sqlalchemy import Agent
 from piper.db.db_sqlalchemy import Build
@@ -606,15 +605,18 @@ class TestSQLAlchemyManagerGetOrCreate(object):
 
 
 class TestInSessionInner(object):
+    def setup_method(self, method):
+        self.sql = SQLAlchemyManager(mock.Mock())
+
     @mock.patch('piper.db.db_sqlalchemy.Session')
     def test_context_is_a_session(self, session):
-        with in_session() as val:
+        with self.sql.in_session() as val:
             assert val is session.return_value
 
     @mock.patch('piper.db.db_sqlalchemy.Session')
     def test_exception_rolls_back(self, session):
         with pytest.raises(ValueError):
-            with in_session():
+            with self.sql.in_session():
                 raise ValueError('zomg')
 
         session.return_value.rollback.assert_called_once_with()
@@ -622,17 +624,34 @@ class TestInSessionInner(object):
 
     @mock.patch('piper.db.db_sqlalchemy.Session')
     def test_automatic_commit(self, session):
-        with in_session():
+        with self.sql.in_session():
             pass
 
         session.return_value.commit.assert_called_once_with()
 
     @mock.patch('piper.db.db_sqlalchemy.Session')
     def test_automatic_close(self, session):
-        with in_session():
+        with self.sql.in_session():
             pass
 
         session.return_value.close.assert_called_once_with()
+
+    @mock.patch('piper.db.db_sqlalchemy.Session')
+    def test_session_reuse(self, session):
+        self.stored = mock.Mock()
+        with self.sql.in_session(self.stored) as x:
+            assert x is self.stored
+
+        assert session.call_count == 0
+
+    @mock.patch('piper.db.db_sqlalchemy.Session')
+    def test_nested_session_reuse(self, session):
+        self.stored = mock.Mock()
+        with self.sql.in_session(self.stored) as x:
+            with self.sql.in_session(self.stored) as y:
+                assert x is y is self.stored
+
+        assert session.call_count == 0
 
 
 class TestSQLiteIntegration(SQLAIntegration):
@@ -680,7 +699,7 @@ class TestSQLiteIntegration(SQLAIntegration):
 
         self.db.vcs.get(self.build)
 
-        with in_session() as session:
+        with self.sql.in_session() as session:
             self.assert_vcs(session)
 
     @mock.patch('socket.gethostname')
@@ -689,7 +708,7 @@ class TestSQLiteIntegration(SQLAIntegration):
         gh.return_value = self.hostname
         self.db.agent.get()
 
-        with in_session() as session:
+        with self.sql.in_session() as session:
             self.assert_agent(session)
 
     def test_get_project(self):
@@ -699,7 +718,7 @@ class TestSQLiteIntegration(SQLAIntegration):
 
         self.db.project.get(self.build)
 
-        with in_session() as session:
+        with self.sql.in_session() as session:
             self.assert_vcs(session)
             self.assert_project(session)
 
@@ -710,7 +729,7 @@ class TestSQLiteIntegration(SQLAIntegration):
 
         self.db.config.register(self.build)
 
-        with in_session() as session:
+        with self.sql.in_session() as session:
             self.assert_config(session)
 
     @mock.patch('os.getenv')
@@ -737,7 +756,7 @@ class TestSQLiteIntegration(SQLAIntegration):
 
         self.db.build.add(self.build)
 
-        with in_session() as session:
+        with self.sql.in_session() as session:
             # Yay integration
             self.assert_build(session)
             self.assert_config(session)
@@ -751,7 +770,7 @@ class TestSQLiteIntegration(SQLAIntegration):
 
         assert ret == 0
 
-        with in_session() as session:
+        with self.sql.in_session() as session:
             assert session.query(PropertyNamespace).count() == 1
 
             # I don't really know how to test for these. They are _supposed_ to
