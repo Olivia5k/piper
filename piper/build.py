@@ -92,13 +92,14 @@ class Build(LazyDatabaseMixin):
 
     def add_build(self):
         """
-        Add a build object to the database
+        Add a build object and its configuration to the database
 
         Also store the reference to the build
 
         """
 
         self.ref = self.db.build.add(self)
+        self.db.config.register(self.config)
 
     def set_logfile(self):
         """
