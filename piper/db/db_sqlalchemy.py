@@ -136,7 +136,7 @@ class BuildManager(SQLAlchemyManager, db.BuildManager):
             instance = Build(
                 agent=self.db.agent.get(),
                 project=self.db.project.get(build),
-                config=self.db.config.register(build.config),
+                config=self.db.config.register(build),
                 user=os.getenv('USER'),
                 **build.default_db_kwargs()
             )
@@ -186,17 +186,23 @@ class Config(Base):
     __tablename__ = 'config'
 
     id = Column(Integer(), primary_key=True)
+    project = relationship('Project', backref='configs')
+    project_id = Column(Integer(), ForeignKey('project.id'))
     json = Column(Text())
     created = Column(DateTime(), default=utils.now)
 
 
 class ConfigManager(SQLAlchemyManager, db.ConfigManager):
-    def register(self, config):
+    def register(self, build, project=None):
         with in_session() as session:
+            if project is None:
+                project = self.db.project.get(build, expunge=True)
+
             return self.get_or_create(
                 session,
                 Config,
-                json=json.dumps(config.raw),
+                project=project,
+                json=json.dumps(build.config.raw),
             )
 
 
@@ -211,11 +217,12 @@ class Project(Base):
 
 
 class ProjectManager(SQLAlchemyManager, db.ProjectManager):
-    def get(self, build):
+    def get(self, build, expunge=False):
         with in_session() as session:
             project = self.get_or_create(
                 session,
                 Project,
+                expunge=expunge,
                 name=build.vcs.get_project_name(),
                 vcs=self.db.vcs.get(build, expunge=True),
             )

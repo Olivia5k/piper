@@ -99,7 +99,7 @@ class Build(LazyDatabaseMixin):
         """
 
         self.ref = self.db.build.add(self)
-        self.db.config.register(self.config)
+        self.db.config.register(self)
 
     def set_logfile(self):
         """

@@ -35,7 +35,7 @@ class BuildManagerTest(object):
 class ConfigManagerTest(object):
     def setup_method(self, method):
         self.manager = ConfigManager(mock.Mock())
-        self.config = mock.Mock()
+        self.build = mock.Mock()
 
 
 class ProjectManagerTest(object):
@@ -205,18 +205,50 @@ class TestBuildManagerAll(BuildManagerTest):
 
 
 class TestConfigManagerRegister(ConfigManagerTest):
+    def setup_method(self, method):
+        super(TestConfigManagerRegister, self).setup_method(method)
+        self.manager.get_or_create = mock.Mock()
+
     @mock.patch('json.dumps')
     @mock.patch('piper.db.db_sqlalchemy.Config')
     @mock.patch('piper.db.db_sqlalchemy.Session')
     def test_get_or_create_arguments(self, Session, Config, dumps):
-        self.manager.get_or_create = mock.Mock()
-        self.manager.register(self.config)
+        self.manager.register(self.build)
 
+        dumps.assert_called_once_with(self.build.config.raw)
         self.manager.get_or_create.assert_called_once_with(
             Session.return_value,
             Config,
+            project=self.manager.db.project.get.return_value,
             json=dumps.return_value,
         )
+
+    @mock.patch('json.dumps')
+    @mock.patch('piper.db.db_sqlalchemy.Config')
+    @mock.patch('piper.db.db_sqlalchemy.Session')
+    def test_json_dumping(self, Session, Config, dumps):
+        self.manager.register(self.build)
+
+        dumps.assert_called_once_with(self.build.config.raw)
+
+    @mock.patch('json.dumps')
+    @mock.patch('piper.db.db_sqlalchemy.Config')
+    @mock.patch('piper.db.db_sqlalchemy.Session')
+    def test_project_creation(self, Session, Config, dumps):
+        self.manager.register(self.build)
+
+        self.manager.db.project.get.assert_called_once_with(
+            self.build,
+            expunge=True,
+        )
+
+    @mock.patch('json.dumps')
+    @mock.patch('piper.db.db_sqlalchemy.Config')
+    @mock.patch('piper.db.db_sqlalchemy.Session')
+    def test_project_passing(self, Session, Config, dumps):
+        self.manager.register(self.build, mock.Mock())
+
+        assert self.manager.db.project.get.call_count == 0
 
 
 class TestProjectManagerGet(ProjectManagerTest):
@@ -238,6 +270,7 @@ class TestProjectManagerGet(ProjectManagerTest):
         self.manager.get_or_create.assert_called_once_with(
             session.return_value,
             table,
+            expunge=False,
             name=self.build.vcs.get_project_name.return_value,
             vcs=self.manager.db.vcs.get.return_value
         )
@@ -671,7 +704,11 @@ class TestSQLiteIntegration(SQLAIntegration):
             self.assert_project(session)
 
     def test_register_config(self):
-        self.db.config.register(self.build.config)
+        self.build.vcs.name = 'apathy divine'
+        self.build.vcs.root_url = 'tokenring://wutheringheights.dk'
+        self.build.vcs.get_project_name.return_value = 'mandatory/fun'
+
+        self.db.config.register(self.build)
 
         with in_session() as session:
             self.assert_config(session)

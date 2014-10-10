@@ -251,7 +251,7 @@ class TestBuildAddBuild(BuildTest):
         self.build.add_build()
 
         self.build.db.config.register.assert_called_once_with(
-            self.build.config
+            self.build
         )
 
 
