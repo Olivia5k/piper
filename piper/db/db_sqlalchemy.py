@@ -34,16 +34,12 @@ class SQLAlchemyManager(object):
 
         self.log = logbook.Logger(self.__class__.__name__)
 
-    def get_or_create(self, session, model, expunge=False, keys=(), **kwargs):
+    def get_or_create(self, session, model, keys=(), **kwargs):
         """
         Get or create an object.
 
         A filter is done on the model with `kwargs`. If `keys` are specified,
         only those keys will be used to do the filtering.
-
-        If `expunge` is True, the created object is detached from the session.
-        This is used if one get_or_create call calls another for its arguments
-        since the different calls would get different sessions.
 
         """
 
@@ -55,9 +51,6 @@ class SQLAlchemyManager(object):
         if not instance:
             instance = model(**kwargs)
             session.add(instance)
-
-        if expunge:
-            session.expunge(instance)
 
         return instance
 
@@ -96,13 +89,12 @@ class Agent(Base):
 
 
 class AgentManager(SQLAlchemyManager, db.AgentManager):
-    def get(self, expunge=False):
+    def get(self):
         with self.in_session() as session:
             name = socket.gethostname()
             agent = self.get_or_create(
                 session,
                 Agent,
-                expunge=expunge,
                 keys=('fqdn',),
                 name=name,
                 fqdn=name,  # XXX
@@ -215,7 +207,7 @@ class ConfigManager(SQLAlchemyManager, db.ConfigManager):
     def register(self, build, project=None):
         with self.in_session() as session:
             if project is None:
-                project = self.db.project.get(build, expunge=True)
+                project = self.db.project.get(build)
 
             return self.get_or_create(
                 session,
@@ -236,14 +228,13 @@ class Project(Base):
 
 
 class ProjectManager(SQLAlchemyManager, db.ProjectManager):
-    def get(self, build, expunge=False):
+    def get(self, build):
         with self.in_session() as session:
             project = self.get_or_create(
                 session,
                 Project,
-                expunge=expunge,
                 name=build.vcs.get_project_name(),
-                vcs=self.db.vcs.get(build, expunge=True),
+                vcs=self.db.vcs.get(build),
             )
 
             return project
@@ -259,12 +250,11 @@ class VCS(Base):
 
 
 class VCSManager(SQLAlchemyManager, db.VCSManager):
-    def get(self, build, expunge=False):
+    def get(self, build):
         with self.in_session() as session:
             vcs = self.get_or_create(
                 session,
                 VCS,
-                expunge=expunge,
                 keys=('root_url',),
                 root_url=build.vcs.root_url,
                 name=build.vcs.name,
@@ -292,7 +282,7 @@ class PropertyManager(SQLAlchemyManager, db.PropertyManager):
         self.log.debug(classes)
 
         with self.in_session() as session:
-            agent = self.db.agent.get(expunge=True)
+            agent = self.db.agent.get()
 
             # Clear existing properties.
             query = session.query(Property).filter(Property.agent == agent)

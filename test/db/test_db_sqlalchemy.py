@@ -236,10 +236,7 @@ class TestConfigManagerRegister(ConfigManagerTest):
     def test_project_creation(self, Session, Config, dumps):
         self.manager.register(self.build)
 
-        self.manager.db.project.get.assert_called_once_with(
-            self.build,
-            expunge=True,
-        )
+        self.manager.db.project.get.assert_called_once_with(self.build)
 
     @mock.patch('json.dumps')
     @mock.patch('piper.db.db_sqlalchemy.Config')
@@ -269,7 +266,6 @@ class TestProjectManagerGet(ProjectManagerTest):
         self.manager.get_or_create.assert_called_once_with(
             session.return_value,
             table,
-            expunge=False,
             name=self.build.vcs.get_project_name.return_value,
             vcs=self.manager.db.vcs.get.return_value
         )
@@ -296,7 +292,6 @@ class TestAgentManagerGet(AgentManagerTest):
             session.return_value,
             table,
             keys=('fqdn',),
-            expunge=False,
             name=gh.return_value,
             fqdn=gh.return_value,
             active=True,
@@ -375,7 +370,6 @@ class TestVCSManagerGet(VCSManagerTest):
         self.manager.get_or_create.assert_called_once_with(
             session.return_value,
             table,
-            expunge=False,
             keys=('root_url',),
             root_url=self.build.vcs.root_url,
             name=self.build.vcs.name,
@@ -384,12 +378,11 @@ class TestVCSManagerGet(VCSManagerTest):
     @mock.patch('piper.db.db_sqlalchemy.VCS')
     @mock.patch('piper.db.db_sqlalchemy.Session')
     def test_get_or_create_arguments_with_expunge(self, session, table):
-        self.manager.get(self.build, expunge=True)
+        self.manager.get(self.build)
 
         self.manager.get_or_create.assert_called_once_with(
             session.return_value,
             table,
-            expunge=True,
             keys=('root_url',),
             root_url=self.build.vcs.root_url,
             name=self.build.vcs.name,
@@ -400,7 +393,7 @@ class TestPropertyManagerUpdate(PropertyManagerTest):
     @mock.patch('piper.db.db_sqlalchemy.Session')
     def test_agent_is_gotten(self, session):
         self.manager.update(self.classes)
-        self.manager.db.agent.get.assert_called_once_with(expunge=True)
+        self.manager.db.agent.get.assert_called_once_with()
 
     @mock.patch('piper.db.db_sqlalchemy.Property')
     @mock.patch('piper.db.db_sqlalchemy.Session')
@@ -590,21 +583,8 @@ class TestSQLAlchemyManagerGetOrCreate(object):
         )
         self.filter.assert_called_once_with(**self.filtered_keys)
 
-    def test_expungning_when_not_creating(self):
-        self.filter.return_value.first.return_value = None
-        self.manager.get_or_create(
-            self.session, self.model, expunge=True,
-        )
-        self.session.expunge.assert_called_once_with(self.model.return_value)
 
-    def test_expungning_when_creating(self):
-        self.manager.get_or_create(
-            self.session, self.model, expunge=True,
-        )
-        self.session.expunge.assert_called_once_with(self.instance)
-
-
-class TestInSessionInner(object):
+class TestSQLAlchemyManagerInSession(object):
     def setup_method(self, method):
         self.sql = SQLAlchemyManager(mock.Mock())
 
