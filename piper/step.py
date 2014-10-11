@@ -37,8 +37,8 @@ class Step(DynamicItem):
         """
 
         self.index = (cur, tot)
-        self.log_key = '{0} ({1}/{2})'.format(
-            self.key, self.index[0], self.index[1]
+        self.log_key = '{3}: {0} ({1}/{2})'.format(
+            self.key, self.index[0], self.index[1], self.build.log_key
         )
         self.log = logbook.Logger(self.log_key)
 

@@ -107,9 +107,10 @@ class Build(LazyDatabaseMixin):
 
         """
 
-        self.log = logbook.Logger('{0}({1})'.format(
+        self.log_key = '{0} {1}'.format(
             self.__class__.__name__, self.ref.id
-        ))
+        )
+        self.log = logbook.Logger(self.log_key)
 
         self.logfile = 'logs/piper/{0}.log'.format(self.ref.id)
         self.log_handler = logging.get_file_logger(self.logfile)
