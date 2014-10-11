@@ -55,23 +55,40 @@ class SQLAlchemyManager(object):
         return instance
 
     @contextlib.contextmanager
-    def in_session(self, session=None):
-        if session is not None:
-            self.log.debug('Re-using session `{0}`'.format(session))
-            yield session
+    def in_session(self):
+        """
+        Context manager that yields SQLA Session() objects.
+
+        Currently implemented by storing the session on the database for the
+        duration of the topmost context. That means that all subsequent
+        calls to this will just re-use the upper context. This will lead to
+        simple code that ensures just one transaction per operation, but it
+        also removes thread safety.
+
+        """
+
+        if self.db._session is not None:
+            self.log.debug('Re-using session `{0}`'.format(self.db._session))
+            yield self.db._session
             return
 
         session = Session()
         self.log.debug('Creating new session `{0}`'.format(session))
 
+        # Store the session on the database singleton.
+        self.db._session = session
+
         try:
             yield session
+            self.log.debug('Committing session `{0}`'.format(session))
             session.commit()
         except:
             session.rollback()
             raise
         finally:
+            self.log.debug('Closing session `{0}`'.format(session))
             session.close()
+            self.db._session = None
 
 
 class Agent(Base):
@@ -320,15 +337,9 @@ class PropertyNamespace(Base):
 
 
 class PropertyNamespaceManager(SQLAlchemyManager, db.PropertyNamespaceManager):
-    def get(self, name, session=None):
-        kwargs = {
-            'name': name,
-            'expunge': True,
-        }
-        with self.in_session(session) as session:
-            ret = self.get_or_create(session, PropertyNamespace, **kwargs)
-
-        return ret
+    def get(self, name):
+        with self.in_session() as session:
+            return self.get_or_create(session, PropertyNamespace, name=name)
 
 
 class SQLAlchemyDB(db.Database):
@@ -343,6 +354,7 @@ class SQLAlchemyDB(db.Database):
     }
 
     sqlite = 'sqlite:///'
+    _session = None
 
     def setup(self, config):
         self._config = config

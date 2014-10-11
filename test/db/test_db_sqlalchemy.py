@@ -25,40 +25,46 @@ import mock
 import pytest
 
 
-class BuildManagerTest(object):
+class ManagerTest(object):
     def setup_method(self, method):
-        self.manager = BuildManager(mock.Mock())
+        self.db = mock.Mock(_session=None)
         self.build = mock.Mock()
 
 
-class ConfigManagerTest(object):
+class BuildManagerTest(ManagerTest):
     def setup_method(self, method):
-        self.manager = ConfigManager(mock.Mock())
-        self.build = mock.Mock()
+        super(BuildManagerTest, self).setup_method(method)
+        self.manager = BuildManager(self.db)
 
 
-class ProjectManagerTest(object):
+class ConfigManagerTest(ManagerTest):
     def setup_method(self, method):
-        self.manager = ProjectManager(mock.Mock())
-        self.build = mock.Mock()
+        super(ConfigManagerTest, self).setup_method(method)
+        self.manager = ConfigManager(self.db)
 
 
-class AgentManagerTest(object):
+class ProjectManagerTest(ManagerTest):
     def setup_method(self, method):
-        self.manager = AgentManager(mock.Mock())
-        self.build = mock.Mock()
+        super(ProjectManagerTest, self).setup_method(method)
+        self.manager = ProjectManager(self.db)
 
 
-class VCSManagerTest(object):
+class AgentManagerTest(ManagerTest):
     def setup_method(self, method):
-        self.manager = VCSManager(mock.Mock())
-        self.build = mock.Mock()
+        super(AgentManagerTest, self).setup_method(method)
+        self.manager = AgentManager(self.db)
 
 
-class PropertyManagerTest(object):
+class VCSManagerTest(ManagerTest):
     def setup_method(self, method):
-        self.manager = PropertyManager(mock.Mock())
-        self.manager.db = mock.Mock()
+        super(VCSManagerTest, self).setup_method(method)
+        self.manager = VCSManager(self.db)
+
+
+class PropertyManagerTest(ManagerTest):
+    def setup_method(self, method):
+        super(PropertyManagerTest, self).setup_method(method)
+        self.manager = PropertyManager(self.db)
 
         self.classes = []
         for x in range(2):
@@ -70,10 +76,10 @@ class PropertyManagerTest(object):
             self.classes.append(cls)
 
 
-class PropertyNamespaceManagerTest(object):
+class PropertyNamespaceManagerTest(ManagerTest):
     def setup_method(self, method):
-        self.manager = PropertyNamespaceManager(mock.Mock())
-        self.manager.db = mock.Mock()
+        super(PropertyNamespaceManagerTest, self).setup_method(method)
+        self.manager = PropertyNamespaceManager(self.db)
         self.manager.get_or_create = mock.Mock()
         self.name = 'down.to.the.devil'
 
@@ -105,9 +111,6 @@ class TestBuildManagerAdd(BuildManagerTest):
         self.manager.add(self.build)
 
         Session.return_value.refresh.assert_called_once_with(
-            Build.return_value
-        )
-        Session.return_value.expunge.assert_called_once_with(
             Build.return_value
         )
 
@@ -440,20 +443,6 @@ class TestPropertyNamespaceManagerGet(PropertyNamespaceManagerTest):
             session.return_value,
             table,
             name=self.name,
-            expunge=True,
-        )
-
-    @mock.patch('piper.db.db_sqlalchemy.PropertyNamespace')
-    def test_with_session(self, table):
-        self.session = mock.Mock()
-        ret = self.manager.get(self.name, self.session)
-
-        assert ret is self.manager.get_or_create.return_value
-        self.manager.get_or_create.assert_called_once_with(
-            self.session,
-            table,
-            name=self.name,
-            expunge=True,
         )
 
 
@@ -586,12 +575,15 @@ class TestSQLAlchemyManagerGetOrCreate(object):
 
 class TestSQLAlchemyManagerInSession(object):
     def setup_method(self, method):
-        self.sql = SQLAlchemyManager(mock.Mock())
+        self.db = mock.Mock(_session=None)
+        self.sql = SQLAlchemyManager(self.db)
 
     @mock.patch('piper.db.db_sqlalchemy.Session')
     def test_context_is_a_session(self, session):
         with self.sql.in_session() as val:
             assert val is session.return_value
+
+        assert session.call_count == 1
 
     @mock.patch('piper.db.db_sqlalchemy.Session')
     def test_exception_rolls_back(self, session):
@@ -617,21 +609,12 @@ class TestSQLAlchemyManagerInSession(object):
         session.return_value.close.assert_called_once_with()
 
     @mock.patch('piper.db.db_sqlalchemy.Session')
-    def test_session_reuse(self, session):
-        self.stored = mock.Mock()
-        with self.sql.in_session(self.stored) as x:
-            assert x is self.stored
-
-        assert session.call_count == 0
-
-    @mock.patch('piper.db.db_sqlalchemy.Session')
     def test_nested_session_reuse(self, session):
-        self.stored = mock.Mock()
-        with self.sql.in_session(self.stored) as x:
-            with self.sql.in_session(self.stored) as y:
-                assert x is y is self.stored
+        with self.sql.in_session() as x:
+            with self.sql.in_session() as y:
+                assert x is y
 
-        assert session.call_count == 0
+        assert session.call_count == 1
 
 
 class TestSQLiteIntegration(SQLAIntegration):
