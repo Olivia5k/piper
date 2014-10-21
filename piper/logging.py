@@ -89,6 +89,10 @@ COLORIZERS = (
     Colorizer(r'(\S*/[\S/]+)', '{t.bold_blue}{0}'),
     # Colorize environment variables
     Colorizer(r'([A-Z]+)(=)', '{t.bold_green}{0}{t.bold_black}{1}'),
+    # Colorize PASSED
+    Colorizer(r'(PASSED)', '{t.bold_green}{0}'),
+    # Colorize FAILED
+    Colorizer(r'(FAILED)', '{t.bold_red}{0}'),
 )
 
 
