@@ -137,7 +137,7 @@ class TestBuildManagerUpdate(BuildManagerTest):
     @mock.patch('piper.db.db_sqlalchemy.update')
     @mock.patch('piper.db.db_sqlalchemy.Build')
     @mock.patch('piper.db.db_sqlalchemy.Session')
-    def test_values(self, session, table, update):
+    def test_values(self, Session, Build, update):
         self.manager.update(self.build, **self.extra)
 
         self.build.default_db_kwargs.assert_called_once_with()
@@ -147,11 +147,11 @@ class TestBuildManagerUpdate(BuildManagerTest):
     @mock.patch('piper.db.db_sqlalchemy.update')
     @mock.patch('piper.db.db_sqlalchemy.Build')
     @mock.patch('piper.db.db_sqlalchemy.Session')
-    def test_database_chain(self, session, table, update):
+    def test_database_chain(self, Session, Build, update):
         # Fake the comparison thingy that SQLAlchemy uses to make constructor
         # objects. Default for the mock seems to be actually not mocked, even
         # when it's magic.
-        table.id.__eq__ = mock.Mock()
+        Build.id.__eq__ = mock.Mock()
 
         self.manager.update(self.build, **self.extra)
 
@@ -159,19 +159,19 @@ class TestBuildManagerUpdate(BuildManagerTest):
         where = update.return_value.where
         values = where.return_value.values
 
-        update.assert_called_once_with(table)
-        where.assert_called_once_with(table.id.__eq__.return_value)
+        update.assert_called_once_with(Build)
+        where.assert_called_once_with(Build.id.__eq__.return_value)
         values.assert_called_once_with(args)
-        table.id.__eq__.assert_called_once_with(self.build.ref.id)
+        Build.id.__eq__.assert_called_once_with(self.build.ref.id)
 
     @mock.patch('piper.db.db_sqlalchemy.update')
     @mock.patch('piper.db.db_sqlalchemy.Build')
     @mock.patch('piper.db.db_sqlalchemy.Session')
-    def test_execution(self, session, table, update):
+    def test_execution(self, Session, Build, update):
         self.manager.update(self.build, **self.extra)
 
         stmt = update.return_value.where.return_value.values.return_value
-        session.return_value.execute.assert_called_once_with(stmt)
+        Session.return_value.execute.assert_called_once_with(stmt)
 
 
 class TestBuildManagerGet(BuildManagerTest):
@@ -181,29 +181,29 @@ class TestBuildManagerGet(BuildManagerTest):
 
     @mock.patch('piper.db.db_sqlalchemy.Build')
     @mock.patch('piper.db.db_sqlalchemy.Session')
-    def test_return_value(self, session, table):
+    def test_return_value(self, Session, Build):
         ret = self.manager.get(self.build_id)
-        assert ret is session.return_value.query.return_value.get.return_value
+        assert ret is Session.return_value.query.return_value.get.return_value
 
     @mock.patch('piper.db.db_sqlalchemy.Build')
     @mock.patch('piper.db.db_sqlalchemy.Session')
-    def test_result_is_expunged(self, session, table):
+    def test_result_is_expunged(self, Session, Build):
         self.manager.get(self.build_id)
-        session.return_value.expunge_all.assert_called_once_with()
+        Session.return_value.expunge_all.assert_called_once_with()
 
 
 class TestBuildManagerAll(BuildManagerTest):
     @mock.patch('piper.db.db_sqlalchemy.Build')
     @mock.patch('piper.db.db_sqlalchemy.Session')
-    def test_return_value(self, session, table):
+    def test_return_value(self, Session, Build):
         ret = self.manager.all()
-        assert ret is session.return_value.query.return_value.all.return_value
+        assert ret is Session.return_value.query.return_value.all.return_value
 
     @mock.patch('piper.db.db_sqlalchemy.Build')
     @mock.patch('piper.db.db_sqlalchemy.Session')
-    def test_result_is_expunged(self, session, table):
+    def test_result_is_expunged(self, Session, Build):
         self.manager.all()
-        session.return_value.expunge_all.assert_called_once_with()
+        Session.return_value.expunge_all.assert_called_once_with()
 
 
 class TestConfigManagerRegister(ConfigManagerTest):
@@ -263,12 +263,12 @@ class TestProjectManagerGet(ProjectManagerTest):
 
     @mock.patch('piper.db.db_sqlalchemy.Project')
     @mock.patch('piper.db.db_sqlalchemy.Session')
-    def test_get_or_create_arguments(self, session, table):
+    def test_get_or_create_arguments(self, Session, Project):
         self.manager.get(self.build)
 
         self.manager.get_or_create.assert_called_once_with(
-            session.return_value,
-            table,
+            Session.return_value,
+            Project,
             name=self.build.vcs.get_project_name.return_value,
             vcs=self.manager.db.vcs.get.return_value
         )
@@ -281,22 +281,22 @@ class TestAgentManagerGet(AgentManagerTest):
 
     @mock.patch('socket.gethostname')
     @mock.patch('piper.db.db_sqlalchemy.Session')
-    def test_return_value_is_agent(self, session, gh):
+    def test_return_value_is_agent(self, Session, gethostname):
         ret = self.manager.get()
         assert ret is self.manager.get_or_create.return_value
 
     @mock.patch('socket.gethostname')
     @mock.patch('piper.db.db_sqlalchemy.Agent')
     @mock.patch('piper.db.db_sqlalchemy.Session')
-    def test_get_or_create_arguments(self, session, table, gh):
+    def test_get_or_create_arguments(self, Session, Agent, gethostname):
         self.manager.get()
 
         self.manager.get_or_create.assert_called_once_with(
-            session.return_value,
-            table,
+            Session.return_value,
+            Agent,
             keys=('fqdn',),
-            name=gh.return_value,
-            fqdn=gh.return_value,
+            name=gethostname.return_value,
+            fqdn=gethostname.return_value,
             active=True,
             busy=False,
             registered=False,
@@ -335,24 +335,24 @@ class TestAgentManagerSetAgentLock(AgentManagerTest):
 
     @mock.patch('piper.db.db_sqlalchemy.Build')
     @mock.patch('piper.db.db_sqlalchemy.Session')
-    def test_query_chain(self, session, table):
+    def test_query_chain(self, Session, Build):
         self.manager.set_lock(self.build, True)
 
-        query = session.return_value.query
+        query = Session.return_value.query
         get = query.return_value.get
 
-        query.assert_called_once_with(table)
+        query.assert_called_once_with(Build)
         get.assert_called_once_with(self.build.ref.id)
 
     @mock.patch('piper.db.db_sqlalchemy.Build')
     @mock.patch('piper.db.db_sqlalchemy.Session')
-    def test_agent_updated_to_locked(self, session, table):
-        self.assert_lock(session, table, True)
+    def test_agent_updated_to_locked(self, Session, Build):
+        self.assert_lock(Session, Build, True)
 
     @mock.patch('piper.db.db_sqlalchemy.Build')
     @mock.patch('piper.db.db_sqlalchemy.Session')
-    def test_agent_updated_to_unlocked(self, session, table):
-        self.assert_lock(session, table, False)
+    def test_agent_updated_to_unlocked(self, Session, Build):
+        self.assert_lock(Session, Build, False)
 
 
 class TestVCSManagerGet(VCSManagerTest):
@@ -367,12 +367,12 @@ class TestVCSManagerGet(VCSManagerTest):
 
     @mock.patch('piper.db.db_sqlalchemy.VCS')
     @mock.patch('piper.db.db_sqlalchemy.Session')
-    def test_get_or_create_arguments(self, session, table):
+    def test_get_or_create_arguments(self, Session, VCS):
         self.manager.get(self.build)
 
         self.manager.get_or_create.assert_called_once_with(
-            session.return_value,
-            table,
+            Session.return_value,
+            VCS,
             keys=('root_url',),
             root_url=self.build.vcs.root_url,
             name=self.build.vcs.name,
@@ -380,12 +380,12 @@ class TestVCSManagerGet(VCSManagerTest):
 
     @mock.patch('piper.db.db_sqlalchemy.VCS')
     @mock.patch('piper.db.db_sqlalchemy.Session')
-    def test_get_or_create_arguments_with_expunge(self, session, table):
+    def test_get_or_create_arguments_with_expunge(self, Session, VCS):
         self.manager.get(self.build)
 
         self.manager.get_or_create.assert_called_once_with(
-            session.return_value,
-            table,
+            Session.return_value,
+            VCS,
             keys=('root_url',),
             root_url=self.build.vcs.root_url,
             name=self.build.vcs.name,
@@ -400,20 +400,20 @@ class TestPropertyManagerUpdate(PropertyManagerTest):
 
     @mock.patch('piper.db.db_sqlalchemy.Property')
     @mock.patch('piper.db.db_sqlalchemy.Session')
-    def test_deletion_query_chain(self, session, table):
+    def test_deletion_query_chain(self, Session, Property):
         self.manager.update(self.classes)
 
-        query = session.return_value.query
+        query = Session.return_value.query
         filter = query.return_value.filter
         delete = filter.return_value.delete
 
-        query.assert_called_once_with(table)
+        query.assert_called_once_with(Property)
         assert filter.call_count == 1
         delete.assert_called_once_with()
 
     @mock.patch('piper.db.db_sqlalchemy.Property')
     @mock.patch('piper.db.db_sqlalchemy.Session')
-    def test_property_namespace_retrieval(self, session, table):
+    def test_property_namespace_retrieval(self, Session, Property):
         self.manager.update(self.classes)
 
         calls = [
@@ -424,24 +424,24 @@ class TestPropertyManagerUpdate(PropertyManagerTest):
 
     @mock.patch('piper.db.db_sqlalchemy.Property')
     @mock.patch('piper.db.db_sqlalchemy.Session')
-    def test_properties_added_to_db(self, session, table):
+    def test_properties_added_to_db(self, Session, Property):
         self.manager.update(self.classes)
 
-        calls = [mock.call(table()), mock.call(table())]
-        session.return_value.add.assert_has_calls(calls)
+        calls = [mock.call(Property()), mock.call(Property())]
+        Session.return_value.add.assert_has_calls(calls)
 
 
 class TestPropertyNamespaceManagerGet(PropertyNamespaceManagerTest):
     @mock.patch('piper.db.db_sqlalchemy.PropertyNamespace')
     @mock.patch('piper.db.db_sqlalchemy.Session')
-    def test_without_session(self, session, table):
+    def test_without_session(self, Session, PropertyNamespace):
         self.manager.get_or_create = mock.Mock()
         ret = self.manager.get(self.name)
 
         assert ret is self.manager.get_or_create.return_value
         self.manager.get_or_create.assert_called_once_with(
-            session.return_value,
-            table,
+            Session.return_value,
+            PropertyNamespace,
             name=self.name,
         )
 
@@ -449,12 +449,12 @@ class TestPropertyNamespaceManagerGet(PropertyNamespaceManagerTest):
 class TestSQLAlchemyDBSetup(SQLATest):
     @mock.patch('piper.db.db_sqlalchemy.create_engine')
     @mock.patch('piper.db.db_sqlalchemy.Session')
-    def test_setup(self, se, ce):
+    def test_setup(self, Session, ce):
         self.db.setup(self.config)
 
         assert self.db._config is self.config
         ce.assert_called_once_with(self.config.raw['db']['host'])
-        se.configure.assert_called_once_with(bind=ce.return_value)
+        Session.configure.assert_called_once_with(bind=ce.return_value)
 
 
 class TestSQLAlchemyDBInit(SQLATest):
@@ -501,14 +501,14 @@ class TestSQLAlchemyDBCreateTables(SQLATest):
 
     @mock.patch('piper.db.db_sqlalchemy.Session')
     @mock.patch('piper.db.db_sqlalchemy.create_engine')
-    def test_creation(self, ce, se):
+    def test_creation(self, ce, Session):
         eng = ce.return_value
         host = self.config.host
 
         self.db.create_tables(host)
 
         ce.assert_called_once_with(host, echo=False)
-        se.configure.assert_called_once_with(bind=eng)
+        Session.configure.assert_called_once_with(bind=eng)
 
         for table in self.db.tables:
             assert table.metadata.bind is eng
@@ -666,9 +666,9 @@ class TestSQLiteIntegration(SQLAIntegration):
             self.assert_vcs(session)
 
     @mock.patch('socket.gethostname')
-    def test_get_agent(self, gh):
+    def test_get_agent(self, gethostname):
         self.hostname = 'shadow.cabinet'
-        gh.return_value = self.hostname
+        gethostname.return_value = self.hostname
         self.db.agent.get()
 
         with self.sql.in_session() as session:
@@ -697,14 +697,14 @@ class TestSQLiteIntegration(SQLAIntegration):
 
     @mock.patch('os.getenv')
     @mock.patch('socket.gethostname')
-    def test_add_build(self, gh, getenv):
+    def test_add_build(self, gethostname, getenv):
         self.success, self.crashed, self.status = True, False, 'hehe'
         self.now = datetime.datetime.now()
 
         self.username = 'fatmike'
         self.hostname = 'anarchy.camp'
         getenv.return_value = self.username
-        gh.return_value = self.hostname
+        gethostname.return_value = self.hostname
 
         self.build.default_db_kwargs.return_value = {
             'success': self.success,
