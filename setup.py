@@ -21,13 +21,13 @@ install_requires = (
 )
 
 tests_require = (
-    'cov-core==1.14.0',
+    'cov-core==1.15.0',
     'coverage==3.7.1',
     'mock==1.0.1',
-    'py==1.4.25',
-    'pytest==2.6.3',
-    'pytest-cov==1.8.0',
-    'pytz==2014.7',
+    'py==1.4.26',
+    'pytest==2.6.4',
+    'pytest-cov==1.8.1',
+    'pytz==2014.10',
     'tox==1.8.0',
     'virtualenv==1.11.6',
 )
