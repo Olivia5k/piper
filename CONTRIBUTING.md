@@ -12,7 +12,8 @@ will download all dependencies.
 your code is welcome in a Pull Request!
 
 Things to generally think about:
-* Code is always welcome, and discussing in an issue before implementing is encouraged.
+* Code is always welcome, and discussing in an issue before implementing is
+  encouraged.
 * Commit messages should follow the [convention][tbag].
 * Unit tests are required, integration tests are encouraged.
 * If unsure, strive to emulate the look and feel of the rest of the code.
@@ -50,16 +51,21 @@ than not to ask! You also don't need to add labels - the contributors will help
 out with that as well.
 
 The [discussions] label means that something requires input, and that input
-can come from you even though you have not contributed to the project in any 
+can come from you even though you have not contributed to the project in any
 other sense before!
+
+If you start working on something, add yourself as the assignee so that it's
+visible what is being worked on or not.
 
 ## Collaborators
 If you are a collaborator, there are some extra guidelines:
 
-* React on issues. Reply to them if possible and add labels accordingly.
-* Avoid pushing to master without a Pull Request. Use branches on the repo freely.
+* React on issues. Reply to them if possible and add labels accordingly. Assign
+  users if they are working on something but did not add themselves.
+* Avoid pushing to master without a Pull Request. Use branches on the repo
+  freely.
 
- 
+
 [pyenv]: https://github.com/yyuu/pyenv
 [virtualenv]: https://virtualenv.pypa.io/en/latest/
 [tbag]: http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html
