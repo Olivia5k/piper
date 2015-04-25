@@ -5,33 +5,21 @@ from setuptools.command.test import test as TestCommand
 
 # http://stackoverflow.com/questions/11472810/#14405269
 install_requires = (
-    'Flask>=0.10.1,<1.0.0a0',
     'Flask-RESTful>=0.3.2,<1.0.0a0',
-    'Jinja2>=2.7.3,<3.0.0a0',
     'Logbook>=0.9.0,<1.0.0a0',
-    'MarkupSafe>=0.23,<1.0a0',
     'PyYAML>=3.11,<4.0a0',
     'SQLAlchemy==0.9.7',  # Purposefully on hold
-    'Werkzeug>=0.10.4,<1.0.0a0',
     'ago>=0.0.6,<1.0.0a0',
-    'aniso8601>=0.83,<1.0.0a0',
     'blessings>=1.6,<2.0.0a0',
     'facterpy>=0.1,<1.0a0',
-    'itsdangerous>=0.24,<1.0a0',
     'jsonschema>=2.3.0,<3.0.0a0',
     'six>=1.9.0,<2.0.0a0',
 )
 
 tests_require = (
-    'cov-core',
-    'coverage',
     'mock',
-    'py',
-    'pytest',
     'pytest-cov',
-    'pytz',
     'tox',
-    'virtualenv',
 )
 
 
