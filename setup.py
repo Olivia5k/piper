@@ -2,34 +2,24 @@ import sys
 from setuptools import setup
 from setuptools.command.test import test as TestCommand
 
+
+# http://stackoverflow.com/questions/11472810/#14405269
 install_requires = (
-    'Flask==0.10.1',
-    'Flask-RESTful==0.2.12',
-    'Jinja2==2.7.3',
-    'Logbook==0.7.0',
-    'MarkupSafe==0.23',
-    'PyYAML==3.11',
-    'SQLAlchemy==0.9.7',
-    'Werkzeug==0.9.6',
-    'ago==0.0.6',
-    'aniso8601==0.83',
-    'blessings==1.5.1',
-    'facterpy==0.1',
-    'itsdangerous==0.24',
-    'jsonschema==2.3.0',
-    'six==1.7.3',
+    'Flask-RESTful>=0.3.2,<1.0.0a0',
+    'Logbook>=0.9.0,<1.0.0a0',
+    'PyYAML>=3.11,<4.0a0',
+    'SQLAlchemy==0.9.7',  # Purposefully on hold
+    'ago>=0.0.6,<1.0.0a0',
+    'blessings>=1.6,<2.0.0a0',
+    'facterpy>=0.1,<1.0a0',
+    'jsonschema>=2.3.0,<3.0.0a0',
+    'six>=1.9.0,<2.0.0a0',
 )
 
 tests_require = (
-    'cov-core==1.15.0',
-    'coverage==3.7.1',
-    'mock==1.0.1',
-    'py==1.4.26',
-    'pytest==2.6.4',
-    'pytest-cov==1.8.1',
-    'pytz==2014.10',
-    'tox==1.8.0',
-    'virtualenv==1.11.6',
+    'mock',
+    'pytest-cov',
+    'tox',
 )
 
 
