@@ -5,6 +5,7 @@ from piper import prop
 from piper import config
 
 import mock
+import pytest
 
 
 class TestEntry(object):
@@ -27,6 +28,7 @@ class TestEntry(object):
 
 
 class TestEntryIntegration(object):
+    @pytest.mark.skipif(True, reason="NOT isolated")
     @mock.patch('piper.api.api.Flask')
     def test_api_start(self, flask):
         cmd_piperd.entry(['api', 'start'])

@@ -31,33 +31,6 @@ class SQLATest(object):
         self.build = mock.Mock()
 
 
-class SQLAIntegration(SQLATest):
-    def setup_method(self, method):
-        from piper.db.db_sqlalchemy import SQLAlchemyDB
-        from piper.db.db_sqlalchemy import SQLAlchemyManager
-        from piper.config import BuildConfig
-
-        self.db = SQLAlchemyDB()
-        self.db_file = 'test.db'
-        self.db_host = 'sqlite:///{0}'.format(self.db_file)
-        self.config = BuildConfig(raw=BASE_CONFIG)
-        self.config.raw['db']['host'] = self.db_host
-        self.config.verbose = False
-
-        self.sql = SQLAlchemyManager(self.db)
-
-        self.build = mock.Mock(config=self.config)
-
-        self.db.init(self.config)
-        self.db.setup(self.config)
-
-    def teardown_method(self, method):
-        try:
-            os.remove(self.db_file)
-        except Exception:
-            pass
-
-
 def builtin(target):
     """
     Return the correct string to mock.patch depending on Py3k or not.

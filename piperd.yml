@@ -8,7 +8,7 @@ properties:
     - piper.prop.FacterProp
 
 db:
-  class: piper.db.SQLAlchemyDB
+  class: piper.db.RethinkDB
   host: sqlite:///data/piper.db
   user:
   password:

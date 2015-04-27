@@ -1,11 +1,9 @@
 import mock
 
-from piper.config import BuildConfig
 from piper.build import Build
 from piper.build import ExecCLI
 
 from test.utils import BASE_CONFIG
-from test.utils import SQLAIntegration
 
 
 class BuildTest(object):
@@ -339,47 +337,3 @@ class TestExecCLIRun(object):
         ret = self.cli.run()
 
         assert ret == 1
-
-
-class TestBuildIntegration(SQLAIntegration):
-    def setup_method(self, method):
-        super(TestBuildIntegration, self).setup_method(method)
-        self.raw_config = {
-            'version': {
-                'class': 'piper.version.StaticVersion',
-                'version': '0.0.1',
-            },
-            'envs': {
-                'local': {
-                    'class': 'piper.env.Env',
-                    'requirements': None,
-                }
-            },
-            'steps': {
-                'test': {
-                    'class': 'piper.step.CommandLineStep',
-                    'command': 'true',
-                    'requirements': None,
-                },
-            },
-            'pipelines': {
-                'test': [
-                    'test',
-                ],
-            },
-            'db': {
-                'class': 'piper.db.SQLAlchemyDB',
-                'host': self.db_host,
-            },
-        }
-
-        self.config = BuildConfig(raw=self.raw_config).load()
-
-    def test_build_with_one_successful_step(self):
-        self.config.pipeline = 'test'
-        self.config.env = 'local'
-        self.build = Build(self.config)
-
-        ret = self.build.run()
-
-        assert ret is True

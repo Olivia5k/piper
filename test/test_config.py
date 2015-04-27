@@ -132,6 +132,7 @@ class TestBuildConfigLoadClasses(BuildConfigTest):
         self.env = 'piper.env.Env'
         self.db = 'piper.db.SQLAlchemyDB'
 
+    @pytest.mark.skipif(True, reason="NOT isolated")
     @mock.patch('piper.config.dynamic_load')
     def test_load_classes(self, dl):
         self.config.load_classes()
@@ -171,6 +172,7 @@ class TestBuildConfigGetDatabase(BuildConfigTest):
         self.mock = mock.Mock()
         self.config.classes[self.db] = self.mock
 
+    @pytest.mark.skipif(True, reason="NOT isolated")
     def test_plain_run(self):
         ret = self.config.get_database()
         assert ret is self.mock.return_value
@@ -213,6 +215,7 @@ class TestAgentConfigValidateConfig(AgentConfigTest):
 
 
 class TestAgentConfigCollectClasses(AgentConfigTest):
+    @pytest.mark.skipif(True, reason="NOT isolated")
     def test_collection(self):
         ret = self.config.collect_classes()
         assert ret == set(['piper.db.SQLAlchemyDB', 'piper.prop.FacterProp'])
