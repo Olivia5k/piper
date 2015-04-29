@@ -1,4 +1,5 @@
 import logbook
+import rethinkdb as rdb
 
 from piper.db import core as db
 
@@ -65,7 +66,25 @@ class PropertyNamespaceManager(RethinkManager, db.PropertyNamespaceManager):
 
 class RethinkDB(db.Database):
     def setup(self, config):
-        raise NotImplementedError()
+        """
+        Used for setting up a session when starting piper
+
+        """
+
+        self._config = config
+        # TODO: Error handling if connection refused.
+        self.conn = rdb.connect(
+            host=config.raw['db']['host'],
+            port=config.raw['db']['port'],
+            db=config.raw['db']['db'],
+            auth_key=config.raw['db'].get('auth_key', ''),
+        )
 
     def init(self, config):
+        """
+        Used for initial creation of database when none exists.
+        Used by `piperd db init`
+
+        """
+
         raise NotImplementedError()
