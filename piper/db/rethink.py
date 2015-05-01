@@ -7,11 +7,14 @@ from piper.db import core as db
 class RethinkManager(object):
     def __init__(self, db):
         self.db = db
+        self.table = db.conn.table(self.table_name)
 
         self.log = logbook.Logger(self.__class__.__name__)
 
 
 class AgentManager(RethinkManager, db.AgentManager):
+    table_name = 'agent'
+
     def get(self):
         raise NotImplementedError()
 
@@ -26,8 +29,10 @@ class AgentManager(RethinkManager, db.AgentManager):
 
 
 class BuildManager(RethinkManager, db.BuildManager):
+    table_name = 'build'
+
     def add(self, build):
-        raise NotImplementedError()
+        pass
 
     def update(self, build, **extra):
         raise NotImplementedError()
@@ -40,31 +45,51 @@ class BuildManager(RethinkManager, db.BuildManager):
 
 
 class ConfigManager(RethinkManager, db.ConfigManager):
+    table_name = 'config'
+
     def register(self, build, project=None):
-        raise NotImplementedError()
+        pass
 
 
 class ProjectManager(RethinkManager, db.ProjectManager):
+    table_name = 'project'
+
     def get(self, build):
         raise NotImplementedError()
 
 
 class VCSManager(RethinkManager, db.VCSManager):
+    table_name = 'vcs'
+
     def get(self, build):
         raise NotImplementedError()
 
 
 class PropertyManager(RethinkManager, db.PropertyManager):
+    table_name = 'property'
+
     def update(self, classes):
         raise NotImplementedError()
 
 
 class PropertyNamespaceManager(RethinkManager, db.PropertyNamespaceManager):
+    table_name = 'property_namespace'
+
     def get(self, name):
         raise NotImplementedError()
 
 
 class RethinkDB(db.Database):
+    managers = (
+        AgentManager,
+        BuildManager,
+        ConfigManager,
+        ProjectManager,
+        VCSManager,
+        PropertyManager,
+        PropertyNamespaceManager,
+    )
+
     def setup(self, config):
         """
         Used for setting up a session when starting piper
@@ -92,9 +117,12 @@ class RethinkDB(db.Database):
         raise NotImplementedError()
 
     def setup_managers(self):
-        self.build = BuildManager(self)
-        self.config = ConfigManager(self)
-        self.project = ProjectManager(self)
-        self.vcs = VCSManager(self)
-        self.property = PropertyManager(self)
-        self.property_namespace = PropertyNamespaceManager(self)
+        """
+        Create instances of all manager classes, setting them as attributes
+        with the same name as their table names.
+
+        """
+
+        for manager in self.managers:
+            man = manager(self)
+            setattr(self, man.table_name, man)
