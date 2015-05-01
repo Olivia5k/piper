@@ -18,6 +18,26 @@ class Build(LazyDatabaseMixin):
 
     """
 
+
+    FIELDS_TO_DB = (
+        # Main fields
+        'agent',
+        'config',
+
+        # Booleans
+        'success',
+        'crashed',
+
+        # String fields
+        'status',
+
+        # Timestamps
+        'started',
+        'ended',
+        'created',
+    )
+
+
     def __init__(self, config):
         self.config = config
 
@@ -89,6 +109,26 @@ class Build(LazyDatabaseMixin):
         self.configure_pipeline()
 
         self.setup_env()
+
+    def as_dict(self):
+        """
+        Generate a dict representation of the build, suitable for DB use.
+
+        """
+
+        ret = {}
+
+        for key in self.FIELDS_TO_DB:
+            val = getattr(self, key, None)
+            if val is not None:
+                ret[key] = val
+
+        # Set the timestamp so that the database doesn't need to care. The
+        # timestamp will technically be a bit earlier than the insertion, but
+        # that probably doesn't matter much.
+        ret['updated'] = utils.now()
+
+        return ret
 
     def add_build(self):
         """
