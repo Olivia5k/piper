@@ -90,4 +90,4 @@ def now():
 
     """
 
-    return datetime.datetime.utcnow()
+    return datetime.datetime.now(datetime.timezone.utc)
