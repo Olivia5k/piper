@@ -141,7 +141,7 @@ class Build(LazyDatabaseMixin):
 
         """
 
-        self.ref = self.db.build.add(self)
+        self.id = self.db.build.add(self)
         self.db.config.register(self)
 
     def set_logfile(self):
@@ -151,11 +151,12 @@ class Build(LazyDatabaseMixin):
         """
 
         self.log_key = '{0} {1}'.format(
-            self.__class__.__name__, self.ref.id
+            self.__class__.__name__,
+            self.id[:7] if self.id else '',
         )
         self.log = logbook.Logger(self.log_key)
 
-        self.logfile = 'logs/piper/{0}.log'.format(self.ref.id)
+        self.logfile = 'logs/piper/{0}.log'.format(self.id)
         self.log_handler = logging.get_file_logger(self.logfile)
         self.log_handler.push_application()
 

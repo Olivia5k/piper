@@ -241,7 +241,7 @@ class TestBuildAddBuild(BuildTest):
         self.build.db = mock.Mock()
         self.build.add_build()
 
-        assert self.build.ref is self.build.db.build.add.return_value
+        assert self.build.id is self.build.db.build.add.return_value
         self.build.db.build.add.assert_called_once_with(self.build)
 
     def test_configuration_is_added(self):
