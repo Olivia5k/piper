@@ -80,6 +80,8 @@ class RethinkDB(db.Database):
             auth_key=config.raw['db'].get('auth_key', ''),
         )
 
+        self.setup_managers()
+
     def init(self, config):
         """
         Used for initial creation of database when none exists.
@@ -88,3 +90,11 @@ class RethinkDB(db.Database):
         """
 
         raise NotImplementedError()
+
+    def setup_managers(self):
+        self.build = BuildManager(self)
+        self.config = ConfigManager(self)
+        self.project = ProjectManager(self)
+        self.vcs = VCSManager(self)
+        self.property = PropertyManager(self)
+        self.property_namespace = PropertyNamespaceManager(self)
