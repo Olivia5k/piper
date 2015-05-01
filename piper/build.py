@@ -18,9 +18,9 @@ class Build(LazyDatabaseMixin):
 
     """
 
-
     FIELDS_TO_DB = (
         # Main fields
+        'id',
         'agent',
         'config',
 
