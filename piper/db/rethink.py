@@ -7,7 +7,8 @@ from piper.db import core as db
 class RethinkManager(object):
     def __init__(self, db):
         self.db = db
-        self.table = db.conn.table(self.table_name)
+        self.conn = db.conn
+        self.table = rdb.table(self.table_name)
 
         self.log = logbook.Logger(self.__class__.__name__)
 
