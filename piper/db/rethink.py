@@ -26,17 +26,22 @@ class AgentManager(RethinkManager, db.AgentManager):
         self.set_lock(build, False)
 
     def set_lock(self, build, locked):
-        raise NotImplementedError()
+        pass
 
 
 class BuildManager(RethinkManager, db.BuildManager):
     table_name = 'build'
 
     def add(self, build):
-        pass
+        # TODO: Error handling
+        data = build.as_dict()
+        ret = self.table.insert(data).run(self.conn)
 
-    def update(self, build, **extra):
-        raise NotImplementedError()
+        return ret['generated_keys'][0]
+
+    def update(self, build):
+        data = build.as_dict()
+        return self.table.update(data).run(self.conn)
 
     def get(self, build_id):
         raise NotImplementedError()
