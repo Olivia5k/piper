@@ -37,13 +37,12 @@ class Build(LazyDatabaseMixin):
         'created',
     )
 
-
     def __init__(self, config):
         self.config = config
 
         self.vcs = GitVCS('github', 'git@github.com')
 
-        self.start = utils.now()
+        self.started = utils.now()
 
         self.id = None
         self.version = None
@@ -74,15 +73,15 @@ class Build(LazyDatabaseMixin):
         return self.success
 
     def finish(self):
-        self.end = utils.now()
-        self.db.build.update(self, ended=self.end)
+        self.ended = utils.now()
+        self.db.build.update(self)
 
         verb = 'finished successfully in'
         if not self.success:
             verb = 'failed after'
 
         ts = ago.human(
-            self.end - self.start,
+            self.ended - self.started,
             precision=5,
             past_tense='%s {0}' % verb  # hee hee
         )
@@ -259,7 +258,7 @@ class Build(LazyDatabaseMixin):
 
         self.status = ''
         # As long as we did not break out of the loop above, the build is
-        # to be deemed succesful.
+        # to be deemed successful.
         if self.success is not False:
             self.success = True
 

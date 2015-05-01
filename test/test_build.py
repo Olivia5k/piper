@@ -264,11 +264,10 @@ class TestBuildFinish(BuildTest):
     def test_build_is_updated_in_database(self, now, human):
         self.build.finish()
 
-        assert self.build.end is now.return_value
+        assert self.build.ended is now.return_value
         now.assert_called_once_with()
         self.build.db.build.update.assert_called_once_with(
             self.build,
-            ended=now.return_value
         )
 
 
