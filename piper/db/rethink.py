@@ -102,14 +102,10 @@ class RethinkDB(db.Database):
 
         """
 
+        # Underscore because there is also a ConfigManager set to self.config
         self._config = config
-        # TODO: Error handling if connection refused.
-        self.conn = rdb.connect(
-            host=config.raw['db']['host'],
-            port=config.raw['db']['port'],
-            db=config.raw['db']['db'],
-            auth_key=config.raw['db'].get('auth_key', ''),
-        )
+
+        self.conn = self.connect()
 
         self.setup_managers()
 
@@ -121,6 +117,24 @@ class RethinkDB(db.Database):
         """
 
         raise NotImplementedError()
+
+    def connect(self):
+        """
+        Start a connection to RethinkDB.
+
+        """
+
+        self.log.debug(
+            'Connecting to {host}:{port}/{db}'.format(**self._config.raw['db'])
+        )
+
+        # TODO: Error handling if connection refused.
+        return rdb.connect(
+            host=self._config.raw['db']['host'],
+            port=self._config.raw['db']['port'],
+            db=self._config.raw['db']['db'],
+            auth_key=self._config.raw['db'].get('auth_key', ''),
+        )
 
     def setup_managers(self):
         """
