@@ -138,6 +138,7 @@ class RethinkDB(db.Database):
             rdb.db_create(db).run(conn)
             return True
 
+        self.log.info('Database already exists.')
         return False
 
     def create_tables(self, conn):
@@ -154,8 +155,8 @@ class RethinkDB(db.Database):
         name = man.table_name
 
         if name in tables:
-            self.log.debug(
-                "Table '{0}' already exists. Skipping.".format(name)
+            self.log.info(
+                "Table '{0}' already exists.".format(name)
             )
             return False
 
