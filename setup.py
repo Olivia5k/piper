@@ -85,7 +85,6 @@ setup(
         'Environment :: Console',
         'Operating System :: Unix',
         'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 2.7',
         'Topic :: Software Development :: Build Tools',
     ],
 )
