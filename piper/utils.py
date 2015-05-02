@@ -1,6 +1,6 @@
 import os
 import errno
-import subprocess as sub
+import sh
 import datetime
 from collections import OrderedDict
 
@@ -48,23 +48,14 @@ def dynamic_load(target):
 
 def oneshot(cmd):
     """
-    Oneshot execution of a subprocess. Returns output as a single string.
+    Oneshot execution of a command. Returns output as a single string.
 
     This is only to cut down on boiler.
 
     """
 
-    popen = sub.Popen(cmd.split(), stdout=sub.PIPE, stderr=sub.PIPE)
-    exit = popen.wait()
-
-    if exit != 0:
-        raise Exception(
-            "Execution of '{0}' failed with exitcode {1}\n\n{2}".format(
-                cmd, exit, popen.stderr.read().decode().strip()
-            )
-        )
-
-    return str(popen.stdout.read().decode().strip())
+    cmd, *args = cmd.split()
+    return sh.Command(cmd)(args).strip()
 
 
 def mkdir(path):  # pragma: nocover

@@ -1,6 +1,5 @@
-import subprocess as sub
-
 import logbook
+import sh
 
 from piper.logging import SEPARATOR
 
@@ -15,7 +14,7 @@ class Process(object):
         self.config = config
         self.cmd = cmd
 
-        self.popen = None
+        self.sh = None
         self.success = None
         self.log = logbook.Logger(parent_key + SEPARATOR + self.cmd)
 
@@ -27,27 +26,18 @@ class Process(object):
 
         self.log.debug('Spawning process handler')
 
-        self.popen = sub.Popen(
-            self.cmd.split(),
-            stdout=sub.PIPE,
-            stderr=sub.PIPE,
-        )
+        cmd, *args = self.cmd.split()
+        self.sh = sh.Command(cmd)(args, _iter=True)
 
     def run(self):
         self.log.debug('Executing')
 
-        while not self.popen.poll():
-            # TODO: Gracefully handle stderr as well
-            line = self.popen.stdout.readline()
-
-            if not line:
-                break
-
-            self.log.info(line.decode('utf-8').rstrip())
-
-        exit = self.popen.wait()
-        self.log.debug('Exitcode {0}'.format(exit))
-
-        self.success = exit == 0
-        if not self.success:
-            self.log.error(self.popen.stderr.read().decode('utf-8'))
+        try:
+            for line in self.sh:
+                self.log.info(line)
+        except sh.ErrorReturnCode:
+            self.log.error(self.sh.stderr)
+        finally:
+            exit = self.sh.exit_code
+            self.success = exit == 0
+            self.log.debug('Exitcode {0}'.format(exit))
