@@ -102,11 +102,7 @@ class RethinkDB(db.Database):
 
         """
 
-        # Underscore because there is also a ConfigManager set to self.config
-        self._config = config
-
-        self.conn = self.connect()
-
+        self.conn = self.connect(config)
         self.setup_managers()
 
     def init(self, config):
@@ -116,24 +112,73 @@ class RethinkDB(db.Database):
 
         """
 
-        raise NotImplementedError()
+        conn = rdb.connect(
+            host=config.raw['db']['host'],
+            port=config.raw['db']['port'],
+            auth_key=config.raw['db'].get('auth_key', ''),
+        )
 
-    def connect(self):
+        self.create_database(config, conn)
+        conn.use(config.raw['db']['db'])
+        self.create_tables(conn)
+
+    def create_database(self, config, conn):
+        """
+        Idempotently try to create the database
+
+        """
+
+        db = config.raw['db']['db']
+        dbs = rdb.db_list().run(conn)
+
+        if db not in dbs:
+            self.log.info(
+                'Database {0} does not exist. Creating it...'.format(db)
+            )
+            rdb.db_create(db).run(conn)
+            return True
+
+        return False
+
+    def create_tables(self, conn):
+        tables = rdb.table_list().run(conn)
+        for man in self.setup_managers():
+            self.create_table(tables, man, conn)
+
+    def create_table(self, tables, man, conn):
+        """
+        Idempotently create a table
+
+        """
+
+        name = man.table_name
+
+        if name in tables:
+            self.log.debug(
+                "Table '{0}' already exists. Skipping.".format(name)
+            )
+            return False
+
+        self.log.info("Creating table '{0}'...".format(name))
+        rdb.table_create(name).run(conn)
+        return True
+
+    def connect(self, config):
         """
         Start a connection to RethinkDB.
 
         """
 
         self.log.debug(
-            'Connecting to {host}:{port}/{db}'.format(**self._config.raw['db'])
+            'Connecting to {host}:{port}/{db}'.format(**config.raw['db'])
         )
 
         # TODO: Error handling if connection refused.
         return rdb.connect(
-            host=self._config.raw['db']['host'],
-            port=self._config.raw['db']['port'],
-            db=self._config.raw['db']['db'],
-            auth_key=self._config.raw['db'].get('auth_key', ''),
+            host=config.raw['db']['host'],
+            port=config.raw['db']['port'],
+            db=config.raw['db']['db'],
+            auth_key=config.raw['db'].get('auth_key', ''),
         )
 
     def setup_managers(self):
@@ -143,6 +188,10 @@ class RethinkDB(db.Database):
 
         """
 
+        ret = []
         for manager in self.managers:
             man = manager(self)
             setattr(self, man.table_name, man)
+            ret.append(man)
+
+        return ret
