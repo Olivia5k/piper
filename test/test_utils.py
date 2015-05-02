@@ -1,4 +1,3 @@
-from piper.utils import LimitedSizeDict
 from piper.utils import dynamic_load
 from piper.utils import oneshot
 
@@ -7,8 +6,8 @@ import pytest
 
 class TestDynamicLoad(object):
     def test_proper_load(self):
-        cls = dynamic_load('piper.utils.LimitedSizeDict')
-        assert cls is LimitedSizeDict
+        cls = dynamic_load('piper.utils.oneshot')
+        assert cls is oneshot
 
     def test_nonexistant_target(self):
         with pytest.raises(ImportError):
