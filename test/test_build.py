@@ -244,14 +244,6 @@ class TestBuildAddBuild(BuildTest):
         assert self.build.id is self.build.db.build.add.return_value
         self.build.db.build.add.assert_called_once_with(self.build)
 
-    def test_configuration_is_added(self):
-        self.build.db = mock.Mock()
-        self.build.add_build()
-
-        self.build.db.config.register.assert_called_once_with(
-            self.build
-        )
-
 
 class TestBuildFinish(BuildTest):
     def setup_method(self, method):

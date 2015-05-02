@@ -50,50 +50,10 @@ class BuildManager(RethinkManager, db.BuildManager):
         raise NotImplementedError()
 
 
-class ConfigManager(RethinkManager, db.ConfigManager):
-    table_name = 'config'
-
-    def register(self, build, project=None):
-        pass
-
-
-class ProjectManager(RethinkManager, db.ProjectManager):
-    table_name = 'project'
-
-    def get(self, build):
-        raise NotImplementedError()
-
-
-class VCSManager(RethinkManager, db.VCSManager):
-    table_name = 'vcs'
-
-    def get(self, build):
-        raise NotImplementedError()
-
-
-class PropertyManager(RethinkManager, db.PropertyManager):
-    table_name = 'property'
-
-    def update(self, classes):
-        raise NotImplementedError()
-
-
-class PropertyNamespaceManager(RethinkManager, db.PropertyNamespaceManager):
-    table_name = 'property_namespace'
-
-    def get(self, name):
-        raise NotImplementedError()
-
-
 class RethinkDB(db.Database):
     managers = (
         AgentManager,
         BuildManager,
-        ConfigManager,
-        ProjectManager,
-        VCSManager,
-        PropertyManager,
-        PropertyNamespaceManager,
     )
 
     def setup(self, config):

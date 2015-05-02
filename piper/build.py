@@ -141,7 +141,6 @@ class Build(LazyDatabaseMixin):
         """
 
         self.id = self.db.build.add(self)
-        self.db.config.register(self)
 
     def set_logfile(self):
         """
