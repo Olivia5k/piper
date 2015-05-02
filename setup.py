@@ -13,6 +13,7 @@ install_requires = (
     'blessings>=1.6,<2.0.0a0',
     'facterpy>=0.1,<1.0a0',
     'jsonschema>=2.3.0,<3.0.0a0',
+    'rethinkdb>=2.0.0-1,<3.0.0a0',
     'six>=1.9.0,<2.0.0a0',
 )
 
