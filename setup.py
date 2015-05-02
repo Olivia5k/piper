@@ -14,6 +14,7 @@ install_requires = (
     'facterpy>=0.1,<1.0a0',
     'jsonschema>=2.3.0,<3.0.0a0',
     'six>=1.9.0,<2.0.0a0',
+    'sh>=1.11,<2.0a0',
 )
 
 tests_require = (
