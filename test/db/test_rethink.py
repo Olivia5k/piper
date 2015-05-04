@@ -1,8 +1,46 @@
+import os
+import time
+import rethinkdb as rdb
+
 from piper.db.rethink import RethinkDB
 
 from mock import Mock
 from mock import call
 from mock import patch
+
+import pytest
+
+
+@pytest.fixture()
+def rethink(request):
+    """
+    Set up a test database in Rethink and return a piper.db.rethink.RethinkDB
+    instance.
+
+    Tears down the database once done.
+
+    """
+
+    conn = rdb.connect(
+        host=os.getenv('RETHINKDB_TEST_HOST', "localhost"),
+        port=os.getenv('RETHINKDB_TEST_PORT', 28015),
+    )
+
+    db_name = 'piper_test_{0}'.format(str(time.time()).replace('.', '_'))
+    rdb.db_create(db_name).run(conn)
+    conn.use(db_name)
+
+    rethink = RethinkDB()
+    rethink.conn = conn  # Ugly faking to make the manager creation roll.
+    rethink.create_tables(conn)
+
+    def fin():
+        rdb.db_drop(db_name).run(conn)
+        pass
+
+    request.addfinalizer(fin)
+
+    return rethink
 
 
 class RethinkDbTest(object):
@@ -136,3 +174,8 @@ class TestRethinkDbCreateTable(RethinkDbTest):
 
         assert ret is True
         table_create.assert_called_once_with(self.manager.table_name)
+
+
+class TestRethinkDbIntegration(object):
+    def test_insertion(self, rethink):
+        pass
