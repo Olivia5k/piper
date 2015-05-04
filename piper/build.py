@@ -119,11 +119,15 @@ class Build(LazyDatabaseMixin):
 
         for key in self.FIELDS_TO_DB:
             val = getattr(self, key, None)
-            if val is not None:
-                # Handling of special fields with raw notations
-                if hasattr(val, 'raw'):
-                    val = val.raw
-                ret[key] = val
+            if key == 'id' and val is None:
+                # id cannot be sent as a null value because the database
+                # will be sad.
+                continue
+
+            # Handling of special fields with raw notations
+            if hasattr(val, 'raw'):
+                val = val.raw
+            ret[key] = val
 
         # Set the timestamp so that the database doesn't need to care. The
         # timestamp will technically be a bit earlier than the insertion, but
