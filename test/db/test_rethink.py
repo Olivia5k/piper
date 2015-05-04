@@ -3,12 +3,19 @@ import time
 import rethinkdb as rdb
 
 from piper.db.rethink import RethinkDB
+from piper.build import Build
 
 from mock import Mock
 from mock import call
 from mock import patch
 
 import pytest
+from test import utils
+
+
+@pytest.fixture
+def piper():
+    return utils.BASE_CONFIG
 
 
 @pytest.fixture()
@@ -177,5 +184,35 @@ class TestRethinkDbCreateTable(RethinkDbTest):
 
 
 class TestRethinkDbIntegration(object):
-    def test_insertion(self, rethink):
-        pass
+    def test_build_add(self, rethink, piper):
+        """
+        Assert that one build was added
+
+        """
+
+        build = Build(piper)
+        rethink.build.add(build)
+
+        ret = rethink.build.table.run(rethink.conn)
+        assert len(ret.items) == 1
+
+    def test_build_update(self, rethink, piper):
+        """
+        Assert that build can be updated.
+
+        """
+
+        build = Build(piper)
+        id = rethink.build.add(build)
+        build.id = id
+
+        ret = rethink.build.table.run(rethink.conn).next()
+        assert ret['success'] is None
+
+        build.success = True
+        rethink.build.update(build)
+
+        ret = rethink.build.table.run(rethink.conn)
+        assert len(ret.items) == 1
+        item = ret.next()
+        assert item['success'] is True
