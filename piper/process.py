@@ -4,7 +4,7 @@ import sh
 from piper.logging import SEPARATOR
 
 
-class Process(object):
+class Process:
     """
     Helper class for running processes
 

@@ -7,7 +7,7 @@ from piper import config
 import mock
 
 
-class TestEntry(object):
+class TestEntry:
     @mock.patch('piper.cli.cmd_piperd.CLI')
     def test_calls(self, clibase):
         self.mock = mock.Mock()
@@ -26,7 +26,7 @@ class TestEntry(object):
         assert ret is clibase.return_value.entry.return_value
 
 
-class TestEntryIntegration(object):
+class TestEntryIntegration:
     @mock.patch('piper.api.api.Flask')
     def test_api_start(self, flask):
         cmd_piperd.entry(['api', 'start'])

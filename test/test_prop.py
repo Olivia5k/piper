@@ -8,7 +8,7 @@ from piper.prop import PropCLI
 from piper.prop import PropValidationError
 
 
-class PropTest(object):
+class PropTest:
     def setup_method(self, method):
         self.key = 'nocturnal.rites'
         self.value = 'awakening'
@@ -17,13 +17,13 @@ class PropTest(object):
         self.prop.db = mock.Mock()
 
 
-class PropSourceTest(object):
+class PropSourceTest:
     def setup_method(self, method):
         self.build = mock.Mock()
         self.prop = PropSource()
 
 
-class PropCLITest(object):
+class PropCLITest:
     def setup_method(self, method):
         self.config = mock.Mock()
         self.cli = PropCLI(self.config)
@@ -155,7 +155,7 @@ class TestPropSourceFlatten(PropSourceTest):
         }
 
 
-class TestFacterPropGenerate(object):
+class TestFacterPropGenerate:
     @mock.patch('piper.prop.FacterProp')
     @mock.patch('facter.Facter')
     def test_generate(self, Facter, FacterProp):

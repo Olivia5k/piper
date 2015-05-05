@@ -4,7 +4,7 @@ import rethinkdb as rdb
 from piper.db import core as db
 
 
-class RethinkManager(object):
+class RethinkManager:
     def __init__(self, db):
         self.db = db
         self.conn = db.conn

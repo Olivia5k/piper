@@ -6,7 +6,7 @@ from piper.build import ExecCLI
 from test.utils import BASE_CONFIG
 
 
-class BuildTest(object):
+class BuildTest:
     def setup_method(self, method):
         self.build = Build(mock.MagicMock())
         self.base_config = BASE_CONFIG
@@ -65,7 +65,7 @@ class TestBuildRun(BuildTest):
         assert ret is True
 
 
-class TestBuildSetVersion(object):
+class TestBuildSetVersion:
     def setup_method(self, method):
         self.version = '0.0.0.0.0.0.0.0.1-beta'
         self.cls = mock.Mock()
@@ -89,7 +89,7 @@ class TestBuildSetVersion(object):
         self.cls.return_value.validate.assert_called_once_with()
 
 
-class TestBuildConfigureEnv(object):
+class TestBuildConfigureEnv:
     def setup_method(self, method):
         env_key = 'local'
         self.cls_key = 'unisonic.KingForADay'
@@ -118,7 +118,7 @@ class TestBuildConfigureEnv(object):
         self.cls.return_value.validate.assert_called_once_with()
 
 
-class TestBuildConfigureSteps(object):
+class TestBuildConfigureSteps:
     def setup_method(self, method):
         self.step_key = 'local'
         self.raw = {
@@ -156,7 +156,7 @@ class TestBuildConfigureSteps(object):
             cls.return_value.validate.assert_called_once_with()
 
 
-class TestBuildConfigurePipeline(object):
+class TestBuildConfigurePipeline:
     def setup_method(self, method):
         self.step_keys = ('bidubidappa', 'dubop', 'schuwappa')
         self.pipeline_key = 'mmmbop'
@@ -185,7 +185,7 @@ class TestBuildConfigurePipeline(object):
             assert self.build.order[x] is self.steps[x]
 
 
-class TestBuildExecute(object):
+class TestBuildExecute:
     def setup_method(self, method):
         self.build = Build(mock.Mock())
         self.build.order = [mock.Mock() for _ in range(3)]
@@ -309,7 +309,7 @@ class TestBuildUnlockAgent(BuildTest):
         self.build.db.agent.unlock.assert_called_once_with(self.build)
 
 
-class TestExecCLIRun(object):
+class TestExecCLIRun:
     def setup_method(self, method):
         self.config = mock.Mock()
         self.cli = ExecCLI(self.config)

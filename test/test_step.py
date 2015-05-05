@@ -5,7 +5,7 @@ import mock
 import pytest
 
 
-class StepTest(object):
+class StepTest:
     def setup_method(self, method):
         self.build = mock.Mock()
         self.key = 'test'
@@ -21,7 +21,7 @@ class StepTest(object):
         self.step = Step(self.build, self.schema, self.key)
 
 
-class CommandLineStepTest(object):
+class CommandLineStepTest:
     def setup_method(self, method):
         self.build = mock.Mock()
         self.key = 'test'

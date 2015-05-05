@@ -2,7 +2,7 @@ import logbook
 import jsonschema
 
 
-class DynamicItem(object):
+class DynamicItem:
     """
     Dynamic base class that defines things all Piper classes need.
 

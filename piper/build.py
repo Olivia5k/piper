@@ -306,7 +306,7 @@ class Build(LazyDatabaseMixin):
         self.db.agent.unlock(self)
 
 
-class ExecCLI(object):
+class ExecCLI:
     def __init__(self, config):
         self.config = config
 

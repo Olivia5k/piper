@@ -3,7 +3,7 @@ import logbook
 from piper import utils
 
 
-class VCS(object):
+class VCS:
     def __init__(self, name, root_url):
         self.name = name
         self.root_url = root_url

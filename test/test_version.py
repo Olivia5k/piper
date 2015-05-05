@@ -7,7 +7,7 @@ import pytest
 import mock
 
 
-class StaticVersionTest(object):
+class StaticVersionTest:
     def setup_method(self, method):
         self.build = mock.Mock()
         self.v = '32.1.12'
@@ -18,7 +18,7 @@ class StaticVersionTest(object):
         self.version = StaticVersion(self.build, self.raw)
 
 
-class GitVersionTest(object):
+class GitVersionTest:
     def setup_method(self, method):
         self.build = mock.Mock()
         self.raw = {
@@ -27,14 +27,14 @@ class GitVersionTest(object):
         self.git = GitVersion(self.build, self.raw)
 
 
-class TestVersionValidate(object):
+class TestVersionValidate:
     def test_broken_schema(self):
         version = Version(mock.Mock(), mock.Mock(the_final_countdown=True))
         with pytest.raises(jsonschema.exceptions.ValidationError):
             version.validate()
 
 
-class TestVersionGetVersion(object):
+class TestVersionGetVersion:
     def test_not_implemented(self):
         version = Version(mock.Mock(), mock.Mock())
         with pytest.raises(NotImplementedError):
