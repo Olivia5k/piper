@@ -43,8 +43,8 @@ class BuildManager(RethinkManager, db.BuildManager):
         data = build.as_dict()
         return self.table.update(data).run(self.conn)
 
-    def get(self, build_id):
-        raise NotImplementedError()
+    def get(self, id):
+        return self.table.get(id).run(self.conn)
 
     def all(self):
         raise NotImplementedError()
