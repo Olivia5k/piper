@@ -30,7 +30,6 @@ class TestApiCLISetup(object):
 
         api_calls = [mock.call(self.modules[0].RESOURCES[0], '/api/venus')]
         self.cli.api.add_resource.assert_has_calls(api_calls)
-        self.cli.patch_json.assert_called_once_with()
 
     def test_multiple_modules(self):
         self.modules = (mock.Mock(), mock.Mock(), mock.Mock())
@@ -70,17 +69,6 @@ class TestApiCLISetup(object):
         ]
         self.cli.api.add_resource.assert_has_calls(api_calls)
         self.assert_config()
-
-
-class TestApiCLIPatchJson(object):
-    def setup_method(self, method):
-        self.cli = ApiCLI(mock.Mock())
-        self.cli.db = mock.Mock()
-
-    @mock.patch('piper.api.api.rest_json')
-    def test_patch(self, rj):
-        self.cli.patch_json()
-        rj.settings.update.assert_called_once_with(self.cli.db.json_settings)
 
 
 class TestApiCLIRun(object):

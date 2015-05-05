@@ -8,11 +8,11 @@ install_requires = (
     'Flask-RESTful>=0.3.2,<1.0.0a0',
     'Logbook>=0.9.0,<1.0.0a0',
     'PyYAML>=3.11,<4.0a0',
-    'SQLAlchemy==0.9.7',  # Purposefully on hold
     'ago>=0.0.6,<1.0.0a0',
     'blessings>=1.6,<2.0.0a0',
     'facterpy>=0.1,<1.0a0',
     'jsonschema>=2.3.0,<3.0.0a0',
+    'rethinkdb>=2.0.0-1,<3.0.0a0',
     'six>=1.9.0,<2.0.0a0',
     'sh>=1.11,<2.0a0',
 )

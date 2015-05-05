@@ -1,11 +1,9 @@
 import mock
 
-from piper.config import BuildConfig
 from piper.build import Build
 from piper.build import ExecCLI
 
 from test.utils import BASE_CONFIG
-from test.utils import SQLAIntegration
 
 
 class BuildTest(object):
@@ -243,16 +241,8 @@ class TestBuildAddBuild(BuildTest):
         self.build.db = mock.Mock()
         self.build.add_build()
 
-        assert self.build.ref is self.build.db.build.add.return_value
+        assert self.build.id is self.build.db.build.add.return_value
         self.build.db.build.add.assert_called_once_with(self.build)
-
-    def test_configuration_is_added(self):
-        self.build.db = mock.Mock()
-        self.build.add_build()
-
-        self.build.db.config.register.assert_called_once_with(
-            self.build
-        )
 
 
 class TestBuildFinish(BuildTest):
@@ -266,11 +256,10 @@ class TestBuildFinish(BuildTest):
     def test_build_is_updated_in_database(self, now, human):
         self.build.finish()
 
-        assert self.build.end is now.return_value
+        assert self.build.ended is now.return_value
         now.assert_called_once_with()
         self.build.db.build.update.assert_called_once_with(
             self.build,
-            ended=now.return_value
         )
 
 
@@ -339,47 +328,3 @@ class TestExecCLIRun(object):
         ret = self.cli.run()
 
         assert ret == 1
-
-
-class TestBuildIntegration(SQLAIntegration):
-    def setup_method(self, method):
-        super(TestBuildIntegration, self).setup_method(method)
-        self.raw_config = {
-            'version': {
-                'class': 'piper.version.StaticVersion',
-                'version': '0.0.1',
-            },
-            'envs': {
-                'local': {
-                    'class': 'piper.env.Env',
-                    'requirements': None,
-                }
-            },
-            'steps': {
-                'test': {
-                    'class': 'piper.step.CommandLineStep',
-                    'command': 'true',
-                    'requirements': None,
-                },
-            },
-            'pipelines': {
-                'test': [
-                    'test',
-                ],
-            },
-            'db': {
-                'class': 'piper.db.SQLAlchemyDB',
-                'host': self.db_host,
-            },
-        }
-
-        self.config = BuildConfig(raw=self.raw_config).load()
-
-    def test_build_with_one_successful_step(self):
-        self.config.pipeline = 'test'
-        self.config.env = 'local'
-        self.build = Build(self.config)
-
-        ret = self.build.run()
-
-        assert ret is True

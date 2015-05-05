@@ -1,6 +1,5 @@
 from flask import Flask
 from flask.ext.restful import Api
-from flask.ext.restful.representations import json as rest_json
 
 from piper.api import build
 from piper.db.core import LazyDatabaseMixin
@@ -23,14 +22,7 @@ class ApiCLI(LazyDatabaseMixin):
     def get_modules(self):  # pragma: nocover
         return (build,)
 
-    def patch_json(self):
-        # Patch the settings so that we get a proper JSON serializer for
-        # whatever kind of objects we are going to return.
-        rest_json.settings.update(self.db.json_settings)
-
     def setup(self):
-        self.patch_json()
-
         for mod in self.get_modules():
             for resource in mod.RESOURCES:
                 # Give the configuration to the resource.

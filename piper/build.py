@@ -18,12 +18,31 @@ class Build(LazyDatabaseMixin):
 
     """
 
+    FIELDS_TO_DB = (
+        # Main fields
+        'id',
+        'agent',
+        'config',
+
+        # Booleans
+        'success',
+        'crashed',
+
+        # String fields
+        'status',
+
+        # Timestamps
+        'started',
+        'ended',
+        'created',
+    )
+
     def __init__(self, config):
         self.config = config
 
         self.vcs = GitVCS('github', 'git@github.com')
 
-        self.start = utils.now()
+        self.started = utils.now()
 
         self.id = None
         self.version = None
@@ -54,15 +73,15 @@ class Build(LazyDatabaseMixin):
         return self.success
 
     def finish(self):
-        self.end = utils.now()
-        self.db.build.update(self, ended=self.end)
+        self.ended = utils.now()
+        self.db.build.update(self)
 
         verb = 'finished successfully in'
         if not self.success:
             verb = 'failed after'
 
         ts = ago.human(
-            self.end - self.start,
+            self.ended - self.started,
             precision=5,
             past_tense='%s {0}' % verb  # hee hee
         )
@@ -90,6 +109,33 @@ class Build(LazyDatabaseMixin):
 
         self.setup_env()
 
+    def as_dict(self):
+        """
+        Generate a dict representation of the build, suitable for DB use.
+
+        """
+
+        ret = {}
+
+        for key in self.FIELDS_TO_DB:
+            val = getattr(self, key, None)
+            if key == 'id' and val is None:
+                # id cannot be sent as a null value because the database
+                # will be sad.
+                continue
+
+            # Handling of special fields with raw notations
+            if hasattr(val, 'raw'):
+                val = val.raw
+            ret[key] = val
+
+        # Set the timestamp so that the database doesn't need to care. The
+        # timestamp will technically be a bit earlier than the insertion, but
+        # that probably doesn't matter much.
+        ret['updated'] = utils.now()
+
+        return ret
+
     def add_build(self):
         """
         Add a build object and its configuration to the database
@@ -98,8 +144,7 @@ class Build(LazyDatabaseMixin):
 
         """
 
-        self.ref = self.db.build.add(self)
-        self.db.config.register(self)
+        self.id = self.db.build.add(self)
 
     def set_logfile(self):
         """
@@ -108,11 +153,12 @@ class Build(LazyDatabaseMixin):
         """
 
         self.log_key = '{0} {1}'.format(
-            self.__class__.__name__, self.ref.id
+            self.__class__.__name__,
+            self.id[:7] if self.id else '',
         )
         self.log = logbook.Logger(self.log_key)
 
-        self.logfile = 'logs/piper/{0}.log'.format(self.ref.id)
+        self.logfile = 'logs/piper/{0}.log'.format(self.id)
         self.log_handler = logging.get_file_logger(self.logfile)
         self.log_handler.push_application()
 
@@ -215,7 +261,7 @@ class Build(LazyDatabaseMixin):
 
         self.status = ''
         # As long as we did not break out of the loop above, the build is
-        # to be deemed succesful.
+        # to be deemed successful.
         if self.success is not False:
             self.success = True
 

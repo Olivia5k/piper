@@ -130,7 +130,7 @@ class TestBuildConfigLoadClasses(BuildConfigTest):
         self.version = 'piper.version.GitVersion'
         self.step = 'piper.step.CommandLineStep'
         self.env = 'piper.env.Env'
-        self.db = 'piper.db.SQLAlchemyDB'
+        self.db = 'piper.db.RethinkDB'
 
     @mock.patch('piper.config.dynamic_load')
     def test_load_classes(self, dl):
@@ -167,7 +167,7 @@ class TestBuildConfigGetDatabase(BuildConfigTest):
     def setup_method(self, method):
         super(TestBuildConfigGetDatabase, self).setup_method(method)
         self.config.raw = self.base_config
-        self.db = 'piper.db.SQLAlchemyDB'
+        self.db = 'piper.db.RethinkDB'
         self.mock = mock.Mock()
         self.config.classes[self.db] = self.mock
 
@@ -215,4 +215,4 @@ class TestAgentConfigValidateConfig(AgentConfigTest):
 class TestAgentConfigCollectClasses(AgentConfigTest):
     def test_collection(self):
         ret = self.config.collect_classes()
-        assert ret == set(['piper.db.SQLAlchemyDB', 'piper.prop.FacterProp'])
+        assert ret == set(['piper.db.RethinkDB', 'piper.prop.FacterProp'])
