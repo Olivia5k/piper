@@ -8,6 +8,7 @@ Huh?
 ----
 
 `piper` does two things:
+
 * It's a build agent. It recieves requests about things it should build and
   subsequently builds it. If you run `piperd start` it will start in daemon
   mode and start listnening for requests.

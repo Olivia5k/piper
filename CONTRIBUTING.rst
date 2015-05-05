@@ -18,6 +18,7 @@ Code and code guidelines
 your code is welcome in a Pull Request!
 
 Things to generally think about:
+
 * Code is always welcome, and discussing in an issue before implementing is
   encouraged.
 * Commit messages should follow the convention_.
@@ -29,22 +30,24 @@ Test naming
 ^^^^^^^^^^^
 
 All functions have a corresponding test class in the corresponding test file:
-```python
-# in piper/lazer.py
-class Lazergun():
-    def pewpew(self):
-        # <code>
-```
+
+.. code-block:: python
+
+   # in piper/lazer.py
+   class Lazergun():
+       def pewpew(self):
+           # <code>
+
 maps to
 
-```python
-# in test/test_lazer.py
-class TestLazergunPewpew():
-    def test_pewpew_case(self):
-        # <test>
-    def test_pewpew_another_case(self):
-        # <test>
-```
+.. code-block:: python
+
+   # in test/test_lazer.py
+   class TestLazergunPewpew():
+       def test_pewpew_case(self):
+           # <test>
+       def test_pewpew_another_case(self):
+           # <test>
 
 The mapping is basically making a test class called
 `Test` + `<class name` + `<method name in CamelCase>`
