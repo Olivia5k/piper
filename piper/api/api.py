@@ -1,15 +1,13 @@
-from flask import Flask
-from flask.ext.restful import Api
+import asyncio
+import json
 
-from piper.api import build
+from aiohttp import web
 from piper.db.core import LazyDatabaseMixin
 
 
 class ApiCLI(LazyDatabaseMixin):
     def __init__(self, config):
         self.config = config
-        self.app = Flask('piper')
-        self.api = Api(self.app)
 
     def compose(self, parser):  # pragma: nocover
         api = parser.add_parser('api', help='Control the REST API')
@@ -19,19 +17,132 @@ class ApiCLI(LazyDatabaseMixin):
 
         return 'api', self.run
 
-    def get_modules(self):  # pragma: nocover
-        return (build,)
+    @property
+    def modules(self):
+        """
+        Get a tuple of the modules that should be in the API.
+
+        This should probably be programmatically built rather than statically.
+
+        """
+
+        from piper.build import BuildAPI
+
+        return (
+            BuildAPI(self.config),
+        )
 
     def setup(self):
-        for mod in self.get_modules():
-            for resource in mod.RESOURCES:
-                # Give the configuration to the resource.
-                # There might be a better way of doing this, but since we are
-                # not doing the instantiation of the resource objects it's
-                # difficult to actually pass arguments to it.
-                resource.config = self.config
-                self.api.add_resource(resource, '/api' + resource.root)
+        @asyncio.coroutine
+        def init(loop):
+            app = web.Application(loop=loop)
+
+            for mod in self.modules:
+                mod.setup(app)
+
+            srv = yield from loop.create_server(
+                app.make_handler(),
+                '127.0.0.1',
+                8000
+            )
+
+            print("Server started at http://127.0.0.1:8000")
+            return srv
+
+        self.loop = asyncio.get_event_loop()
+        self.loop.run_until_complete(init(self.loop))
 
     def run(self):
         self.setup()
-        self.app.run(debug=True)
+        self.loop.run_forever()
+
+
+class RESTful(LazyDatabaseMixin):
+    """
+    Abstract class pertaining to a RESTful API endpoint for aiohttp.
+
+    Anything that inherits for this has to set `self.routes` to be a tuple like
+    .. code-block::
+       routes = (
+          ("POST", "/foo", self.post),
+          ("GET", "/foo", self.get),
+       )
+
+    When :func:`setup` is ran, the routes will be added to the aiohttp app.
+    See :class:`piper.build.BuildAPI` for an example implementation.
+
+    """
+
+    def __init__(self, config):
+        self.config = config
+
+    def setup(self, app):
+        """
+        Register the routes to the application.
+
+        Will decorate all methods with :func:`endpoint`
+
+        """
+
+        for method, route, function in self.routes:
+            app.router.add_route(
+                method,
+                route,
+                self.endpoint(function),
+            )
+
+    def endpoint(self, func):
+        """
+        Decorator method that takes care of post processing responses.
+
+        Adds handling of responses, additional defaulting of status codes,
+        JSON encoding and header adding.
+
+        """
+
+        def wrap(*args, **kwargs):
+            ret = func(*args, **kwargs)
+
+            if isinstance(ret, tuple):
+                # There was a status code, yay!
+                body, code = ret
+            else:
+                # No status code, assume 200!
+                body = ret
+                code = 200
+
+            # TODO: Add JSONschema validation
+            body = json.dumps(
+                body,
+                indent=2,
+                sort_keys=True,
+                default=date_handler,
+            )
+
+            response = web.Response(
+                body=body.encode(),
+                status=code,
+                headers={'content-type': 'application/json'}
+            )
+            return response
+
+        return asyncio.coroutine(wrap)
+
+
+def date_handler(obj):
+    """
+    This is why we cannot have nice things.
+    https://stackoverflow.com/questions/455580/
+
+    """
+
+    if hasattr(obj, 'isoformat'):
+        return obj.isoformat()
+    elif isinstance(obj, ...):
+        return ...
+    else:
+        raise TypeError(
+            'Object of type %s with value of %s is not JSON serializable' % (
+                type(obj), repr(obj)
+            )
+        )

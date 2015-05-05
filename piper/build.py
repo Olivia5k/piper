@@ -3,6 +3,7 @@ import logbook
 
 from piper.db.core import LazyDatabaseMixin
 from piper.vcs import GitVCS
+from piper.api.api import RESTful
 from piper import utils
 from piper import logging
 
@@ -333,3 +334,30 @@ class ExecCLI:
         success = Build(self.config).run()
 
         return 0 if success else 1
+
+
+class BuildAPI(RESTful):
+    """
+    API endpoint for CRUD operations on builds.
+
+    """
+
+    def __init__(self, config):
+        super().__init__(config)
+        self.routes = (
+            ('GET', '/builds/{id}', self.get),
+        )
+
+    def get(self, request):
+        """
+        Get one build.
+
+        """
+
+        id = request.match_info.get('id')
+        build = self.db.build.get(id)
+
+        if build is None:
+            return {}, 404
+
+        return build
