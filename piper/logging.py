@@ -50,7 +50,7 @@ DEFAULT_LOGFILE_FORMAT_STRING = (
 SEPARATOR = ': '
 
 
-class Colorizer(object):
+class Colorizer:
     terminal = blessings.Terminal()
 
     def __init__(self, regexp, formatting, aborting=False, flags=0):

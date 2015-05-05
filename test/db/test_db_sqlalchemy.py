@@ -25,7 +25,7 @@ import mock
 import pytest
 
 
-class ManagerTest(object):
+class ManagerTest:
     def setup_method(self, method):
         self.db = mock.Mock(_session=None)
         self.build = mock.Mock()
@@ -530,7 +530,7 @@ class TestSQLAlchemyDBSetupManagers(SQLATest):
         assert self.db.hehe is manager.return_value
 
 
-class TestSQLAlchemyManagerGetOrCreate(object):
+class TestSQLAlchemyManagerGetOrCreate:
     def setup_method(self, method):
         self.manager = SQLAlchemyManager(mock.Mock())
         self.session = mock.Mock()
@@ -573,7 +573,7 @@ class TestSQLAlchemyManagerGetOrCreate(object):
         self.filter.assert_called_once_with(**self.filtered_keys)
 
 
-class TestSQLAlchemyManagerInSession(object):
+class TestSQLAlchemyManagerInSession:
     def setup_method(self, method):
         self.db = mock.Mock(_session=None)
         self.sql = SQLAlchemyManager(self.db)

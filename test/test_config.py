@@ -12,7 +12,7 @@ from piper.config import AgentConfig
 from test import utils
 
 
-class BuildConfigTest(object):
+class BuildConfigTest:
     def setup_method(self, method):
         self.config = BuildConfig()
         # Without the deepcopy the tests that check for missing keys will
@@ -20,13 +20,13 @@ class BuildConfigTest(object):
         self.base_config = copy.deepcopy(utils.BASE_CONFIG)
 
 
-class AgentConfigTest(object):
+class AgentConfigTest:
     def setup_method(self, method):
         self.config = AgentConfig()
         self.config.raw = copy.deepcopy(utils.AGENT_CONFIG)
 
 
-class TestConfigLoad(object):
+class TestConfigLoad:
     def test_raw_configuration(self):
         self.raw = {
             'tiger army': 'pain',
@@ -41,7 +41,7 @@ class TestConfigLoad(object):
         assert self.config.raw == self.raw
 
 
-class TestConfigCollectClasses(object):
+class TestConfigCollectClasses:
     def test_load_classes_loads_nested(self):
         self.raw = {
             'avantasia': {
@@ -182,7 +182,7 @@ class TestBuildConfigMergeNamespace(BuildConfigTest):
         self.correct = 'happy for the rest of your life'
 
         # Can't use mocks because they have, like, a million properties.
-        class FakeNS(object):
+        class FakeNS:
             key = self.correct
             _internal = 'never make a pretty woman your wife'
 

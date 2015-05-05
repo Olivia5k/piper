@@ -4,7 +4,7 @@ import logbook
 import mock
 
 
-class TestCLIEntry(object):
+class TestCLIEntry:
     def setup_method(self, method):
         self.cli = CLI('test', (mock.Mock(),), mock.Mock())
 
@@ -45,7 +45,7 @@ class TestCLIEntry(object):
         self.parser.print_help.assert_called_once_with()
 
 
-class TestCLIBuildParser(object):
+class TestCLIBuildParser:
     def setup_method(self, method):
         self.name = 'ophelia',
         self.classes = (mock.Mock(), mock.Mock())
@@ -77,7 +77,7 @@ class TestCLIBuildParser(object):
         )
 
 
-class TestCLIGetRunners(object):
+class TestCLIGetRunners:
     def setup_method(self, method):
         self.name = 'kai',
 
@@ -105,7 +105,7 @@ class TestCLIGetRunners(object):
             cls.return_value.compose.assert_called_once_with(self.sub)
 
 
-class TestCLISetDebug(object):
+class TestCLISetDebug:
     def setup_method(self, method):
         self.cli = CLI('test', (mock.Mock(),), mock.Mock())
         self.cli.log_handlers = mock.Mock(), mock.Mock(), mock.Mock()

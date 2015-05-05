@@ -5,7 +5,7 @@ from piper.utils import oneshot
 import pytest
 
 
-class TestDynamicLoad(object):
+class TestDynamicLoad:
     def test_proper_load(self):
         cls = dynamic_load('piper.utils.LimitedSizeDict')
         assert cls is LimitedSizeDict
@@ -15,7 +15,7 @@ class TestDynamicLoad(object):
             dynamic_load('gammaray.empire.Avalon')
 
 
-class TestOneshot(object):
+class TestOneshot:
     def test_execution(self):
         ret = oneshot('echo lolz')
         assert ret == 'lolz'

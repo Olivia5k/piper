@@ -11,7 +11,7 @@ with open('piperd.yml') as f:
     AGENT_CONFIG = yaml.safe_load(f.read())
 
 
-class SQLATest(object):
+class SQLATest:
     """
     Test base for tests that want a database setup
 
