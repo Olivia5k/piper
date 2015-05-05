@@ -5,7 +5,7 @@ import mock
 import pytest
 
 
-class TestDynamicItemValidateRequirements(object):
+class TestDynamicItemValidateRequirements:
     def setup_method(self, method):
         self.build = mock.Mock()
 

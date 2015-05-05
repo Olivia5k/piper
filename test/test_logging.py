@@ -5,7 +5,7 @@ from piper.logging import SEPARATOR
 import mock
 
 
-class TestBlessingsStringFormatterColorize(object):
+class TestBlessingsStringFormatterColorize:
     def setup_method(self, method):
         self.color = 'color_code'
         self.string = 'mock'
@@ -47,7 +47,7 @@ class TestBlessingsStringFormatterColorize(object):
         assert md5.call_count == 1
 
 
-class TestBlessingsStringFormatterFormatRecord(object):
+class TestBlessingsStringFormatterFormatRecord:
     def setup_method(self, method):
         color = 'black'
         channel = 'no{0}return'.format(SEPARATOR)
@@ -84,7 +84,7 @@ class TestBlessingsStringFormatterFormatRecord(object):
         self.bsf._formatter.format.assert_called_once_with(**self.kwargs)
 
 
-class TestBlessingsStringFormatterPrepareRecord(object):
+class TestBlessingsStringFormatterPrepareRecord:
     def setup_method(self, method):
         self.rc = mock.Mock()
         self.colorizer = mock.Mock()
@@ -101,7 +101,7 @@ class TestBlessingsStringFormatterPrepareRecord(object):
         assert self.colorizer.colorize.call_count == 1
 
 
-class TestColorizerColorize(object):
+class TestColorizerColorize:
     def test_stop_if_no_matches(self):
         color = Colorizer('regexp', 'replace')
         done, ret = color.colorize('message')

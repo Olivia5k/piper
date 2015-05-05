@@ -35,7 +35,7 @@ class ConfigError(Exception):
     pass
 
 
-class Config(object):
+class Config:
     def __init__(self, filename=None, raw=None):
         args = (filename, raw)
         assert any(args), 'Need to specify `filename` or `raw`'

@@ -3,7 +3,7 @@ from piper.api.api import ApiCLI
 import mock
 
 
-class TestApiCLISetup(object):
+class TestApiCLISetup:
     def setup_method(self, method):
         self.config = mock.Mock()
 
@@ -72,7 +72,7 @@ class TestApiCLISetup(object):
         self.assert_config()
 
 
-class TestApiCLIPatchJson(object):
+class TestApiCLIPatchJson:
     def setup_method(self, method):
         self.cli = ApiCLI(mock.Mock())
         self.cli.db = mock.Mock()
@@ -83,7 +83,7 @@ class TestApiCLIPatchJson(object):
         rj.settings.update.assert_called_once_with(self.cli.db.json_settings)
 
 
-class TestApiCLIRun(object):
+class TestApiCLIRun:
     def setup_method(self, method):
         self.config = mock.Mock()
 

@@ -28,7 +28,7 @@ Base = declarative_base()
 Session = sessionmaker()
 
 
-class SQLAlchemyManager(object):
+class SQLAlchemyManager:
     def __init__(self, db):
         self.db = db
 

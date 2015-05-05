@@ -7,7 +7,7 @@ from piper.db.core import DbCLI
 from piper.db.core import Database
 
 
-class DbCLITest(object):
+class DbCLITest:
     def setup_method(self, method):
         self.config = mock.Mock()
         self.cli = DbCLI(self.config)
@@ -23,7 +23,7 @@ class TestDbCLIRun(DbCLITest):
         self.cli.db.init.assert_called_once_with(self.config)
 
 
-class TestDatabase(object):
+class TestDatabase:
     def setup_method(self, method):
         self.db = Database()
 
@@ -54,7 +54,7 @@ class TestDatabase(object):
         self.missing('property', 'update')
 
 
-class TestLazyDatabaseMixinDb(object):
+class TestLazyDatabaseMixinDb:
     def setup_method(self, method):
         self.ldm = LazyDatabaseMixin()
 

@@ -17,7 +17,7 @@ class PropValidationError(Exception):
         super(PropValidationError, self).__init__(self.msg)
 
 
-class PropSource(object):
+class PropSource:
     def __init__(self):
         self._props = None
 

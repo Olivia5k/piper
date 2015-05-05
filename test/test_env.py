@@ -8,7 +8,7 @@ from piper.env import TempDirEnv
 from test.utils import BASE_CONFIG
 
 
-class EnvTest(object):
+class EnvTest:
     def setup_method(self, method):
         self.build = mock.Mock()
         self.env = Env(self.build, BASE_CONFIG['envs']['local'])
@@ -42,7 +42,7 @@ class TestEnvExecute(EnvTest):
         assert ret is procobj
 
 
-class TestTempDirEnvSetup(object):
+class TestTempDirEnvSetup:
     def setup_method(self, method):
         self.build = mock.Mock()
         self.env = TempDirEnv(self.build, mock.MagicMock())
@@ -68,7 +68,7 @@ class TestTempDirEnvSetup(object):
             self.env.validate()
 
 
-class TestTempDirEnvTeardown(object):
+class TestTempDirEnvTeardown:
     def setup_method(self, method):
         self.build = mock.Mock()
         self.env = TempDirEnv(self.build, mock.MagicMock())
@@ -90,7 +90,7 @@ class TestTempDirEnvTeardown(object):
         assert rmtree.call_count == 0
 
 
-class TestTempDirEnvExecute(object):
+class TestTempDirEnvExecute:
     def setup_method(self, method):
         self.build = mock.Mock()
         self.env = TempDirEnv(self.build, mock.MagicMock())
