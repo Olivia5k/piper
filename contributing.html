@@ -183,11 +183,10 @@ will download all dependencies.</p>
 <h2>Code and code guidelines<a class="headerlink" href="#code-and-code-guidelines" title="Permalink to this headline">¶</a></h2>
 <p><cite>piper</cite> tests itself, of course! If <cite>piper</cite> can build itself with <cite>piper exec</cite>,
 your code is welcome in a Pull Request!</p>
-<p>Things to generally think about:
-* Code is always welcome, and discussing in an issue before implementing is</p>
-<blockquote>
-<div>encouraged.</div></blockquote>
+<p>Things to generally think about:</p>
 <ul class="simple">
+<li>Code is always welcome, and discussing in an issue before implementing is
+encouraged.</li>
 <li>Commit messages should follow the <a class="reference external" href="http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html">convention</a>.</li>
 <li>Unit tests are required, integration tests are encouraged.</li>
 <li>If unsure, strive to emulate the look and feel of the rest of the code.
@@ -195,30 +194,22 @@ Consitency is king!</li>
 </ul>
 <div class="section" id="test-naming">
 <h3>Test naming<a class="headerlink" href="#test-naming" title="Permalink to this headline">¶</a></h3>
-<p>All functions have a corresponding test class in the corresponding test file:
-<a href="#id1"><span class="problematic" id="id2">``</span></a><a href="#id3"><span class="problematic" id="id4">`</span></a>python
-# in piper/lazer.py
-class Lazergun():</p>
-<blockquote>
-<div><dl class="docutils">
-<dt>def pewpew(self):</dt>
-<dd># &lt;code&gt;</dd>
-</dl>
-</div></blockquote>
-<p><a href="#id5"><span class="problematic" id="id6">``</span></a>`
-maps to</p>
-<p><a href="#id7"><span class="problematic" id="id8">``</span></a><a href="#id9"><span class="problematic" id="id10">`</span></a>python
-# in test/test_lazer.py
-class TestLazergunPewpew():</p>
-<blockquote>
-<div><dl class="docutils">
-<dt>def test_pewpew_case(self):</dt>
-<dd># &lt;test&gt;</dd>
-<dt>def test_pewpew_another_case(self):</dt>
-<dd># &lt;test&gt;</dd>
-</dl>
-</div></blockquote>
-<p><a href="#id11"><span class="problematic" id="id12">``</span></a><a href="#id13"><span class="problematic" id="id14">`</span></a></p>
+<p>All functions have a corresponding test class in the corresponding test file:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># in piper/lazer.py</span>
+<span class="k">class</span> <span class="nc">Lazergun</span><span class="p">():</span>
+    <span class="k">def</span> <span class="nf">pewpew</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c"># &lt;code&gt;</span>
+</pre></div>
+</div>
+<p>maps to</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># in test/test_lazer.py</span>
+<span class="k">class</span> <span class="nc">TestLazergunPewpew</span><span class="p">():</span>
+    <span class="k">def</span> <span class="nf">test_pewpew_case</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c"># &lt;test&gt;</span>
+    <span class="k">def</span> <span class="nf">test_pewpew_another_case</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c"># &lt;test&gt;</span>
+</pre></div>
+</div>
 <p>The mapping is basically making a test class called
 <cite>Test</cite> + <cite>&lt;class name</cite> + <cite>&lt;method name in CamelCase&gt;</cite>
 and adding one test case for all of the cases in that method.
