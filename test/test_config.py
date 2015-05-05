@@ -130,9 +130,8 @@ class TestBuildConfigLoadClasses(BuildConfigTest):
         self.version = 'piper.version.GitVersion'
         self.step = 'piper.step.CommandLineStep'
         self.env = 'piper.env.Env'
-        self.db = 'piper.db.SQLAlchemyDB'
+        self.db = 'piper.db.RethinkDB'
 
-    @pytest.mark.skipif(True, reason="NOT isolated")
     @mock.patch('piper.config.dynamic_load')
     def test_load_classes(self, dl):
         self.config.load_classes()
@@ -168,11 +167,10 @@ class TestBuildConfigGetDatabase(BuildConfigTest):
     def setup_method(self, method):
         super(TestBuildConfigGetDatabase, self).setup_method(method)
         self.config.raw = self.base_config
-        self.db = 'piper.db.SQLAlchemyDB'
+        self.db = 'piper.db.RethinkDB'
         self.mock = mock.Mock()
         self.config.classes[self.db] = self.mock
 
-    @pytest.mark.skipif(True, reason="NOT isolated")
     def test_plain_run(self):
         ret = self.config.get_database()
         assert ret is self.mock.return_value
@@ -215,7 +213,6 @@ class TestAgentConfigValidateConfig(AgentConfigTest):
 
 
 class TestAgentConfigCollectClasses(AgentConfigTest):
-    @pytest.mark.skipif(True, reason="NOT isolated")
     def test_collection(self):
         ret = self.config.collect_classes()
-        assert ret == set(['piper.db.SQLAlchemyDB', 'piper.prop.FacterProp'])
+        assert ret == set(['piper.db.RethinkDB', 'piper.prop.FacterProp'])
