@@ -4,7 +4,7 @@ from piper.api.build import Build
 from piper.api.build import BuildList
 
 
-class TestBuildGet(object):
+class TestBuildGet:
     def setup_method(self, method):
         self.build = Build()
         self.build.db = mock.Mock()
@@ -24,7 +24,7 @@ class TestBuildGet(object):
         assert code == 404
 
 
-class TestBuildListGet(object):
+class TestBuildListGet:
     def setup_method(self, method):
         self.buildlist = BuildList()
         self.buildlist.db = mock.Mock()

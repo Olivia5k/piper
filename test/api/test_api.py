@@ -3,7 +3,7 @@ from piper.api.api import ApiCLI
 import mock
 
 
-class TestApiCLISetup(object):
+class TestApiCLISetup:
     def setup_method(self, method):
         self.config = mock.Mock()
 
@@ -71,7 +71,7 @@ class TestApiCLISetup(object):
         self.assert_config()
 
 
-class TestApiCLIRun(object):
+class TestApiCLIRun:
     def setup_method(self, method):
         self.config = mock.Mock()
 

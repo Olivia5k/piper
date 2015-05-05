@@ -50,7 +50,7 @@ def rethink(request):
     return rethink
 
 
-class RethinkDbTest(object):
+class RethinkDbTest:
     def setup_method(self, method):
         self.rethinkdb = RethinkDB()
         self.config = Mock()
@@ -183,7 +183,7 @@ class TestRethinkDbCreateTable(RethinkDbTest):
         table_create.assert_called_once_with(self.manager.table_name)
 
 
-class TestRethinkDbIntegration(object):
+class TestRethinkDbIntegration:
     def test_build_add(self, rethink, piper):
         """
         Assert that one build was added

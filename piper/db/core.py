@@ -1,7 +1,7 @@
 import logbook
 
 
-class LazyDatabaseMixin(object):
+class LazyDatabaseMixin:
     """
     A mixin class that gives the subclass lazy access to the database layer
 
@@ -30,7 +30,7 @@ class LazyDatabaseMixin(object):
     db = property(_get_db, _set_db)
 
 
-class AgentManager(object):
+class AgentManager:
     def get(self):
         """
         Lazily get an agent.
@@ -59,7 +59,7 @@ class AgentManager(object):
         raise NotImplementedError()
 
 
-class BuildManager(object):
+class BuildManager:
     def add(self, build):
         """
         Register a build to the database.
@@ -111,7 +111,7 @@ class BuildManager(object):
         raise NotImplementedError()
 
 
-class ConfigManager(object):
+class ConfigManager:
     def register(self, build):
         """
         Register a configuration to the database.
@@ -121,7 +121,7 @@ class ConfigManager(object):
         raise NotImplementedError()
 
 
-class ProjectManager(object):
+class ProjectManager:
     def get(self, build):
         """
         Lazily get the project.
@@ -134,7 +134,7 @@ class ProjectManager(object):
         raise NotImplementedError()
 
 
-class VCSManager(object):
+class VCSManager:
     def get(self, build):
         """
         Lazily get the VCS.
@@ -144,7 +144,7 @@ class VCSManager(object):
         raise NotImplementedError()
 
 
-class PropertyManager(object):
+class PropertyManager:
     def update(self):
         """
         Update agent properties.
@@ -154,11 +154,11 @@ class PropertyManager(object):
         raise NotImplementedError()
 
 
-class PropertyNamespaceManager(object):
+class PropertyNamespaceManager:
     pass
 
 
-class Database(object):
+class Database:
     """
     Abstract class representing a persistance layer
 

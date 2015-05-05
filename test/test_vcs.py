@@ -5,7 +5,7 @@ from piper.vcs import VCS
 from piper.vcs import GitVCS
 
 
-class VCSTest(object):
+class VCSTest:
     def setup_method(self, method):
         self.vcs = VCS('name', 'root')
         self.project = 'bourne'
@@ -26,7 +26,7 @@ class TestVCSGetProjectName(VCSTest):
         self.missing('get_project_name', self.project)
 
 
-class TestGitVCSGetProjectName(object):
+class TestGitVCSGetProjectName:
     def setup_method(self, method):
         self.git = GitVCS('horny', 'hearse')
 

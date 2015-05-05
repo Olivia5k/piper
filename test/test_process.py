@@ -5,7 +5,7 @@ from piper.process import Process
 import mock
 
 
-class TestProcessSetup(object):
+class TestProcessSetup:
     def setup_method(self, method):
         self.proc = Process(mock.Mock(), '/usr/bin/empathy world hide', 'key')
 
@@ -16,7 +16,7 @@ class TestProcessSetup(object):
         assert sh_mock.called_once_with('/usr/bin/empathy')
 
 
-class TestProcessRun(object):
+class TestProcessRun:
     def test_run_failure(self):
         self.proc = Process(mock.Mock(), 'ls -l', 'oioi')
         self.proc.sh = mock.MagicMock()
