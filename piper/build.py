@@ -1,11 +1,11 @@
 import ago
 import logbook
 
+from piper import logging
+from piper import utils
+from piper.api import RESTful
 from piper.db.core import LazyDatabaseMixin
 from piper.vcs import GitVCS
-from piper.api.api import RESTful
-from piper import utils
-from piper import logging
 
 
 class Build(LazyDatabaseMixin):

@@ -1,8 +1,8 @@
-from piper.api import api
-from piper.db import core as db
-from piper import prop
+from piper import api
 from piper import config
+from piper import prop
 from piper.cli.cli import CLI
+from piper.db import core as db
 
 
 def entry(args=None):

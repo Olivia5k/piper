@@ -1,5 +1,5 @@
 from piper.cli import cmd_piperd
-from piper.api import api
+from piper import api
 from piper.db import core as db
 from piper import prop
 from piper import config
