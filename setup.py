@@ -23,6 +23,7 @@ tests_require = (
     'tox',
     'sphinx',
     'sphinx_rtd_theme',
+    'ghp-import',
 )
 
 
