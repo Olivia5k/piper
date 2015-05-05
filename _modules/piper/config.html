@@ -1,0 +1,469 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>piper.config &mdash; Piper 0.0.2 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="Piper 0.0.2 documentation" href="../../index.html"/>
+        <link rel="up" title="Module code" href="../index.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+
+        
+          <a href="../../index.html" class="icon icon-home"> Piper
+        
+
+        
+        </a>
+
+        
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+        
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+          
+          
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html">Piper</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../readme.html#huh">Huh?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../readme.html#selling-points">Selling points</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../readme.html#things-piper-lets-other-systems-do-better">Things piper lets other systems do better</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../readme.html#rationale">Rationale</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../readme.html#design">Design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../readme.html#build">Build()</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference/index.html">Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../reference/index.html#packages">Packages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/piper.api.html">piper.api</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../reference/piper.api.html#modules">Modules</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/piper.cli.html">piper.cli</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../reference/piper.cli.html#modules">Modules</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/piper.db.html">piper.db package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../reference/piper.db.html#modules">Modules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../reference/index.html#modules">Modules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/piper.abc.html">piper.abc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/piper.build.html">piper.build</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/piper.config.html">piper.config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/piper.env.html">piper.env</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/piper.logging.html">piper.logging</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/piper.process.html">piper.process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/piper.prop.html">piper.prop</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/piper.schema.html">piper.schema</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/piper.step.html">piper.step</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/piper.utils.html">piper.utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/piper.vcs.html">piper.vcs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/piper.version.html">piper.version</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing to piper</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../contributing.html#development-environment">Development environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../contributing.html#code-and-code-guidelines">Code and code guidelines</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../contributing.html#test-naming">Test naming</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../contributing.html#issue-management">Issue management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../contributing.html#collaborators">Collaborators</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributors.html">Contributors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Change Log</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../changelog.html#unreleased">unreleased</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../changelog.html#id1">0.0.2 - 2015-04-19</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../changelog.html#id2">0.0.1 - 2014-05-20</a></li>
+</ul>
+</li>
+</ul>
+
+          
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">Piper</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      
+    <li>piper.config</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <h1>Source code for piper.config</h1><div class="highlight"><pre>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">yaml</span>
+<span class="kn">import</span> <span class="nn">logbook</span>
+<span class="kn">import</span> <span class="nn">jsonschema</span>
+
+<span class="kn">from</span> <span class="nn">piper.utils</span> <span class="kn">import</span> <span class="n">dynamic_load</span>
+
+
+<span class="n">DB_SCHEMA</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&#39;description&#39;</span><span class="p">:</span> <span class="s">&#39;Database configuration&#39;</span><span class="p">,</span>
+    <span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;object&#39;</span><span class="p">,</span>
+    <span class="s">&#39;required&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;class&#39;</span><span class="p">,</span> <span class="s">&#39;host&#39;</span><span class="p">],</span>
+    <span class="s">&#39;properties&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;class&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s">&#39;description&#39;</span><span class="p">:</span> <span class="s">&#39;The piper.db class to use as DB abstraction&#39;</span><span class="p">,</span>
+            <span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;string&#39;</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s">&#39;host&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s">&#39;description&#39;</span><span class="p">:</span> <span class="s">&#39;The host to connect to&#39;</span><span class="p">,</span>
+            <span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;string&#39;</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s">&#39;user&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s">&#39;description&#39;</span><span class="p">:</span> <span class="s">&#39;The username used for authentication&#39;</span><span class="p">,</span>
+            <span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;string&#39;</span><span class="p">,</span> <span class="s">&#39;null&#39;</span><span class="p">],</span>
+        <span class="p">},</span>
+        <span class="s">&#39;password&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s">&#39;description&#39;</span><span class="p">:</span> <span class="s">&#39;The passord used for authentication&#39;</span><span class="p">,</span>
+            <span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;string&#39;</span><span class="p">,</span> <span class="s">&#39;null&#39;</span><span class="p">],</span>
+        <span class="p">},</span>
+    <span class="p">},</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="ConfigError"><a class="viewcode-back" href="../../reference/piper.config.html#piper.config.ConfigError">[docs]</a><span class="k">class</span> <span class="nc">ConfigError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+</div>
+<div class="viewcode-block" id="Config"><a class="viewcode-back" href="../../reference/piper.config.html#piper.config.Config">[docs]</a><span class="k">class</span> <span class="nc">Config</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">raw</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">raw</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">any</span><span class="p">(</span><span class="n">args</span><span class="p">),</span> <span class="s">&#39;Need to specify `filename` or `raw`&#39;</span>
+        <span class="k">assert</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">args</span><span class="p">),</span> <span class="s">&#39;Cannot specify both &#39;</span> <span class="o">+</span> \
+            <span class="s">&#39;`filename` and `raw` at the same time&#39;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="n">filename</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">raw</span> <span class="o">=</span> <span class="n">raw</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">classes</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span> <span class="o">=</span> <span class="n">logbook</span><span class="o">.</span><span class="n">Logger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Config.load"><a class="viewcode-back" href="../../reference/piper.config.html#piper.config.Config.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&#39;Loading configuration&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load_config</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&#39;Using provided raw configuration.&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate_config</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">load_classes</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span>
+</div>
+<div class="viewcode-block" id="Config.load_config"><a class="viewcode-back" href="../../reference/piper.config.html#piper.config.Config.load_config">[docs]</a>    <span class="k">def</span> <span class="nf">load_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parses the configuration file and dies in flames if there are errors.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">):</span>
+            <span class="n">err</span> <span class="o">=</span> <span class="s">&#39;Config file not found in $PWD. Aborting.&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">config</span><span class="p">:</span>
+            <span class="n">file_data</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">raw</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">file_data</span><span class="p">)</span>
+
+            <span class="k">except</span> <span class="n">yaml</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">ParserError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span>
+                <span class="n">err</span> <span class="o">=</span> <span class="s">&#39;Invalid YAML in {0}. Aborting.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&#39;Configuration file loaded.&#39;</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Config.collect_classes"><a class="viewcode-back" href="../../reference/piper.config.html#piper.config.Config.collect_classes">[docs]</a>    <span class="k">def</span> <span class="nf">collect_classes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">traverse</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+            <span class="c"># yield from :&#39;(</span>
+            <span class="n">ret</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s">&#39;class&#39;</span><span class="p">:</span>
+                    <span class="n">ret</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s">&#39;classes&#39;</span><span class="p">:</span>
+                    <span class="n">ret</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                    <span class="n">ret</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">traverse</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+
+            <span class="k">return</span> <span class="n">ret</span>
+
+        <span class="k">return</span> <span class="nb">set</span><span class="p">(</span><span class="n">traverse</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">raw</span><span class="p">))</span>
+</div>
+<div class="viewcode-block" id="Config.load_classes"><a class="viewcode-back" href="../../reference/piper.config.html#piper.config.Config.load_classes">[docs]</a>    <span class="k">def</span> <span class="nf">load_classes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Loading classes...&quot;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">cls</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">collect_classes</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Loading class &#39;{0}()&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cls</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">classes</span><span class="p">[</span><span class="n">cls</span><span class="p">]</span> <span class="o">=</span> <span class="n">dynamic_load</span><span class="p">(</span><span class="n">cls</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Class loading done.&quot;</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Config.validate_config"><a class="viewcode-back" href="../../reference/piper.config.html#piper.config.Config.validate_config">[docs]</a>    <span class="k">def</span> <span class="nf">validate_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&#39;Validating...&#39;</span><span class="p">)</span>
+        <span class="n">jsonschema</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">raw</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">schema</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Config.merge_namespace"><a class="viewcode-back" href="../../reference/piper.config.html#piper.config.Config.merge_namespace">[docs]</a>    <span class="k">def</span> <span class="nf">merge_namespace</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ns</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Take an argparse namespace and merge whatever it had directly in to the</span>
+<span class="sd">        configuration object.</span>
+
+<span class="sd">        Before this, we used to shuffle around both, to mostly the same use.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&#39;Merging argparse namespace&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="ow">not</span> <span class="n">x</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&#39;_&#39;</span><span class="p">),</span> <span class="nb">dir</span><span class="p">(</span><span class="n">ns</span><span class="p">)):</span>
+            <span class="n">attr</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">ns</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Config.get_database"><a class="viewcode-back" href="../../reference/piper.config.html#piper.config.Config.get_database">[docs]</a>    <span class="k">def</span> <span class="nf">get_database</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">classes</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">raw</span><span class="p">[</span><span class="s">&#39;db&#39;</span><span class="p">][</span><span class="s">&#39;class&#39;</span><span class="p">]]()</span>
+
+</div></div>
+<div class="viewcode-block" id="BuildConfig"><a class="viewcode-back" href="../../reference/piper.config.html#piper.config.BuildConfig">[docs]</a><span class="k">class</span> <span class="nc">BuildConfig</span><span class="p">(</span><span class="n">Config</span><span class="p">):</span>
+    <span class="n">schema</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s">&quot;$schema&quot;</span><span class="p">:</span> <span class="s">&quot;http://json-schema.org/draft-04/schema&quot;</span><span class="p">,</span>
+        <span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;object&#39;</span><span class="p">,</span>
+        <span class="s">&#39;additionalProperties&#39;</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
+        <span class="s">&#39;required&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;version&#39;</span><span class="p">,</span> <span class="s">&#39;envs&#39;</span><span class="p">,</span> <span class="s">&#39;steps&#39;</span><span class="p">,</span> <span class="s">&#39;pipelines&#39;</span><span class="p">],</span>
+        <span class="s">&#39;properties&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s">&#39;version&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s">&#39;description&#39;</span><span class="p">:</span>
+                    <span class="s">&#39;Versioning setup for this project. This sets up what &#39;</span>
+                    <span class="s">&#39;commands to run to determine the version of the pipeline &#39;</span>
+                    <span class="s">&#39;being executed&#39;</span><span class="p">,</span>
+                <span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;object&#39;</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="s">&#39;envs&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s">&#39;description&#39;</span><span class="p">:</span> <span class="s">&#39;The env configuration for this build.&#39;</span><span class="p">,</span>
+                <span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;object&#39;</span><span class="p">,</span>
+                <span class="s">&#39;additionalProperties&#39;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;object&#39;</span><span class="p">,</span>
+                <span class="p">},</span>
+            <span class="p">},</span>
+            <span class="s">&#39;steps&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s">&#39;description&#39;</span><span class="p">:</span> <span class="s">&#39;Definitions of executable build steps.&#39;</span><span class="p">,</span>
+                <span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;object&#39;</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="s">&#39;pipelines&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s">&#39;description&#39;</span><span class="p">:</span> <span class="s">&#39;Runnable collections of steps.&#39;</span><span class="p">,</span>
+                <span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;object&#39;</span><span class="p">,</span>
+                <span class="s">&#39;additionalProperties&#39;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;array&#39;</span><span class="p">,</span>
+                    <span class="s">&#39;items&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;string&#39;</span><span class="p">},</span>
+                <span class="p">},</span>
+            <span class="p">},</span>
+            <span class="s">&#39;db&#39;</span><span class="p">:</span> <span class="n">DB_SCHEMA</span><span class="p">,</span>
+            <span class="s">&#39;pipeline&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s">&#39;description&#39;</span><span class="p">:</span> <span class="s">&#39;The key of the pipeline to execute.&#39;</span><span class="p">,</span>
+                <span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;string&#39;</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">},</span>
+    <span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">raw</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">raw</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">filename</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="s">&#39;piper.yml&#39;</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">BuildConfig</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">raw</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="AgentConfig"><a class="viewcode-back" href="../../reference/piper.config.html#piper.config.AgentConfig">[docs]</a><span class="k">class</span> <span class="nc">AgentConfig</span><span class="p">(</span><span class="n">Config</span><span class="p">):</span>
+    <span class="n">schema</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s">&quot;$schema&quot;</span><span class="p">:</span> <span class="s">&quot;http://json-schema.org/draft-04/schema&quot;</span><span class="p">,</span>
+        <span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;object&#39;</span><span class="p">,</span>
+        <span class="s">&#39;additionalProperties&#39;</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
+        <span class="s">&#39;required&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;agent&#39;</span><span class="p">,</span> <span class="s">&#39;db&#39;</span><span class="p">],</span>
+        <span class="s">&#39;properties&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s">&#39;agent&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s">&#39;description&#39;</span><span class="p">:</span> <span class="s">&#39;Agent configuration&#39;</span><span class="p">,</span>
+                <span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;object&#39;</span><span class="p">,</span>
+                <span class="s">&#39;additionalProperties&#39;</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
+                <span class="s">&#39;required&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="s">&#39;fqdn&#39;</span><span class="p">,</span> <span class="s">&#39;active&#39;</span><span class="p">],</span>
+                <span class="s">&#39;properties&#39;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s">&#39;description&#39;</span><span class="p">:</span>
+                            <span class="s">&#39;Descriptive name, used for display in interfaces&#39;</span><span class="p">,</span>
+                        <span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;string&#39;</span><span class="p">,</span>
+                    <span class="p">},</span>
+                    <span class="s">&#39;fqdn&#39;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s">&#39;description&#39;</span><span class="p">:</span>
+                            <span class="s">&#39;Fully qualified domain name, used for network &#39;</span>
+                            <span class="s">&#39;operations.&#39;</span><span class="p">,</span>
+                        <span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;string&#39;</span><span class="p">,</span>
+                    <span class="p">},</span>
+                    <span class="s">&#39;active&#39;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s">&#39;description&#39;</span><span class="p">:</span>
+                            <span class="s">&#39;Decides if the agent is to be used for building &#39;</span>
+                            <span class="s">&#39;or not. Inactive agents are connected and &#39;</span>
+                            <span class="s">&#39;visible, but will not be considered for any &#39;</span>
+                            <span class="s">&#39;tasks.&#39;</span><span class="p">,</span>
+                        <span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;boolean&#39;</span><span class="p">,</span>
+                    <span class="p">},</span>
+                <span class="p">},</span>
+            <span class="p">},</span>
+            <span class="s">&#39;db&#39;</span><span class="p">:</span> <span class="n">DB_SCHEMA</span><span class="p">,</span>
+            <span class="s">&#39;properties&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s">&#39;description&#39;</span><span class="p">:</span> <span class="s">&#39;Agent property configuration&#39;</span><span class="p">,</span>
+                <span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;object&#39;</span><span class="p">,</span>
+                <span class="s">&#39;additionalProperties&#39;</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
+                <span class="s">&#39;required&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;classes&#39;</span><span class="p">],</span>
+                <span class="s">&#39;properties&#39;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s">&#39;classes&#39;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s">&#39;description&#39;</span><span class="p">:</span> <span class="s">&#39;Classes to use for property loading&#39;</span><span class="p">,</span>
+                        <span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;array&#39;</span><span class="p">,</span>
+                    <span class="p">},</span>
+                <span class="p">},</span>
+            <span class="p">},</span>
+        <span class="p">},</span>
+    <span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">filename</span><span class="p">:</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="s">&#39;piperd.yml&#39;</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">AgentConfig</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, Lowe Thiderman, Daniele Sluijters.
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0.0.2',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -1,0 +1,319 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Contributing to piper &mdash; Piper 0.0.2 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="Piper 0.0.2 documentation" href="index.html"/>
+        <link rel="next" title="Contributors" href="contributors.html"/>
+        <link rel="prev" title="piper.version" href="reference/piper.version.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+
+        
+          <a href="index.html" class="icon icon-home"> Piper
+        
+
+        
+        </a>
+
+        
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+        
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+          
+          
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="readme.html">Piper</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="readme.html#huh">Huh?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="readme.html#selling-points">Selling points</a></li>
+<li class="toctree-l2"><a class="reference internal" href="readme.html#things-piper-lets-other-systems-do-better">Things piper lets other systems do better</a></li>
+<li class="toctree-l2"><a class="reference internal" href="readme.html#rationale">Rationale</a></li>
+<li class="toctree-l2"><a class="reference internal" href="readme.html#design">Design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="readme.html#build">Build()</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference/index.html">Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reference/index.html#packages">Packages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference/piper.api.html">piper.api</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reference/piper.api.html#modules">Modules</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="reference/piper.cli.html">piper.cli</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reference/piper.cli.html#modules">Modules</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="reference/piper.db.html">piper.db package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reference/piper.db.html#modules">Modules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference/index.html#modules">Modules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference/piper.abc.html">piper.abc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/piper.build.html">piper.build</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/piper.config.html">piper.config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/piper.env.html">piper.env</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/piper.logging.html">piper.logging</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/piper.process.html">piper.process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/piper.prop.html">piper.prop</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/piper.schema.html">piper.schema</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/piper.step.html">piper.step</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/piper.utils.html">piper.utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/piper.vcs.html">piper.vcs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/piper.version.html">piper.version</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Contributing to piper</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#development-environment">Development environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#code-and-code-guidelines">Code and code guidelines</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#test-naming">Test naming</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#issue-management">Issue management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#collaborators">Collaborators</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contributors.html">Contributors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Change Log</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#unreleased">unreleased</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id1">0.0.2 - 2015-04-19</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id2">0.0.1 - 2014-05-20</a></li>
+</ul>
+</li>
+</ul>
+
+          
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">Piper</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>Contributing to piper</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/contributing.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <div class="section" id="contributing-to-piper">
+<h1>Contributing to piper<a class="headerlink" href="#contributing-to-piper" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="development-environment">
+<h2>Development environment<a class="headerlink" href="#development-environment" title="Permalink to this headline">¶</a></h2>
+<p><cite>piper</cite> uses a straight-forward Python setup. <a class="reference external" href="https://github.com/yyuu/pyenv">pyenv</a> and <a class="reference external" href="https://virtualenv.pypa.io/en/latest/">virtualenv</a> are
+recommended.</p>
+<p>Once in a virtualenv, the tests can be run by <cite>python setup.py test</cite>, which
+will download all dependencies.</p>
+</div>
+<div class="section" id="code-and-code-guidelines">
+<h2>Code and code guidelines<a class="headerlink" href="#code-and-code-guidelines" title="Permalink to this headline">¶</a></h2>
+<p><cite>piper</cite> tests itself, of course! If <cite>piper</cite> can build itself with <cite>piper exec</cite>,
+your code is welcome in a Pull Request!</p>
+<p>Things to generally think about:
+* Code is always welcome, and discussing in an issue before implementing is</p>
+<blockquote>
+<div>encouraged.</div></blockquote>
+<ul class="simple">
+<li>Commit messages should follow the <a class="reference external" href="http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html">convention</a>.</li>
+<li>Unit tests are required, integration tests are encouraged.</li>
+<li>If unsure, strive to emulate the look and feel of the rest of the code.
+Consitency is king!</li>
+</ul>
+<div class="section" id="test-naming">
+<h3>Test naming<a class="headerlink" href="#test-naming" title="Permalink to this headline">¶</a></h3>
+<p>All functions have a corresponding test class in the corresponding test file:
+<a href="#id1"><span class="problematic" id="id2">``</span></a><a href="#id3"><span class="problematic" id="id4">`</span></a>python
+# in piper/lazer.py
+class Lazergun():</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>def pewpew(self):</dt>
+<dd># &lt;code&gt;</dd>
+</dl>
+</div></blockquote>
+<p><a href="#id5"><span class="problematic" id="id6">``</span></a>`
+maps to</p>
+<p><a href="#id7"><span class="problematic" id="id8">``</span></a><a href="#id9"><span class="problematic" id="id10">`</span></a>python
+# in test/test_lazer.py
+class TestLazergunPewpew():</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>def test_pewpew_case(self):</dt>
+<dd># &lt;test&gt;</dd>
+<dt>def test_pewpew_another_case(self):</dt>
+<dd># &lt;test&gt;</dd>
+</dl>
+</div></blockquote>
+<p><a href="#id11"><span class="problematic" id="id12">``</span></a><a href="#id13"><span class="problematic" id="id14">`</span></a></p>
+<p>The mapping is basically making a test class called
+<cite>Test</cite> + <cite>&lt;class name</cite> + <cite>&lt;method name in CamelCase&gt;</cite>
+and adding one test case for all of the cases in that method.
+Using this mapping makes it possible to use tooling to navigate
+between tests and code, making developers happy!</p>
+</div>
+</div>
+<div class="section" id="issue-management">
+<h2>Issue management<a class="headerlink" href="#issue-management" title="Permalink to this headline">¶</a></h2>
+<p>Creating issues is welcome. Don&#8217;t worry about accidentally adding a duplicate -
+the collaborators will sort that out without a hitch! It&#8217;s better to ask
+than not to ask! You also don&#8217;t need to add labels - the contributors will help
+out with that as well.</p>
+<p>The <a class="reference external" href="https://github.com/thiderman/piper/labels/discussion">discussions</a> label means that something requires input, and that input
+can come from you even though you have not contributed to the project in any
+other sense before!</p>
+<p>If you start working on something, add yourself as the assignee so that it&#8217;s
+visible what is being worked on or not.</p>
+</div>
+<div class="section" id="collaborators">
+<h2>Collaborators<a class="headerlink" href="#collaborators" title="Permalink to this headline">¶</a></h2>
+<p>If you are a collaborator, there are some extra guidelines:</p>
+<ul class="simple">
+<li>React on issues. Reply to them if possible and add labels accordingly. Assign
+users if they are working on something but did not add themselves.</li>
+<li>Avoid pushing to master without a Pull Request. Use branches on the repo
+freely.</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="contributors.html" class="btn btn-neutral float-right" title="Contributors" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="reference/piper.version.html" class="btn btn-neutral" title="piper.version" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, Lowe Thiderman, Daniele Sluijters.
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.0.2',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

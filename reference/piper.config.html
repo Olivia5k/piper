@@ -1,0 +1,319 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>piper.config &mdash; Piper 0.0.2 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="Piper 0.0.2 documentation" href="../index.html"/>
+        <link rel="up" title="Reference" href="index.html"/>
+        <link rel="next" title="piper.env" href="piper.env.html"/>
+        <link rel="prev" title="piper.build" href="piper.build.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+
+        
+          <a href="../index.html" class="icon icon-home"> Piper
+        
+
+        
+        </a>
+
+        
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+        
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+          
+          
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../readme.html">Piper</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#huh">Huh?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#selling-points">Selling points</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#things-piper-lets-other-systems-do-better">Things piper lets other systems do better</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#rationale">Rationale</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#design">Design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#build">Build()</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html#packages">Packages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="piper.api.html">piper.api</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="piper.api.html#modules">Modules</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="piper.cli.html">piper.cli</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="piper.cli.html#modules">Modules</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="piper.db.html">piper.db package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="piper.db.html#modules">Modules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#modules">Modules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="piper.abc.html">piper.abc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="piper.build.html">piper.build</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="">piper.config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="piper.env.html">piper.env</a></li>
+<li class="toctree-l3"><a class="reference internal" href="piper.logging.html">piper.logging</a></li>
+<li class="toctree-l3"><a class="reference internal" href="piper.process.html">piper.process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="piper.prop.html">piper.prop</a></li>
+<li class="toctree-l3"><a class="reference internal" href="piper.schema.html">piper.schema</a></li>
+<li class="toctree-l3"><a class="reference internal" href="piper.step.html">piper.step</a></li>
+<li class="toctree-l3"><a class="reference internal" href="piper.utils.html">piper.utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="piper.vcs.html">piper.vcs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="piper.version.html">piper.version</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing to piper</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../contributing.html#development-environment">Development environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contributing.html#code-and-code-guidelines">Code and code guidelines</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../contributing.html#test-naming">Test naming</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../contributing.html#issue-management">Issue management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contributing.html#collaborators">Collaborators</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contributors.html">Contributors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Change Log</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#unreleased">unreleased</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id1">0.0.2 - 2015-04-19</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id2">0.0.1 - 2014-05-20</a></li>
+</ul>
+</li>
+</ul>
+
+          
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">Piper</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="index.html">Reference</a> &raquo;</li>
+      
+    <li>piper.config</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/reference/piper.config.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <div class="section" id="module-piper.config">
+<span id="piper-config"></span><h1>piper.config<a class="headerlink" href="#module-piper.config" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="piper.config.AgentConfig">
+<em class="property">class </em><code class="descclassname">piper.config.</code><code class="descname">AgentConfig</code><span class="sig-paren">(</span><em>filename=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/config.html#AgentConfig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.config.AgentConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#piper.config.Config" title="piper.config.Config"><code class="xref py py-class docutils literal"><span class="pre">piper.config.Config</span></code></a></p>
+<dl class="attribute">
+<dt id="piper.config.AgentConfig.schema">
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'type': 'object', '$schema': 'http://json-schema.org/draft-04/schema', 'required': ['agent', 'db'], 'properties': {'agent': {'additionalProperties': False, 'type': 'object', 'description': 'Agent configuration', 'required': ['name', 'fqdn', 'active'], 'properties': {'fqdn': {'type': 'string', 'description': 'Fully qualified domain name, used for network operations.'}, 'active': {'type': 'boolean', 'description': 'Decides if the agent is to be used for building or not. Inactive agents are connected and visible, but will not be considered for any tasks.'}, 'name': {'type': 'string', 'description': 'Descriptive name, used for display in interfaces'}}}, 'db': {'type': 'object', 'description': 'Database configuration', 'required': ['class', 'host'], 'properties': {'class': {'type': 'string', 'description': 'The piper.db class to use as DB abstraction'}, 'host': {'type': 'string', 'description': 'The host to connect to'}, 'user': {'type': ['string', 'null'], 'description': 'The username used for authentication'}, 'password': {'type': ['string', 'null'], 'description': 'The passord used for authentication'}}}, 'properties': {'additionalProperties': False, 'type': 'object', 'description': 'Agent property configuration', 'required': ['classes'], 'properties': {'classes': {'type': 'array', 'description': 'Classes to use for property loading'}}}}}</em><a class="headerlink" href="#piper.config.AgentConfig.schema" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="piper.config.BuildConfig">
+<em class="property">class </em><code class="descclassname">piper.config.</code><code class="descname">BuildConfig</code><span class="sig-paren">(</span><em>filename=None</em>, <em>raw=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/config.html#BuildConfig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.config.BuildConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#piper.config.Config" title="piper.config.Config"><code class="xref py py-class docutils literal"><span class="pre">piper.config.Config</span></code></a></p>
+<dl class="attribute">
+<dt id="piper.config.BuildConfig.schema">
+<code class="descname">schema</code><em class="property"> = {'additionalProperties': False, 'type': 'object', '$schema': 'http://json-schema.org/draft-04/schema', 'required': ['version', 'envs', 'steps', 'pipelines'], 'properties': {'db': {'type': 'object', 'description': 'Database configuration', 'required': ['class', 'host'], 'properties': {'class': {'type': 'string', 'description': 'The piper.db class to use as DB abstraction'}, 'host': {'type': 'string', 'description': 'The host to connect to'}, 'user': {'type': ['string', 'null'], 'description': 'The username used for authentication'}, 'password': {'type': ['string', 'null'], 'description': 'The passord used for authentication'}}}, 'version': {'type': 'object', 'description': 'Versioning setup for this project. This sets up what commands to run to determine the version of the pipeline being executed'}, 'pipelines': {'additionalProperties': {'items': {'type': 'string'}, 'type': 'array'}, 'type': 'object', 'description': 'Runnable collections of steps.'}, 'steps': {'type': 'object', 'description': 'Definitions of executable build steps.'}, 'envs': {'additionalProperties': {'type': 'object'}, 'type': 'object', 'description': 'The env configuration for this build.'}, 'pipeline': {'type': 'string', 'description': 'The key of the pipeline to execute.'}}}</em><a class="headerlink" href="#piper.config.BuildConfig.schema" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="piper.config.Config">
+<em class="property">class </em><code class="descclassname">piper.config.</code><code class="descname">Config</code><span class="sig-paren">(</span><em>filename=None</em>, <em>raw=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/config.html#Config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.config.Config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="piper.config.Config.collect_classes">
+<code class="descname">collect_classes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/config.html#Config.collect_classes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.config.Config.collect_classes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="piper.config.Config.get_database">
+<code class="descname">get_database</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/config.html#Config.get_database"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.config.Config.get_database" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="piper.config.Config.load">
+<code class="descname">load</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/config.html#Config.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.config.Config.load" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="piper.config.Config.load_classes">
+<code class="descname">load_classes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/config.html#Config.load_classes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.config.Config.load_classes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="piper.config.Config.load_config">
+<code class="descname">load_config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/config.html#Config.load_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.config.Config.load_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses the configuration file and dies in flames if there are errors.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="piper.config.Config.merge_namespace">
+<code class="descname">merge_namespace</code><span class="sig-paren">(</span><em>ns</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/config.html#Config.merge_namespace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.config.Config.merge_namespace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take an argparse namespace and merge whatever it had directly in to the
+configuration object.</p>
+<p>Before this, we used to shuffle around both, to mostly the same use.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="piper.config.Config.validate_config">
+<code class="descname">validate_config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/config.html#Config.validate_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.config.Config.validate_config" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
+<dt id="piper.config.ConfigError">
+<em class="property">exception </em><code class="descclassname">piper.config.</code><code class="descname">ConfigError</code><a class="reference internal" href="../_modules/piper/config.html#ConfigError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.config.ConfigError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">Exception</span></code></p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="piper.env.html" class="btn btn-neutral float-right" title="piper.env" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="piper.build.html" class="btn btn-neutral" title="piper.build" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, Lowe Thiderman, Daniele Sluijters.
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.0.2',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

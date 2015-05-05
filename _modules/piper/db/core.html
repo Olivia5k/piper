@@ -1,0 +1,444 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>piper.db.core &mdash; Piper 0.0.2 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="Piper 0.0.2 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+
+        
+          <a href="../../../index.html" class="icon icon-home"> Piper
+        
+
+        
+        </a>
+
+        
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+        
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+          
+          
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../readme.html">Piper</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../readme.html#huh">Huh?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../readme.html#selling-points">Selling points</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../readme.html#things-piper-lets-other-systems-do-better">Things piper lets other systems do better</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../readme.html#rationale">Rationale</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../readme.html#design">Design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../readme.html#build">Build()</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference/index.html">Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../reference/index.html#packages">Packages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference/piper.api.html">piper.api</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../reference/piper.api.html#modules">Modules</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference/piper.cli.html">piper.cli</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../reference/piper.cli.html#modules">Modules</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference/piper.db.html">piper.db package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../reference/piper.db.html#modules">Modules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../reference/index.html#modules">Modules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference/piper.abc.html">piper.abc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference/piper.build.html">piper.build</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference/piper.config.html">piper.config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference/piper.env.html">piper.env</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference/piper.logging.html">piper.logging</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference/piper.process.html">piper.process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference/piper.prop.html">piper.prop</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference/piper.schema.html">piper.schema</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference/piper.step.html">piper.step</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference/piper.utils.html">piper.utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference/piper.vcs.html">piper.vcs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference/piper.version.html">piper.version</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing to piper</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../contributing.html#development-environment">Development environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../contributing.html#code-and-code-guidelines">Code and code guidelines</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../contributing.html#test-naming">Test naming</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../contributing.html#issue-management">Issue management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../contributing.html#collaborators">Collaborators</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributors.html">Contributors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Change Log</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../changelog.html#unreleased">unreleased</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../changelog.html#id1">0.0.2 - 2015-04-19</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../changelog.html#id2">0.0.1 - 2014-05-20</a></li>
+</ul>
+</li>
+</ul>
+
+          
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">Piper</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      
+    <li>piper.db.core</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <h1>Source code for piper.db.core</h1><div class="highlight"><pre>
+<span class="kn">import</span> <span class="nn">logbook</span>
+
+
+<div class="viewcode-block" id="LazyDatabaseMixin"><a class="viewcode-back" href="../../../reference/piper.db.core.html#piper.db.core.LazyDatabaseMixin">[docs]</a><span class="k">class</span> <span class="nc">LazyDatabaseMixin</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A mixin class that gives the subclass lazy access to the database layer</span>
+
+<span class="sd">    The lazy attribute self.db is added, and the database class is gotten from</span>
+<span class="sd">    self.config, and an instance is made and returned.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">_db</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="k">def</span> <span class="nf">_get_db</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_db</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&#39;config&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">,</span> \
+                <span class="s">&#39;Database accessed before self.config was set.&#39;</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_db</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get_database</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_db</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_db</span>
+
+    <span class="k">def</span> <span class="nf">_set_db</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+        <span class="c"># This is actually mostly for tests so that we don&#39;t have to do the</span>
+        <span class="c"># mock-out-the-property dance for all the tests that hit the db.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_db</span> <span class="o">=</span> <span class="n">val</span>
+
+    <span class="n">db</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">_get_db</span><span class="p">,</span> <span class="n">_set_db</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="AgentManager"><a class="viewcode-back" href="../../../reference/piper.db.core.html#piper.db.core.AgentManager">[docs]</a><span class="k">class</span> <span class="nc">AgentManager</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="AgentManager.get"><a class="viewcode-back" href="../../../reference/piper.db.core.html#piper.db.core.AgentManager.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Lazily get an agent.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="AgentManager.lock"><a class="viewcode-back" href="../../../reference/piper.db.core.html#piper.db.core.AgentManager.lock">[docs]</a>    <span class="k">def</span> <span class="nf">lock</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">build</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Lock the agent to a build.</span>
+
+<span class="sd">        When an agent is locked, it will not accept other builds until it</span>
+<span class="sd">        unlocks itself.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="AgentManager.unlock"><a class="viewcode-back" href="../../../reference/piper.db.core.html#piper.db.core.AgentManager.unlock">[docs]</a>    <span class="k">def</span> <span class="nf">unlock</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">build</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Unlock the agent from a build.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+
+</div></div>
+<div class="viewcode-block" id="BuildManager"><a class="viewcode-back" href="../../../reference/piper.db.core.html#piper.db.core.BuildManager">[docs]</a><span class="k">class</span> <span class="nc">BuildManager</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="BuildManager.add"><a class="viewcode-back" href="../../../reference/piper.db.core.html#piper.db.core.BuildManager.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">build</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Register a build to the database.</span>
+
+<span class="sd">        Should return a reference to the build that other methods can access</span>
+<span class="sd">        via `self.ref`.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="BuildManager.update"><a class="viewcode-back" href="../../../reference/piper.db.core.html#piper.db.core.BuildManager.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">build</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the state of a build.</span>
+
+<span class="sd">        Uses `build.ref` as set by `add_build()`.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="BuildManager.get"><a class="viewcode-back" href="../../../reference/piper.db.core.html#piper.db.core.BuildManager.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">build_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get a build and all its related fields.</span>
+
+<span class="sd">        Should return a Build object or None.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="BuildManager.all"><a class="viewcode-back" href="../../../reference/piper.db.core.html#piper.db.core.BuildManager.all">[docs]</a>    <span class="k">def</span> <span class="nf">all</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get all builds!</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="BuildManager.get_agents"><a class="viewcode-back" href="../../../reference/piper.db.core.html#piper.db.core.BuildManager.get_agents">[docs]</a>    <span class="k">def</span> <span class="nf">get_agents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">build_id</span><span class="p">,</span> <span class="n">compatible</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return a list of agents that meet the requirements of this build</span>
+
+<span class="sd">        The `compatible` boolean dictates whether compatible or incompatible</span>
+<span class="sd">        agents should be returned.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+
+</div></div>
+<div class="viewcode-block" id="ConfigManager"><a class="viewcode-back" href="../../../reference/piper.db.core.html#piper.db.core.ConfigManager">[docs]</a><span class="k">class</span> <span class="nc">ConfigManager</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="ConfigManager.register"><a class="viewcode-back" href="../../../reference/piper.db.core.html#piper.db.core.ConfigManager.register">[docs]</a>    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">build</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Register a configuration to the database.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+
+</div></div>
+<div class="viewcode-block" id="ProjectManager"><a class="viewcode-back" href="../../../reference/piper.db.core.html#piper.db.core.ProjectManager">[docs]</a><span class="k">class</span> <span class="nc">ProjectManager</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="ProjectManager.get"><a class="viewcode-back" href="../../../reference/piper.db.core.html#piper.db.core.ProjectManager.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">build</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Lazily get the project.</span>
+
+<span class="sd">        Create the project if it does not exist. If the VCS root for the</span>
+<span class="sd">        project does not exist, create that too.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+
+</div></div>
+<div class="viewcode-block" id="VCSManager"><a class="viewcode-back" href="../../../reference/piper.db.core.html#piper.db.core.VCSManager">[docs]</a><span class="k">class</span> <span class="nc">VCSManager</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="VCSManager.get"><a class="viewcode-back" href="../../../reference/piper.db.core.html#piper.db.core.VCSManager.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">build</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Lazily get the VCS.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+
+</div></div>
+<div class="viewcode-block" id="PropertyManager"><a class="viewcode-back" href="../../../reference/piper.db.core.html#piper.db.core.PropertyManager">[docs]</a><span class="k">class</span> <span class="nc">PropertyManager</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="PropertyManager.update"><a class="viewcode-back" href="../../../reference/piper.db.core.html#piper.db.core.PropertyManager.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update agent properties.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+
+</div></div>
+<div class="viewcode-block" id="PropertyNamespaceManager"><a class="viewcode-back" href="../../../reference/piper.db.core.html#piper.db.core.PropertyNamespaceManager">[docs]</a><span class="k">class</span> <span class="nc">PropertyNamespaceManager</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+</div>
+<div class="viewcode-block" id="Database"><a class="viewcode-back" href="../../../reference/piper.db.core.html#piper.db.core.Database">[docs]</a><span class="k">class</span> <span class="nc">Database</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Abstract class representing a persistance layer</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">agent</span> <span class="o">=</span> <span class="n">AgentManager</span><span class="p">()</span>
+    <span class="n">build</span> <span class="o">=</span> <span class="n">BuildManager</span><span class="p">()</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">ConfigManager</span><span class="p">()</span>
+    <span class="n">project</span> <span class="o">=</span> <span class="n">ProjectManager</span><span class="p">()</span>
+    <span class="n">vcs</span> <span class="o">=</span> <span class="n">VCSManager</span><span class="p">()</span>
+    <span class="nb">property</span> <span class="o">=</span> <span class="n">PropertyManager</span><span class="p">()</span>
+    <span class="n">propertynamespace</span> <span class="o">=</span> <span class="n">PropertyNamespaceManager</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span> <span class="o">=</span> <span class="n">logbook</span><span class="o">.</span><span class="n">Logger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Database.setup"><a class="viewcode-back" href="../../../reference/piper.db.core.html#piper.db.core.Database.setup">[docs]</a>    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set up the database.</span>
+
+<span class="sd">        This should do whatever setup steps are needed for the database</span>
+<span class="sd">        connection to be able to happen.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="Database.init"><a class="viewcode-back" href="../../../reference/piper.db.core.html#piper.db.core.Database.init">[docs]</a>    <span class="k">def</span> <span class="nf">init</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create the tables needed for the application.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+
+</div></div>
+<div class="viewcode-block" id="DbCLI"><a class="viewcode-back" href="../../../reference/piper.db.core.html#piper.db.core.DbCLI">[docs]</a><span class="k">class</span> <span class="nc">DbCLI</span><span class="p">(</span><span class="n">LazyDatabaseMixin</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span> <span class="o">=</span> <span class="n">logbook</span><span class="o">.</span><span class="n">Logger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">)</span>
+
+<div class="viewcode-block" id="DbCLI.compose"><a class="viewcode-back" href="../../../reference/piper.db.core.html#piper.db.core.DbCLI.compose">[docs]</a>    <span class="k">def</span> <span class="nf">compose</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>  <span class="c"># pragma: nocover</span>
+        <span class="n">db</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s">&#39;db&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s">&#39;Perform database tasks&#39;</span><span class="p">)</span>
+
+        <span class="n">sub</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">add_subparsers</span><span class="p">(</span><span class="n">help</span><span class="o">=</span><span class="s">&#39;Database commands&#39;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s">&quot;db_command&quot;</span><span class="p">)</span>
+        <span class="n">sub</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s">&#39;init&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s">&#39;Do the initial setup of the database&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="s">&#39;db&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">run</span>
+</div>
+<div class="viewcode-block" id="DbCLI.run"><a class="viewcode-back" href="../../../reference/piper.db.core.html#piper.db.core.DbCLI.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
+        <span class="k">return</span> <span class="mi">0</span></div></div>
+</pre></div>
+
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, Lowe Thiderman, Daniele Sluijters.
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.0.2',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

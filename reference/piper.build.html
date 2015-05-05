@@ -1,0 +1,389 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>piper.build &mdash; Piper 0.0.2 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="Piper 0.0.2 documentation" href="../index.html"/>
+        <link rel="up" title="Reference" href="index.html"/>
+        <link rel="next" title="piper.config" href="piper.config.html"/>
+        <link rel="prev" title="piper.abc" href="piper.abc.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+
+        
+          <a href="../index.html" class="icon icon-home"> Piper
+        
+
+        
+        </a>
+
+        
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+        
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+          
+          
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../readme.html">Piper</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#huh">Huh?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#selling-points">Selling points</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#things-piper-lets-other-systems-do-better">Things piper lets other systems do better</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#rationale">Rationale</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#design">Design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#build">Build()</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html#packages">Packages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="piper.api.html">piper.api</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="piper.api.html#modules">Modules</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="piper.cli.html">piper.cli</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="piper.cli.html#modules">Modules</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="piper.db.html">piper.db package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="piper.db.html#modules">Modules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#modules">Modules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="piper.abc.html">piper.abc</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="">piper.build</a></li>
+<li class="toctree-l3"><a class="reference internal" href="piper.config.html">piper.config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="piper.env.html">piper.env</a></li>
+<li class="toctree-l3"><a class="reference internal" href="piper.logging.html">piper.logging</a></li>
+<li class="toctree-l3"><a class="reference internal" href="piper.process.html">piper.process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="piper.prop.html">piper.prop</a></li>
+<li class="toctree-l3"><a class="reference internal" href="piper.schema.html">piper.schema</a></li>
+<li class="toctree-l3"><a class="reference internal" href="piper.step.html">piper.step</a></li>
+<li class="toctree-l3"><a class="reference internal" href="piper.utils.html">piper.utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="piper.vcs.html">piper.vcs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="piper.version.html">piper.version</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing to piper</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../contributing.html#development-environment">Development environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contributing.html#code-and-code-guidelines">Code and code guidelines</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../contributing.html#test-naming">Test naming</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../contributing.html#issue-management">Issue management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contributing.html#collaborators">Collaborators</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contributors.html">Contributors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Change Log</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#unreleased">unreleased</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id1">0.0.2 - 2015-04-19</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id2">0.0.1 - 2014-05-20</a></li>
+</ul>
+</li>
+</ul>
+
+          
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">Piper</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="index.html">Reference</a> &raquo;</li>
+      
+    <li>piper.build</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/reference/piper.build.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <div class="section" id="module-piper.build">
+<span id="piper-build"></span><h1>piper.build<a class="headerlink" href="#module-piper.build" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="piper.build.Build">
+<em class="property">class </em><code class="descclassname">piper.build.</code><code class="descname">Build</code><span class="sig-paren">(</span><em>config</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/build.html#Build"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.build.Build" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="piper.db.core.html#piper.db.core.LazyDatabaseMixin" title="piper.db.core.LazyDatabaseMixin"><code class="xref py py-class docutils literal"><span class="pre">piper.db.core.LazyDatabaseMixin</span></code></a></p>
+<p>The main pipeline runner.</p>
+<p>This class loads the configurations, sets up all other components,
+executes them in whatever order they are supposed to happen in, collects
+data about the state of the pipeline and persists it, and finally tears
+down the components that needs tearing down.</p>
+<dl class="attribute">
+<dt id="piper.build.Build.FIELDS_TO_DB">
+<code class="descname">FIELDS_TO_DB</code><em class="property"> = ('id', 'agent', 'config', 'success', 'crashed', 'status', 'started', 'ended', 'created')</em><a class="headerlink" href="#piper.build.Build.FIELDS_TO_DB" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="piper.build.Build.add_build">
+<code class="descname">add_build</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/build.html#Build.add_build"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.build.Build.add_build" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a build object and its configuration to the database</p>
+<p>Also store the reference to the build</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="piper.build.Build.as_dict">
+<code class="descname">as_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/build.html#Build.as_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.build.Build.as_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a dict representation of the build, suitable for DB use.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="piper.build.Build.configure_env">
+<code class="descname">configure_env</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/build.html#Build.configure_env"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.build.Build.configure_env" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configures the environment according to its config file.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="piper.build.Build.configure_pipeline">
+<code class="descname">configure_pipeline</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/build.html#Build.configure_pipeline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.build.Build.configure_pipeline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Places steps in proper order according to the pipeline.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="piper.build.Build.configure_steps">
+<code class="descname">configure_steps</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/build.html#Build.configure_steps"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.build.Build.configure_steps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configures the steps according to their config sections.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="piper.build.Build.default_db_kwargs">
+<code class="descname">default_db_kwargs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/build.html#Build.default_db_kwargs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.build.Build.default_db_kwargs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a dict with keys to update in the database</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="piper.build.Build.execute">
+<code class="descname">execute</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/build.html#Build.execute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.build.Build.execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs the steps and determines whether to continue or not.</p>
+<p>Of all the things to happen in this application, this is probably
+the most important part!</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="piper.build.Build.finish">
+<code class="descname">finish</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/build.html#Build.finish"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.build.Build.finish" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="piper.build.Build.lock_agent">
+<code class="descname">lock_agent</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/build.html#Build.lock_agent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.build.Build.lock_agent" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="piper.build.Build.run">
+<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/build.html#Build.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.build.Build.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Main entry point</p>
+<p>This is run when starting the script from the command line.
+Returns boolean success.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="piper.build.Build.save_state">
+<code class="descname">save_state</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/build.html#Build.save_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.build.Build.save_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Collects all data about the pipeline being built and persists it.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="piper.build.Build.set_logfile">
+<code class="descname">set_logfile</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/build.html#Build.set_logfile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.build.Build.set_logfile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the log file to store the build log in.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="piper.build.Build.set_version">
+<code class="descname">set_version</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/build.html#Build.set_version"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.build.Build.set_version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the version for this pipeline</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="piper.build.Build.setup">
+<code class="descname">setup</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/build.html#Build.setup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.build.Build.setup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs all setup steps</p>
+<p>This is basically an umbrella function that runs setup for all the
+things that the class needs to run a fully configured execute().</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="piper.build.Build.setup_env">
+<code class="descname">setup_env</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/build.html#Build.setup_env"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.build.Build.setup_env" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute setup steps of the env</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="piper.build.Build.teardown">
+<code class="descname">teardown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/build.html#Build.teardown"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.build.Build.teardown" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="piper.build.Build.teardown_env">
+<code class="descname">teardown_env</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/build.html#Build.teardown_env"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.build.Build.teardown_env" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute teardown step of the env</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="piper.build.Build.unlock_agent">
+<code class="descname">unlock_agent</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/build.html#Build.unlock_agent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.build.Build.unlock_agent" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="piper.build.ExecCLI">
+<em class="property">class </em><code class="descclassname">piper.build.</code><code class="descname">ExecCLI</code><span class="sig-paren">(</span><em>config</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/build.html#ExecCLI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.build.ExecCLI" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="piper.build.ExecCLI.compose">
+<code class="descname">compose</code><span class="sig-paren">(</span><em>parser</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/build.html#ExecCLI.compose"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.build.ExecCLI.compose" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="piper.build.ExecCLI.run">
+<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/build.html#ExecCLI.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.build.ExecCLI.run" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="piper.config.html" class="btn btn-neutral float-right" title="piper.config" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="piper.abc.html" class="btn btn-neutral" title="piper.abc" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, Lowe Thiderman, Daniele Sluijters.
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.0.2',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

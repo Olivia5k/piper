@@ -1,0 +1,347 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>piper.prop &mdash; Piper 0.0.2 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="Piper 0.0.2 documentation" href="../index.html"/>
+        <link rel="up" title="Reference" href="index.html"/>
+        <link rel="next" title="piper.schema" href="piper.schema.html"/>
+        <link rel="prev" title="piper.process" href="piper.process.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+
+        
+          <a href="../index.html" class="icon icon-home"> Piper
+        
+
+        
+        </a>
+
+        
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+        
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+          
+          
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../readme.html">Piper</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#huh">Huh?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#selling-points">Selling points</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#things-piper-lets-other-systems-do-better">Things piper lets other systems do better</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#rationale">Rationale</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#design">Design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#build">Build()</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html#packages">Packages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="piper.api.html">piper.api</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="piper.api.html#modules">Modules</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="piper.cli.html">piper.cli</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="piper.cli.html#modules">Modules</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="piper.db.html">piper.db package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="piper.db.html#modules">Modules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#modules">Modules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="piper.abc.html">piper.abc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="piper.build.html">piper.build</a></li>
+<li class="toctree-l3"><a class="reference internal" href="piper.config.html">piper.config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="piper.env.html">piper.env</a></li>
+<li class="toctree-l3"><a class="reference internal" href="piper.logging.html">piper.logging</a></li>
+<li class="toctree-l3"><a class="reference internal" href="piper.process.html">piper.process</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="">piper.prop</a></li>
+<li class="toctree-l3"><a class="reference internal" href="piper.schema.html">piper.schema</a></li>
+<li class="toctree-l3"><a class="reference internal" href="piper.step.html">piper.step</a></li>
+<li class="toctree-l3"><a class="reference internal" href="piper.utils.html">piper.utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="piper.vcs.html">piper.vcs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="piper.version.html">piper.version</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing to piper</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../contributing.html#development-environment">Development environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contributing.html#code-and-code-guidelines">Code and code guidelines</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../contributing.html#test-naming">Test naming</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../contributing.html#issue-management">Issue management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contributing.html#collaborators">Collaborators</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contributors.html">Contributors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Change Log</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#unreleased">unreleased</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id1">0.0.2 - 2015-04-19</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id2">0.0.1 - 2014-05-20</a></li>
+</ul>
+</li>
+</ul>
+
+          
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">Piper</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="index.html">Reference</a> &raquo;</li>
+      
+    <li>piper.prop</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/reference/piper.prop.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <div class="section" id="module-piper.prop">
+<span id="piper-prop"></span><h1>piper.prop<a class="headerlink" href="#module-piper.prop" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="piper.prop.FacterProp">
+<em class="property">class </em><code class="descclassname">piper.prop.</code><code class="descname">FacterProp</code><span class="sig-paren">(</span><em>key</em>, <em>value=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/prop.html#FacterProp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.prop.FacterProp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#piper.prop.Prop" title="piper.prop.Prop"><code class="xref py py-class docutils literal"><span class="pre">piper.prop.Prop</span></code></a></p>
+<dl class="attribute">
+<dt id="piper.prop.FacterProp.source">
+<code class="descname">source</code><em class="property"> = &lt;piper.prop.FacterPropSource object&gt;</em><a class="headerlink" href="#piper.prop.FacterProp.source" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="piper.prop.FacterPropSource">
+<em class="property">class </em><code class="descclassname">piper.prop.</code><code class="descname">FacterPropSource</code><a class="reference internal" href="../_modules/piper/prop.html#FacterPropSource"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.prop.FacterPropSource" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#piper.prop.PropSource" title="piper.prop.PropSource"><code class="xref py py-class docutils literal"><span class="pre">piper.prop.PropSource</span></code></a></p>
+<p>Collect properties from facter via facterpy</p>
+<p>It should be noted that the current version does not have any typecasting,
+so everything is always strings.
+See <a class="reference external" href="https://github.com/knorby/facterpy/issues/5">https://github.com/knorby/facterpy/issues/5</a></p>
+<dl class="method">
+<dt id="piper.prop.FacterPropSource.generate">
+<code class="descname">generate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/prop.html#FacterPropSource.generate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.prop.FacterPropSource.generate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="piper.prop.Prop">
+<em class="property">class </em><code class="descclassname">piper.prop.</code><code class="descname">Prop</code><span class="sig-paren">(</span><em>key</em>, <em>value=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/prop.html#Prop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.prop.Prop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="piper.db.core.html#piper.db.core.LazyDatabaseMixin" title="piper.db.core.LazyDatabaseMixin"><code class="xref py py-class docutils literal"><span class="pre">piper.db.core.LazyDatabaseMixin</span></code></a></p>
+<dl class="method">
+<dt id="piper.prop.Prop.equals">
+<code class="descname">equals</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/prop.html#Prop.equals"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.prop.Prop.equals" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="piper.prop.Prop.source">
+<code class="descname">source</code><em class="property"> = &lt;piper.prop.PropSource object&gt;</em><a class="headerlink" href="#piper.prop.Prop.source" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="piper.prop.Prop.to_kwargs">
+<code class="descname">to_kwargs</code><span class="sig-paren">(</span><em>**extra</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/prop.html#Prop.to_kwargs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.prop.Prop.to_kwargs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="piper.prop.Prop.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><em>schema</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/prop.html#Prop.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.prop.Prop.validate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="piper.prop.Prop.value">
+<code class="descname">value</code><a class="headerlink" href="#piper.prop.Prop.value" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="piper.prop.PropCLI">
+<em class="property">class </em><code class="descclassname">piper.prop.</code><code class="descname">PropCLI</code><span class="sig-paren">(</span><em>config</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/prop.html#PropCLI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.prop.PropCLI" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="piper.db.core.html#piper.db.core.LazyDatabaseMixin" title="piper.db.core.LazyDatabaseMixin"><code class="xref py py-class docutils literal"><span class="pre">piper.db.core.LazyDatabaseMixin</span></code></a></p>
+<dl class="method">
+<dt id="piper.prop.PropCLI.compose">
+<code class="descname">compose</code><span class="sig-paren">(</span><em>parser</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/prop.html#PropCLI.compose"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.prop.PropCLI.compose" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="piper.prop.PropCLI.run">
+<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/prop.html#PropCLI.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.prop.PropCLI.run" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="piper.prop.PropSource">
+<em class="property">class </em><code class="descclassname">piper.prop.</code><code class="descname">PropSource</code><a class="reference internal" href="../_modules/piper/prop.html#PropSource"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.prop.PropSource" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="piper.prop.PropSource.flatten">
+<code class="descname">flatten</code><span class="sig-paren">(</span><em>d</em>, <em>parent_key=''</em>, <em>sep='.'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/prop.html#PropSource.flatten"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.prop.PropSource.flatten" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="piper.prop.PropSource.generate">
+<code class="descname">generate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/prop.html#PropSource.generate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.prop.PropSource.generate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Collect system properties and return a dictionary of them</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="piper.prop.PropSource.namespace">
+<code class="descname">namespace</code><a class="headerlink" href="#piper.prop.PropSource.namespace" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
+<dt id="piper.prop.PropValidationError">
+<em class="property">exception </em><code class="descclassname">piper.prop.</code><code class="descname">PropValidationError</code><span class="sig-paren">(</span><em>msg=''</em>, <em>key=None</em>, <em>value=None</em>, <em>other=None</em>, <em>namespace=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/prop.html#PropValidationError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.prop.PropValidationError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">Exception</span></code></p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="piper.schema.html" class="btn btn-neutral float-right" title="piper.schema" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="piper.process.html" class="btn btn-neutral" title="piper.process" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, Lowe Thiderman, Daniele Sluijters.
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.0.2',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

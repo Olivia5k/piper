@@ -1,0 +1,289 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>piper.step &mdash; Piper 0.0.2 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="Piper 0.0.2 documentation" href="../index.html"/>
+        <link rel="up" title="Reference" href="index.html"/>
+        <link rel="next" title="piper.utils" href="piper.utils.html"/>
+        <link rel="prev" title="piper.schema" href="piper.schema.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+
+        
+          <a href="../index.html" class="icon icon-home"> Piper
+        
+
+        
+        </a>
+
+        
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+        
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+          
+          
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../readme.html">Piper</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#huh">Huh?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#selling-points">Selling points</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#things-piper-lets-other-systems-do-better">Things piper lets other systems do better</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#rationale">Rationale</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#design">Design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#build">Build()</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html#packages">Packages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="piper.api.html">piper.api</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="piper.api.html#modules">Modules</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="piper.cli.html">piper.cli</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="piper.cli.html#modules">Modules</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="piper.db.html">piper.db package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="piper.db.html#modules">Modules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#modules">Modules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="piper.abc.html">piper.abc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="piper.build.html">piper.build</a></li>
+<li class="toctree-l3"><a class="reference internal" href="piper.config.html">piper.config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="piper.env.html">piper.env</a></li>
+<li class="toctree-l3"><a class="reference internal" href="piper.logging.html">piper.logging</a></li>
+<li class="toctree-l3"><a class="reference internal" href="piper.process.html">piper.process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="piper.prop.html">piper.prop</a></li>
+<li class="toctree-l3"><a class="reference internal" href="piper.schema.html">piper.schema</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="">piper.step</a></li>
+<li class="toctree-l3"><a class="reference internal" href="piper.utils.html">piper.utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="piper.vcs.html">piper.vcs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="piper.version.html">piper.version</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing to piper</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../contributing.html#development-environment">Development environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contributing.html#code-and-code-guidelines">Code and code guidelines</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../contributing.html#test-naming">Test naming</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../contributing.html#issue-management">Issue management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contributing.html#collaborators">Collaborators</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contributors.html">Contributors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Change Log</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#unreleased">unreleased</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id1">0.0.2 - 2015-04-19</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id2">0.0.1 - 2014-05-20</a></li>
+</ul>
+</li>
+</ul>
+
+          
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">Piper</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="index.html">Reference</a> &raquo;</li>
+      
+    <li>piper.step</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/reference/piper.step.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <div class="section" id="module-piper.step">
+<span id="piper-step"></span><h1>piper.step<a class="headerlink" href="#module-piper.step" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="piper.step.CommandLineStep">
+<em class="property">class </em><code class="descclassname">piper.step.</code><code class="descname">CommandLineStep</code><span class="sig-paren">(</span><em>build</em>, <em>config</em>, <em>key</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/step.html#CommandLineStep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.step.CommandLineStep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#piper.step.Step" title="piper.step.Step"><code class="xref py py-class docutils literal"><span class="pre">piper.step.Step</span></code></a></p>
+<p>Step that simply runs a command line from the configuration file.</p>
+<p>KISS.</p>
+<dl class="method">
+<dt id="piper.step.CommandLineStep.get_command">
+<code class="descname">get_command</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/step.html#CommandLineStep.get_command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.step.CommandLineStep.get_command" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="piper.step.CommandLineStep.schema">
+<code class="descname">schema</code><a class="headerlink" href="#piper.step.CommandLineStep.schema" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="piper.step.Step">
+<em class="property">class </em><code class="descclassname">piper.step.</code><code class="descname">Step</code><span class="sig-paren">(</span><em>build</em>, <em>config</em>, <em>key</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/step.html#Step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.step.Step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="piper.abc.html#piper.abc.DynamicItem" title="piper.abc.DynamicItem"><code class="xref py py-class docutils literal"><span class="pre">piper.abc.DynamicItem</span></code></a></p>
+<p>Abstract base class of an execution step.</p>
+<dl class="method">
+<dt id="piper.step.Step.get_command">
+<code class="descname">get_command</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/step.html#Step.get_command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.step.Step.get_command" title="Permalink to this definition">¶</a></dt>
+<dd><p>The main entry point.</p>
+<p>This is what Env()s are supposed to run.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="piper.step.Step.schema">
+<code class="descname">schema</code><a class="headerlink" href="#piper.step.Step.schema" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="piper.step.Step.set_index">
+<code class="descname">set_index</code><span class="sig-paren">(</span><em>cur</em>, <em>tot</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/step.html#Step.set_index"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.step.Step.set_index" title="Permalink to this definition">¶</a></dt>
+<dd><p>Store the order of the step running and set up the logger accordingly.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="piper.utils.html" class="btn btn-neutral float-right" title="piper.utils" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="piper.schema.html" class="btn btn-neutral" title="piper.schema" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, Lowe Thiderman, Daniele Sluijters.
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.0.2',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

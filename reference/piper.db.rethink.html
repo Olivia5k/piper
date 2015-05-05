@@ -1,0 +1,370 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>piper.db.rethink &mdash; Piper 0.0.2 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="Piper 0.0.2 documentation" href="../index.html"/>
+        <link rel="up" title="piper.db package" href="piper.db.html"/>
+        <link rel="next" title="piper.abc" href="piper.abc.html"/>
+        <link rel="prev" title="piper.db.core" href="piper.db.core.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+
+        
+          <a href="../index.html" class="icon icon-home"> Piper
+        
+
+        
+        </a>
+
+        
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+        
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+          
+          
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../readme.html">Piper</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#huh">Huh?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#selling-points">Selling points</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#things-piper-lets-other-systems-do-better">Things piper lets other systems do better</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#rationale">Rationale</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#design">Design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#build">Build()</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#packages">Packages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="piper.api.html">piper.api</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="piper.api.html#modules">Modules</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="piper.cli.html">piper.cli</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="piper.cli.html#modules">Modules</a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="piper.db.html">piper.db package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="piper.db.html#modules">Modules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#modules">Modules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="piper.abc.html">piper.abc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="piper.build.html">piper.build</a></li>
+<li class="toctree-l3"><a class="reference internal" href="piper.config.html">piper.config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="piper.env.html">piper.env</a></li>
+<li class="toctree-l3"><a class="reference internal" href="piper.logging.html">piper.logging</a></li>
+<li class="toctree-l3"><a class="reference internal" href="piper.process.html">piper.process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="piper.prop.html">piper.prop</a></li>
+<li class="toctree-l3"><a class="reference internal" href="piper.schema.html">piper.schema</a></li>
+<li class="toctree-l3"><a class="reference internal" href="piper.step.html">piper.step</a></li>
+<li class="toctree-l3"><a class="reference internal" href="piper.utils.html">piper.utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="piper.vcs.html">piper.vcs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="piper.version.html">piper.version</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing to piper</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../contributing.html#development-environment">Development environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contributing.html#code-and-code-guidelines">Code and code guidelines</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../contributing.html#test-naming">Test naming</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../contributing.html#issue-management">Issue management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contributing.html#collaborators">Collaborators</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contributors.html">Contributors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Change Log</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#unreleased">unreleased</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id1">0.0.2 - 2015-04-19</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id2">0.0.1 - 2014-05-20</a></li>
+</ul>
+</li>
+</ul>
+
+          
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">Piper</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="index.html">Reference</a> &raquo;</li>
+      
+          <li><a href="piper.db.html">piper.db package</a> &raquo;</li>
+      
+    <li>piper.db.rethink</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/reference/piper.db.rethink.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <div class="section" id="module-piper.db.rethink">
+<span id="piper-db-rethink"></span><h1>piper.db.rethink<a class="headerlink" href="#module-piper.db.rethink" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="piper.db.rethink.AgentManager">
+<em class="property">class </em><code class="descclassname">piper.db.rethink.</code><code class="descname">AgentManager</code><span class="sig-paren">(</span><em>db</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/db/rethink.html#AgentManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.db.rethink.AgentManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#piper.db.rethink.RethinkManager" title="piper.db.rethink.RethinkManager"><code class="xref py py-class docutils literal"><span class="pre">piper.db.rethink.RethinkManager</span></code></a>, <a class="reference internal" href="piper.db.core.html#piper.db.core.AgentManager" title="piper.db.core.AgentManager"><code class="xref py py-class docutils literal"><span class="pre">piper.db.core.AgentManager</span></code></a></p>
+<dl class="method">
+<dt id="piper.db.rethink.AgentManager.get">
+<code class="descname">get</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/db/rethink.html#AgentManager.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.db.rethink.AgentManager.get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="piper.db.rethink.AgentManager.lock">
+<code class="descname">lock</code><span class="sig-paren">(</span><em>build</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/db/rethink.html#AgentManager.lock"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.db.rethink.AgentManager.lock" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="piper.db.rethink.AgentManager.set_lock">
+<code class="descname">set_lock</code><span class="sig-paren">(</span><em>build</em>, <em>locked</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/db/rethink.html#AgentManager.set_lock"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.db.rethink.AgentManager.set_lock" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="piper.db.rethink.AgentManager.table_name">
+<code class="descname">table_name</code><em class="property"> = 'agent'</em><a class="headerlink" href="#piper.db.rethink.AgentManager.table_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="piper.db.rethink.AgentManager.unlock">
+<code class="descname">unlock</code><span class="sig-paren">(</span><em>build</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/db/rethink.html#AgentManager.unlock"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.db.rethink.AgentManager.unlock" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="piper.db.rethink.BuildManager">
+<em class="property">class </em><code class="descclassname">piper.db.rethink.</code><code class="descname">BuildManager</code><span class="sig-paren">(</span><em>db</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/db/rethink.html#BuildManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.db.rethink.BuildManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#piper.db.rethink.RethinkManager" title="piper.db.rethink.RethinkManager"><code class="xref py py-class docutils literal"><span class="pre">piper.db.rethink.RethinkManager</span></code></a>, <a class="reference internal" href="piper.db.core.html#piper.db.core.BuildManager" title="piper.db.core.BuildManager"><code class="xref py py-class docutils literal"><span class="pre">piper.db.core.BuildManager</span></code></a></p>
+<dl class="method">
+<dt id="piper.db.rethink.BuildManager.add">
+<code class="descname">add</code><span class="sig-paren">(</span><em>build</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/db/rethink.html#BuildManager.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.db.rethink.BuildManager.add" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="piper.db.rethink.BuildManager.all">
+<code class="descname">all</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/db/rethink.html#BuildManager.all"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.db.rethink.BuildManager.all" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="piper.db.rethink.BuildManager.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>build_id</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/db/rethink.html#BuildManager.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.db.rethink.BuildManager.get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="piper.db.rethink.BuildManager.table_name">
+<code class="descname">table_name</code><em class="property"> = 'build'</em><a class="headerlink" href="#piper.db.rethink.BuildManager.table_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="piper.db.rethink.BuildManager.update">
+<code class="descname">update</code><span class="sig-paren">(</span><em>build</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/db/rethink.html#BuildManager.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.db.rethink.BuildManager.update" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="piper.db.rethink.RethinkDB">
+<em class="property">class </em><code class="descclassname">piper.db.rethink.</code><code class="descname">RethinkDB</code><a class="reference internal" href="../_modules/piper/db/rethink.html#RethinkDB"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.db.rethink.RethinkDB" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="piper.db.core.html#piper.db.core.Database" title="piper.db.core.Database"><code class="xref py py-class docutils literal"><span class="pre">piper.db.core.Database</span></code></a></p>
+<dl class="method">
+<dt id="piper.db.rethink.RethinkDB.connect">
+<code class="descname">connect</code><span class="sig-paren">(</span><em>config</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/db/rethink.html#RethinkDB.connect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.db.rethink.RethinkDB.connect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Start a connection to RethinkDB.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="piper.db.rethink.RethinkDB.create_database">
+<code class="descname">create_database</code><span class="sig-paren">(</span><em>config</em>, <em>conn</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/db/rethink.html#RethinkDB.create_database"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.db.rethink.RethinkDB.create_database" title="Permalink to this definition">¶</a></dt>
+<dd><p>Idempotently try to create the database</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="piper.db.rethink.RethinkDB.create_table">
+<code class="descname">create_table</code><span class="sig-paren">(</span><em>tables</em>, <em>man</em>, <em>conn</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/db/rethink.html#RethinkDB.create_table"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.db.rethink.RethinkDB.create_table" title="Permalink to this definition">¶</a></dt>
+<dd><p>Idempotently create a table</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="piper.db.rethink.RethinkDB.create_tables">
+<code class="descname">create_tables</code><span class="sig-paren">(</span><em>conn</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/db/rethink.html#RethinkDB.create_tables"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.db.rethink.RethinkDB.create_tables" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="piper.db.rethink.RethinkDB.init">
+<code class="descname">init</code><span class="sig-paren">(</span><em>config</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/db/rethink.html#RethinkDB.init"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.db.rethink.RethinkDB.init" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used for initial creation of database when none exists.
+Used by <cite>piperd db init</cite></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="piper.db.rethink.RethinkDB.managers">
+<code class="descname">managers</code><em class="property"> = (&lt;class 'piper.db.rethink.AgentManager'&gt;, &lt;class 'piper.db.rethink.BuildManager'&gt;)</em><a class="headerlink" href="#piper.db.rethink.RethinkDB.managers" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="piper.db.rethink.RethinkDB.setup">
+<code class="descname">setup</code><span class="sig-paren">(</span><em>config</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/db/rethink.html#RethinkDB.setup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.db.rethink.RethinkDB.setup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used for setting up a session when starting piper</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="piper.db.rethink.RethinkDB.setup_managers">
+<code class="descname">setup_managers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/db/rethink.html#RethinkDB.setup_managers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.db.rethink.RethinkDB.setup_managers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create instances of all manager classes, setting them as attributes
+with the same name as their table names.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="piper.db.rethink.RethinkManager">
+<em class="property">class </em><code class="descclassname">piper.db.rethink.</code><code class="descname">RethinkManager</code><span class="sig-paren">(</span><em>db</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/piper/db/rethink.html#RethinkManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#piper.db.rethink.RethinkManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="piper.abc.html" class="btn btn-neutral float-right" title="piper.abc" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="piper.db.core.html" class="btn btn-neutral" title="piper.db.core" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, Lowe Thiderman, Daniele Sluijters.
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.0.2',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

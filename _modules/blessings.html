@@ -1,0 +1,792 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>blessings &mdash; Piper 0.0.2 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="Piper 0.0.2 documentation" href="../index.html"/>
+        <link rel="up" title="Module code" href="index.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+
+        
+          <a href="../index.html" class="icon icon-home"> Piper
+        
+
+        
+        </a>
+
+        
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+        
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+          
+          
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html">Piper</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#huh">Huh?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#selling-points">Selling points</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#things-piper-lets-other-systems-do-better">Things piper lets other systems do better</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#rationale">Rationale</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#design">Design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#build">Build()</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/index.html">Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../reference/index.html#packages">Packages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference/piper.api.html">piper.api</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../reference/piper.api.html#modules">Modules</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/piper.cli.html">piper.cli</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../reference/piper.cli.html#modules">Modules</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/piper.db.html">piper.db package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../reference/piper.db.html#modules">Modules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/index.html#modules">Modules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference/piper.abc.html">piper.abc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/piper.build.html">piper.build</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/piper.config.html">piper.config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/piper.env.html">piper.env</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/piper.logging.html">piper.logging</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/piper.process.html">piper.process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/piper.prop.html">piper.prop</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/piper.schema.html">piper.schema</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/piper.step.html">piper.step</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/piper.utils.html">piper.utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/piper.vcs.html">piper.vcs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/piper.version.html">piper.version</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing to piper</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../contributing.html#development-environment">Development environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contributing.html#code-and-code-guidelines">Code and code guidelines</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../contributing.html#test-naming">Test naming</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../contributing.html#issue-management">Issue management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contributing.html#collaborators">Collaborators</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contributors.html">Contributors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Change Log</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#unreleased">unreleased</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id1">0.0.2 - 2015-04-19</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#id2">0.0.1 - 2014-05-20</a></li>
+</ul>
+</li>
+</ul>
+
+          
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">Piper</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="index.html">Module code</a> &raquo;</li>
+      
+    <li>blessings</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <h1>Source code for blessings</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;A thin, practical wrapper around terminal coloring, styling, and</span>
+<span class="sd">positioning&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">contextmanager</span>
+<span class="kn">import</span> <span class="nn">curses</span>
+<span class="kn">from</span> <span class="nn">curses</span> <span class="kn">import</span> <span class="n">setupterm</span><span class="p">,</span> <span class="n">tigetnum</span><span class="p">,</span> <span class="n">tigetstr</span><span class="p">,</span> <span class="n">tparm</span>
+<span class="kn">from</span> <span class="nn">fcntl</span> <span class="kn">import</span> <span class="n">ioctl</span>
+<span class="kn">import</span> <span class="nn">collections</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">UnsupportedOperation</span> <span class="k">as</span> <span class="n">IOUnsupportedOperation</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="k">class</span> <span class="nc">IOUnsupportedOperation</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;A dummy exception to take the place of Python 3&#39;s</span>
+<span class="sd">        ``io.UnsupportedOperation`` in Python 2&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">isatty</span><span class="p">,</span> <span class="n">environ</span>
+<span class="kn">from</span> <span class="nn">platform</span> <span class="kn">import</span> <span class="n">python_version_tuple</span>
+<span class="kn">import</span> <span class="nn">struct</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">termios</span> <span class="kn">import</span> <span class="n">TIOCGWINSZ</span>
+
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;Terminal&#39;</span><span class="p">]</span>
+
+
+<span class="k">if</span> <span class="p">(</span><span class="s">&#39;3&#39;</span><span class="p">,</span> <span class="s">&#39;0&#39;</span><span class="p">,</span> <span class="s">&#39;0&#39;</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">python_version_tuple</span><span class="p">()</span> <span class="o">&lt;</span> <span class="p">(</span><span class="s">&#39;3&#39;</span><span class="p">,</span> <span class="s">&#39;2&#39;</span><span class="p">,</span> <span class="s">&#39;2+&#39;</span><span class="p">):</span>  <span class="c"># Good till</span>
+                                                                  <span class="c"># 3.2.10</span>
+    <span class="c"># Python 3.x &lt; 3.2.3 has a bug in which tparm() erroneously takes a string.</span>
+    <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s">&#39;Blessings needs Python 3.2.3 or greater for Python 3 &#39;</span>
+                      <span class="s">&#39;support due to http://bugs.python.org/issue10570.&#39;</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">Terminal</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;An abstraction around terminal capabilities</span>
+
+<span class="sd">    Unlike curses, this doesn&#39;t require clearing the screen before doing</span>
+<span class="sd">    anything, and it&#39;s friendlier to use. It keeps the endless calls to</span>
+<span class="sd">    ``tigetstr()`` and ``tparm()`` out of your code, and it acts intelligently</span>
+<span class="sd">    when somebody pipes your output to a non-terminal.</span>
+
+<span class="sd">    Instance attributes:</span>
+
+<span class="sd">      ``stream``</span>
+<span class="sd">        The stream the terminal outputs to. It&#39;s convenient to pass the stream</span>
+<span class="sd">        around with the terminal; it&#39;s almost always needed when the terminal</span>
+<span class="sd">        is and saves sticking lots of extra args on client functions in</span>
+<span class="sd">        practice.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">force_styling</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialize the terminal.</span>
+
+<span class="sd">        If ``stream`` is not a tty, I will default to returning an empty</span>
+<span class="sd">        Unicode string for all capability values, so things like piping your</span>
+<span class="sd">        output to a file won&#39;t strew escape sequences all over the place. The</span>
+<span class="sd">        ``ls`` command sets a precedent for this: it defaults to columnar</span>
+<span class="sd">        output when being sent to a tty and one-item-per-line when not.</span>
+
+<span class="sd">        :arg kind: A terminal string as taken by ``setupterm()``. Defaults to</span>
+<span class="sd">            the value of the ``TERM`` environment variable.</span>
+<span class="sd">        :arg stream: A file-like object representing the terminal. Defaults to</span>
+<span class="sd">            the original value of stdout, like ``curses.initscr()`` does.</span>
+<span class="sd">        :arg force_styling: Whether to force the emission of capabilities, even</span>
+<span class="sd">            if we don&#39;t seem to be in a terminal. This comes in handy if users</span>
+<span class="sd">            are trying to pipe your output through something like ``less -r``,</span>
+<span class="sd">            which supports terminal codes just fine but doesn&#39;t appear itself</span>
+<span class="sd">            to be a terminal. Just expose a command-line option, and set</span>
+<span class="sd">            ``force_styling`` based on it. Terminal initialization sequences</span>
+<span class="sd">            will be sent to ``stream`` if it has a file descriptor and to</span>
+<span class="sd">            ``sys.__stdout__`` otherwise. (``setupterm()`` demands to send them</span>
+<span class="sd">            somewhere, and stdout is probably where the output is ultimately</span>
+<span class="sd">            headed. If not, stderr is probably bound to the same terminal.)</span>
+
+<span class="sd">            If you want to force styling to not happen, pass</span>
+<span class="sd">            ``force_styling=None``.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">stream</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">stream</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">__stdout__</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">stream_descriptor</span> <span class="o">=</span> <span class="p">(</span><span class="n">stream</span><span class="o">.</span><span class="n">fileno</span><span class="p">()</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="s">&#39;fileno&#39;</span><span class="p">)</span>
+                                 <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">stream</span><span class="o">.</span><span class="n">fileno</span><span class="p">,</span> <span class="n">collections</span><span class="o">.</span><span class="n">Callable</span><span class="p">)</span>
+                                 <span class="k">else</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">IOUnsupportedOperation</span><span class="p">:</span>
+            <span class="n">stream_descriptor</span> <span class="o">=</span> <span class="bp">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_is_a_tty</span> <span class="o">=</span> <span class="p">(</span><span class="n">stream_descriptor</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span>
+                         <span class="n">isatty</span><span class="p">(</span><span class="n">stream_descriptor</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_does_styling</span> <span class="o">=</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">is_a_tty</span> <span class="ow">or</span> <span class="n">force_styling</span><span class="p">)</span> <span class="ow">and</span>
+                              <span class="n">force_styling</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">)</span>
+
+        <span class="c"># The desciptor to direct terminal initialization sequences to.</span>
+        <span class="c"># sys.__stdout__ seems to always have a descriptor of 1, even if output</span>
+        <span class="c"># is redirected.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_init_descriptor</span> <span class="o">=</span> <span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">__stdout__</span><span class="o">.</span><span class="n">fileno</span><span class="p">()</span>
+                                 <span class="k">if</span> <span class="n">stream_descriptor</span> <span class="ow">is</span> <span class="bp">None</span>
+                                 <span class="k">else</span> <span class="n">stream_descriptor</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">does_styling</span><span class="p">:</span>
+            <span class="c"># Make things like tigetstr() work. Explicit args make setupterm()</span>
+            <span class="c"># work even when -s is passed to nosetests. Lean toward sending</span>
+            <span class="c"># init sequences to the stream if it has a file descriptor, and</span>
+            <span class="c"># send them to stdout as a fallback, since they have to go</span>
+            <span class="c"># somewhere.</span>
+            <span class="n">setupterm</span><span class="p">(</span><span class="n">kind</span> <span class="ow">or</span> <span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;TERM&#39;</span><span class="p">,</span> <span class="s">&#39;unknown&#39;</span><span class="p">),</span>
+                      <span class="bp">self</span><span class="o">.</span><span class="n">_init_descriptor</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">stream</span> <span class="o">=</span> <span class="n">stream</span>
+
+    <span class="c"># Sugary names for commonly-used capabilities, intended to help avoid trips</span>
+    <span class="c"># to the terminfo man page and comments in your code:</span>
+    <span class="n">_sugar</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+        <span class="c"># Don&#39;t use &quot;on&quot; or &quot;bright&quot; as an underscore-separated chunk in any of</span>
+        <span class="c"># these (e.g. on_cology or rock_on) so we don&#39;t interfere with</span>
+        <span class="c"># __getattr__.</span>
+        <span class="n">save</span><span class="o">=</span><span class="s">&#39;sc&#39;</span><span class="p">,</span>
+        <span class="n">restore</span><span class="o">=</span><span class="s">&#39;rc&#39;</span><span class="p">,</span>
+
+        <span class="n">clear_eol</span><span class="o">=</span><span class="s">&#39;el&#39;</span><span class="p">,</span>
+        <span class="n">clear_bol</span><span class="o">=</span><span class="s">&#39;el1&#39;</span><span class="p">,</span>
+        <span class="n">clear_eos</span><span class="o">=</span><span class="s">&#39;ed&#39;</span><span class="p">,</span>
+        <span class="c"># &#39;clear&#39; clears the whole screen.</span>
+        <span class="n">position</span><span class="o">=</span><span class="s">&#39;cup&#39;</span><span class="p">,</span>  <span class="c"># deprecated</span>
+        <span class="n">enter_fullscreen</span><span class="o">=</span><span class="s">&#39;smcup&#39;</span><span class="p">,</span>
+        <span class="n">exit_fullscreen</span><span class="o">=</span><span class="s">&#39;rmcup&#39;</span><span class="p">,</span>
+        <span class="n">move</span><span class="o">=</span><span class="s">&#39;cup&#39;</span><span class="p">,</span>
+        <span class="n">move_x</span><span class="o">=</span><span class="s">&#39;hpa&#39;</span><span class="p">,</span>
+        <span class="n">move_y</span><span class="o">=</span><span class="s">&#39;vpa&#39;</span><span class="p">,</span>
+        <span class="n">move_left</span><span class="o">=</span><span class="s">&#39;cub1&#39;</span><span class="p">,</span>
+        <span class="n">move_right</span><span class="o">=</span><span class="s">&#39;cuf1&#39;</span><span class="p">,</span>
+        <span class="n">move_up</span><span class="o">=</span><span class="s">&#39;cuu1&#39;</span><span class="p">,</span>
+        <span class="n">move_down</span><span class="o">=</span><span class="s">&#39;cud1&#39;</span><span class="p">,</span>
+
+        <span class="n">hide_cursor</span><span class="o">=</span><span class="s">&#39;civis&#39;</span><span class="p">,</span>
+        <span class="n">normal_cursor</span><span class="o">=</span><span class="s">&#39;cnorm&#39;</span><span class="p">,</span>
+
+        <span class="n">reset_colors</span><span class="o">=</span><span class="s">&#39;op&#39;</span><span class="p">,</span>  <span class="c"># oc doesn&#39;t work on my OS X terminal.</span>
+
+        <span class="n">normal</span><span class="o">=</span><span class="s">&#39;sgr0&#39;</span><span class="p">,</span>
+        <span class="n">reverse</span><span class="o">=</span><span class="s">&#39;rev&#39;</span><span class="p">,</span>
+        <span class="c"># &#39;bold&#39; is just &#39;bold&#39;. Similarly...</span>
+        <span class="c"># blink</span>
+        <span class="c"># dim</span>
+        <span class="c"># flash</span>
+        <span class="n">italic</span><span class="o">=</span><span class="s">&#39;sitm&#39;</span><span class="p">,</span>
+        <span class="n">no_italic</span><span class="o">=</span><span class="s">&#39;ritm&#39;</span><span class="p">,</span>
+        <span class="n">shadow</span><span class="o">=</span><span class="s">&#39;sshm&#39;</span><span class="p">,</span>
+        <span class="n">no_shadow</span><span class="o">=</span><span class="s">&#39;rshm&#39;</span><span class="p">,</span>
+        <span class="n">standout</span><span class="o">=</span><span class="s">&#39;smso&#39;</span><span class="p">,</span>
+        <span class="n">no_standout</span><span class="o">=</span><span class="s">&#39;rmso&#39;</span><span class="p">,</span>
+        <span class="n">subscript</span><span class="o">=</span><span class="s">&#39;ssubm&#39;</span><span class="p">,</span>
+        <span class="n">no_subscript</span><span class="o">=</span><span class="s">&#39;rsubm&#39;</span><span class="p">,</span>
+        <span class="n">superscript</span><span class="o">=</span><span class="s">&#39;ssupm&#39;</span><span class="p">,</span>
+        <span class="n">no_superscript</span><span class="o">=</span><span class="s">&#39;rsupm&#39;</span><span class="p">,</span>
+        <span class="n">underline</span><span class="o">=</span><span class="s">&#39;smul&#39;</span><span class="p">,</span>
+        <span class="n">no_underline</span><span class="o">=</span><span class="s">&#39;rmul&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a terminal capability, like bold.</span>
+
+<span class="sd">        For example, you can say ``term.bold`` to get the string that turns on</span>
+<span class="sd">        bold formatting and ``term.normal`` to get the string that turns it off</span>
+<span class="sd">        again. Or you can take a shortcut: ``term.bold(&#39;hi&#39;)`` bolds its</span>
+<span class="sd">        argument and sets everything to normal afterward. You can even combine</span>
+<span class="sd">        things: ``term.bold_underline_red_on_bright_green(&#39;yowzers!&#39;)``.</span>
+
+<span class="sd">        For a parametrized capability like ``cup``, pass the parameters too:</span>
+<span class="sd">        ``some_term.cup(line, column)``.</span>
+
+<span class="sd">        ``man terminfo`` for a complete list of capabilities.</span>
+
+<span class="sd">        Return values are always Unicode.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">resolution</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_resolve_formatter</span><span class="p">(</span><span class="n">attr</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">does_styling</span>
+                      <span class="k">else</span> <span class="n">NullCallableString</span><span class="p">())</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">resolution</span><span class="p">)</span>  <span class="c"># Cache capability codes.</span>
+        <span class="k">return</span> <span class="n">resolution</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">does_styling</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Whether attempt to emit capabilities</span>
+
+<span class="sd">        This is influenced by the ``is_a_tty`` property and by the</span>
+<span class="sd">        ``force_styling`` argument to the constructor. You can examine</span>
+<span class="sd">        this value to decide whether to draw progress bars or other frippery.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_does_styling</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">is_a_tty</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Whether my ``stream`` appears to be associated with a terminal&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_a_tty</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">height</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The height of the terminal in characters</span>
+
+<span class="sd">        If no stream or a stream not representing a terminal was passed in at</span>
+<span class="sd">        construction, return the dimension of the controlling terminal so</span>
+<span class="sd">        piping to things that eventually display on the terminal (like ``less</span>
+<span class="sd">        -R``) work. If a stream representing a terminal was passed in, return</span>
+<span class="sd">        the dimensions of that terminal. If there somehow is no controlling</span>
+<span class="sd">        terminal, return ``None``. (Thus, you should check that the property</span>
+<span class="sd">        ``is_a_tty`` is true before doing any math on the result.)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_height_and_width</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">width</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The width of the terminal in characters</span>
+
+<span class="sd">        See ``height()`` for some corner cases.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_height_and_width</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">_height_and_width</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a tuple of (terminal height, terminal width).</span>
+
+<span class="sd">        Start by trying TIOCGWINSZ (Terminal I/O-Control: Get Window Size),</span>
+<span class="sd">        falling back to environment variables (LINES, COLUMNS), and returning</span>
+<span class="sd">        (None, None) if those are unavailable or invalid.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c"># tigetnum(&#39;lines&#39;) and tigetnum(&#39;cols&#39;) update only if we call</span>
+        <span class="c"># setupterm() again.</span>
+        <span class="k">for</span> <span class="n">descriptor</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_init_descriptor</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">__stdout__</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span>
+                        <span class="s">&#39;hhhh&#39;</span><span class="p">,</span> <span class="n">ioctl</span><span class="p">(</span><span class="n">descriptor</span><span class="p">,</span> <span class="n">TIOCGWINSZ</span><span class="p">,</span> <span class="s">&#39;</span><span class="se">\000</span><span class="s">&#39;</span> <span class="o">*</span> <span class="mi">8</span><span class="p">))[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
+            <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
+                <span class="c"># when the output stream or init descriptor is not a tty, such</span>
+                <span class="c"># as when when stdout is piped to another program, fe. tee(1),</span>
+                <span class="c"># these ioctls will raise IOError</span>
+                <span class="k">pass</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;LINES&#39;</span><span class="p">)),</span> <span class="nb">int</span><span class="p">(</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;COLUMNS&#39;</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span>
+
+    <span class="nd">@contextmanager</span>
+    <span class="k">def</span> <span class="nf">location</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a context manager for temporarily moving the cursor.</span>
+
+<span class="sd">        Move the cursor to a certain position on entry, let you print stuff</span>
+<span class="sd">        there, then return the cursor to its original position::</span>
+
+<span class="sd">            term = Terminal()</span>
+<span class="sd">            with term.location(2, 5):</span>
+<span class="sd">                print &#39;Hello, world!&#39;</span>
+<span class="sd">                for x in xrange(10):</span>
+<span class="sd">                    print &#39;I can do it %i times!&#39; % x</span>
+
+<span class="sd">        Specify ``x`` to move to a certain column, ``y`` to move to a certain</span>
+<span class="sd">        row, both, or neither. If you specify neither, only the saving and</span>
+<span class="sd">        restoration of cursor position will happen. This can be useful if you</span>
+<span class="sd">        simply want to restore your place after doing some manual cursor</span>
+<span class="sd">        movement.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c"># Save position and move to the requested column, row, or both:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stream</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">y</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stream</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="n">x</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stream</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">move_x</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="n">y</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stream</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">move_y</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">yield</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="c"># Restore original cursor position:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stream</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">restore</span><span class="p">)</span>
+
+    <span class="nd">@contextmanager</span>
+    <span class="k">def</span> <span class="nf">fullscreen</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a context manager that enters fullscreen mode while inside it</span>
+<span class="sd">        and restores normal mode on leaving.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stream</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">enter_fullscreen</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">yield</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stream</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">exit_fullscreen</span><span class="p">)</span>
+
+    <span class="nd">@contextmanager</span>
+    <span class="k">def</span> <span class="nf">hidden_cursor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a context manager that hides the cursor while inside it and</span>
+<span class="sd">        makes it visible on leaving.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stream</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hide_cursor</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">yield</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stream</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">normal_cursor</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">color</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a capability that sets the foreground color.</span>
+
+<span class="sd">        The capability is unparametrized until called and passed a number</span>
+<span class="sd">        (0-15), at which point it returns another string which represents a</span>
+<span class="sd">        specific color change. This second string can further be called to</span>
+<span class="sd">        color a piece of text and set everything back to normal afterward.</span>
+
+<span class="sd">        :arg num: The number, 0-15, of the color</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">ParametrizingString</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_foreground_color</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">normal</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">on_color</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a capability that sets the background color.</span>
+
+<span class="sd">        See ``color()``.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">ParametrizingString</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_background_color</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">normal</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">number_of_colors</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the number of colors the terminal supports.</span>
+
+<span class="sd">        Common values are 0, 8, 16, 88, and 256.</span>
+
+<span class="sd">        Though the underlying capability returns -1 when there is no color</span>
+<span class="sd">        support, we return 0. This lets you test more Pythonically::</span>
+
+<span class="sd">            if term.number_of_colors:</span>
+<span class="sd">                ...</span>
+
+<span class="sd">        We also return 0 if the terminal won&#39;t tell us how many colors it</span>
+<span class="sd">        supports, which I think is rare.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c"># This is actually the only remotely useful numeric capability. We</span>
+        <span class="c"># don&#39;t name it after the underlying capability, because we deviate</span>
+        <span class="c"># slightly from its behavior, and we might someday wish to give direct</span>
+        <span class="c"># access to it.</span>
+        <span class="n">colors</span> <span class="o">=</span> <span class="n">tigetnum</span><span class="p">(</span><span class="s">&#39;colors&#39;</span><span class="p">)</span>  <span class="c"># Returns -1 if no color support, -2 if no</span>
+                                     <span class="c"># such cap.</span>
+        <span class="c">#  self.__dict__[&#39;colors&#39;] = ret  # Cache it. It&#39;s not changing.</span>
+                                          <span class="c"># (Doesn&#39;t work.)</span>
+        <span class="k">return</span> <span class="n">colors</span> <span class="k">if</span> <span class="n">colors</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="nf">_resolve_formatter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Resolve a sugary or plain capability name, color, or compound</span>
+<span class="sd">        formatting function name into a callable capability.</span>
+
+<span class="sd">        Return a ``ParametrizingString`` or a ``FormattingString``.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">COLORS</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resolve_color</span><span class="p">(</span><span class="n">attr</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">COMPOUNDABLES</span><span class="p">:</span>
+            <span class="c"># Bold, underline, or something that takes no parameters</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_formatting_string</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_resolve_capability</span><span class="p">(</span><span class="n">attr</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">formatters</span> <span class="o">=</span> <span class="n">split_into_formatters</span><span class="p">(</span><span class="n">attr</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="n">f</span> <span class="ow">in</span> <span class="n">COMPOUNDABLES</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">formatters</span><span class="p">):</span>
+                <span class="c"># It&#39;s a compound formatter, like &quot;bold_green_on_red&quot;. Future</span>
+                <span class="c"># optimization: combine all formatting into a single escape</span>
+                <span class="c"># sequence.</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_formatting_string</span><span class="p">(</span>
+                    <span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_resolve_formatter</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">formatters</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">ParametrizingString</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_resolve_capability</span><span class="p">(</span><span class="n">attr</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">_resolve_capability</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atom</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a terminal code for a capname or a sugary name, or an empty</span>
+<span class="sd">        Unicode.</span>
+
+<span class="sd">        The return value is always Unicode, because otherwise it is clumsy</span>
+<span class="sd">        (especially in Python 3) to concatenate with real (Unicode) strings.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">code</span> <span class="o">=</span> <span class="n">tigetstr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sugar</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">atom</span><span class="p">,</span> <span class="n">atom</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">code</span><span class="p">:</span>
+            <span class="c"># See the comment in ParametrizingString for why this is latin1.</span>
+            <span class="k">return</span> <span class="n">code</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s">&#39;latin1&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s">&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">_resolve_color</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">color</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Resolve a color like red or on_bright_green into a callable</span>
+<span class="sd">        capability.&quot;&quot;&quot;</span>
+        <span class="c"># TODO: Does curses automatically exchange red and blue and cyan and</span>
+        <span class="c"># yellow when a terminal supports setf/setb rather than setaf/setab?</span>
+        <span class="c"># I&#39;ll be blasted if I can find any documentation. The following</span>
+        <span class="c"># assumes it does.</span>
+        <span class="n">color_cap</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_background_color</span> <span class="k">if</span> <span class="s">&#39;on_&#39;</span> <span class="ow">in</span> <span class="n">color</span> <span class="k">else</span>
+                     <span class="bp">self</span><span class="o">.</span><span class="n">_foreground_color</span><span class="p">)</span>
+        <span class="c"># curses constants go up to only 7, so add an offset to get at the</span>
+        <span class="c"># bright colors at 8-15:</span>
+        <span class="n">offset</span> <span class="o">=</span> <span class="mi">8</span> <span class="k">if</span> <span class="s">&#39;bright_&#39;</span> <span class="ow">in</span> <span class="n">color</span> <span class="k">else</span> <span class="mi">0</span>
+        <span class="n">base_color</span> <span class="o">=</span> <span class="n">color</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s">&#39;_&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_formatting_string</span><span class="p">(</span>
+            <span class="n">color_cap</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">curses</span><span class="p">,</span> <span class="s">&#39;COLOR_&#39;</span> <span class="o">+</span> <span class="n">base_color</span><span class="o">.</span><span class="n">upper</span><span class="p">())</span> <span class="o">+</span> <span class="n">offset</span><span class="p">))</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">_foreground_color</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">setaf</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">setf</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">_background_color</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">setab</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">setb</span>
+
+    <span class="k">def</span> <span class="nf">_formatting_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">formatting</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a new ``FormattingString`` which implicitly receives my</span>
+<span class="sd">        notion of &quot;normal&quot;.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">FormattingString</span><span class="p">(</span><span class="n">formatting</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">normal</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">derivative_colors</span><span class="p">(</span><span class="n">colors</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return the names of valid color variants, given the base colors.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">set</span><span class="p">([(</span><span class="s">&#39;on_&#39;</span> <span class="o">+</span> <span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">colors</span><span class="p">]</span> <span class="o">+</span>
+               <span class="p">[(</span><span class="s">&#39;bright_&#39;</span> <span class="o">+</span> <span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">colors</span><span class="p">]</span> <span class="o">+</span>
+               <span class="p">[(</span><span class="s">&#39;on_bright_&#39;</span> <span class="o">+</span> <span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">colors</span><span class="p">])</span>
+
+
+<span class="n">COLORS</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="s">&#39;black&#39;</span><span class="p">,</span> <span class="s">&#39;red&#39;</span><span class="p">,</span> <span class="s">&#39;green&#39;</span><span class="p">,</span> <span class="s">&#39;yellow&#39;</span><span class="p">,</span> <span class="s">&#39;blue&#39;</span><span class="p">,</span> <span class="s">&#39;magenta&#39;</span><span class="p">,</span> <span class="s">&#39;cyan&#39;</span><span class="p">,</span>
+              <span class="s">&#39;white&#39;</span><span class="p">])</span>
+<span class="n">COLORS</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">derivative_colors</span><span class="p">(</span><span class="n">COLORS</span><span class="p">))</span>
+<span class="n">COMPOUNDABLES</span> <span class="o">=</span> <span class="p">(</span><span class="n">COLORS</span> <span class="o">|</span>
+                 <span class="nb">set</span><span class="p">([</span><span class="s">&#39;bold&#39;</span><span class="p">,</span> <span class="s">&#39;underline&#39;</span><span class="p">,</span> <span class="s">&#39;reverse&#39;</span><span class="p">,</span> <span class="s">&#39;blink&#39;</span><span class="p">,</span> <span class="s">&#39;dim&#39;</span><span class="p">,</span> <span class="s">&#39;italic&#39;</span><span class="p">,</span>
+                      <span class="s">&#39;shadow&#39;</span><span class="p">,</span> <span class="s">&#39;standout&#39;</span><span class="p">,</span> <span class="s">&#39;subscript&#39;</span><span class="p">,</span> <span class="s">&#39;superscript&#39;</span><span class="p">]))</span>
+
+
+<span class="k">class</span> <span class="nc">ParametrizingString</span><span class="p">(</span><span class="nb">str</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A Unicode string which can be called to parametrize it as a terminal</span>
+<span class="sd">    capability&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">formatting</span><span class="p">,</span> <span class="n">normal</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Instantiate.</span>
+
+<span class="sd">        :arg normal: If non-None, indicates that, once parametrized, this can</span>
+<span class="sd">            be used as a ``FormattingString``. The value is used as the</span>
+<span class="sd">            &quot;normal&quot; capability.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">new</span> <span class="o">=</span> <span class="nb">str</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">formatting</span><span class="p">)</span>
+        <span class="n">new</span><span class="o">.</span><span class="n">_normal</span> <span class="o">=</span> <span class="n">normal</span>
+        <span class="k">return</span> <span class="n">new</span>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c"># Re-encode the cap, because tparm() takes a bytestring in Python</span>
+            <span class="c"># 3. However, appear to be a plain Unicode string otherwise so</span>
+            <span class="c"># concats work.</span>
+            <span class="c">#</span>
+            <span class="c"># We use *latin1* encoding so that bytes emitted by tparm are</span>
+            <span class="c"># encoded to their native value: some terminal kinds, such as</span>
+            <span class="c"># &#39;avatar&#39; or &#39;kermit&#39;, emit 8-bit bytes in range 0x7f to 0xff.</span>
+            <span class="c"># latin1 leaves these values unmodified in their conversion to</span>
+            <span class="c"># unicode byte values. The terminal emulator will &quot;catch&quot; and</span>
+            <span class="c"># handle these values, even if emitting utf8-encoded text, where</span>
+            <span class="c"># these bytes would otherwise be illegal utf8 start bytes.</span>
+            <span class="n">parametrized</span> <span class="o">=</span> <span class="n">tparm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">&#39;latin1&#39;</span><span class="p">),</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s">&#39;latin1&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">parametrized</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_normal</span> <span class="ow">is</span> <span class="bp">None</span> <span class="k">else</span>
+                    <span class="n">FormattingString</span><span class="p">(</span><span class="n">parametrized</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_normal</span><span class="p">))</span>
+        <span class="k">except</span> <span class="n">curses</span><span class="o">.</span><span class="n">error</span><span class="p">:</span>
+            <span class="c"># Catch &quot;must call (at least) setupterm() first&quot; errors, as when</span>
+            <span class="c"># running simply `nosetests` (without progressive) on nose-</span>
+            <span class="c"># progressive. Perhaps the terminal has gone away between calling</span>
+            <span class="c"># tigetstr and calling tparm.</span>
+            <span class="k">return</span> <span class="s">&#39;&#39;</span>
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+            <span class="c"># If the first non-int (i.e. incorrect) arg was a string, suggest</span>
+            <span class="c"># something intelligent:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                    <span class="s">&#39;A native or nonexistent capability template received &#39;</span>
+                    <span class="s">&#39;</span><span class="si">%r</span><span class="s"> when it was expecting ints. You probably misspelled a &#39;</span>
+                    <span class="s">&#39;formatting call like bright_red_on_white(...).&#39;</span> <span class="o">%</span> <span class="n">args</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c"># Somebody passed a non-string; I don&#39;t feel confident</span>
+                <span class="c"># guessing what they were trying to do.</span>
+                <span class="k">raise</span>
+
+
+<span class="k">class</span> <span class="nc">FormattingString</span><span class="p">(</span><span class="nb">str</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A Unicode string which can be called upon a piece of text to wrap it in</span>
+<span class="sd">    formatting&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">formatting</span><span class="p">,</span> <span class="n">normal</span><span class="p">):</span>
+        <span class="n">new</span> <span class="o">=</span> <span class="nb">str</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">formatting</span><span class="p">)</span>
+        <span class="n">new</span><span class="o">.</span><span class="n">_normal</span> <span class="o">=</span> <span class="n">normal</span>
+        <span class="k">return</span> <span class="n">new</span>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a new string that is ``text`` formatted with my contents.</span>
+
+<span class="sd">        At the beginning of the string, I prepend the formatting that is my</span>
+<span class="sd">        contents. At the end, I append the &quot;normal&quot; sequence to set everything</span>
+<span class="sd">        back to defaults. The return value is always a Unicode.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span> <span class="o">+</span> <span class="n">text</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_normal</span>
+
+
+<span class="k">class</span> <span class="nc">NullCallableString</span><span class="p">(</span><span class="nb">str</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A dummy callable Unicode to stand in for ``FormattingString`` and</span>
+<span class="sd">    ``ParametrizingString``</span>
+
+<span class="sd">    We use this when there is no tty and thus all capabilities should be blank.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
+        <span class="n">new</span> <span class="o">=</span> <span class="nb">str</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">new</span>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a Unicode or whatever you passed in as the first arg</span>
+<span class="sd">        (hopefully a string of some kind).</span>
+
+<span class="sd">        When called with an int as the first arg, return an empty Unicode. An</span>
+<span class="sd">        int is a good hint that I am a ``ParametrizingString``, as there are</span>
+<span class="sd">        only about half a dozen string-returning capabilities on OS X&#39;s</span>
+<span class="sd">        terminfo man page which take any param that&#39;s not an int, and those are</span>
+<span class="sd">        seldom if ever used on modern terminal emulators. (Most have to do with</span>
+<span class="sd">        programming function keys. Blessings&#39; story for supporting</span>
+<span class="sd">        non-string-returning caps is undeveloped.) And any parametrized</span>
+<span class="sd">        capability in a situation where all capabilities themselves are taken</span>
+<span class="sd">        to be blank are, of course, themselves blank.</span>
+
+<span class="sd">        When called with a non-int as the first arg (no no args at all), return</span>
+<span class="sd">        the first arg. I am acting as a ``FormattingString``.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="c"># I am acting as a ParametrizingString.</span>
+
+            <span class="c"># tparm can take not only ints but also (at least) strings as its</span>
+            <span class="c"># second...nth args. But we don&#39;t support callably parametrizing</span>
+            <span class="c"># caps that take non-ints yet, so we can cheap out here. TODO: Go</span>
+            <span class="c"># through enough of the motions in the capability resolvers to</span>
+            <span class="c"># determine which of 2 special-purpose classes,</span>
+            <span class="c"># NullParametrizableString or NullFormattingString, to return, and</span>
+            <span class="c"># retire this one.</span>
+            <span class="k">return</span> <span class="s">&#39;&#39;</span>
+        <span class="k">return</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c"># Should we force even strs in Python 2.x to be</span>
+                        <span class="c"># unicodes? No. How would I know what encoding to use</span>
+                        <span class="c"># to convert it?</span>
+
+
+<span class="k">def</span> <span class="nf">split_into_formatters</span><span class="p">(</span><span class="n">compound</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Split a possibly compound format string into segments.</span>
+
+<span class="sd">    &gt;&gt;&gt; split_into_formatters(&#39;bold_underline_bright_blue_on_red&#39;)</span>
+<span class="sd">    [&#39;bold&#39;, &#39;underline&#39;, &#39;bright_blue&#39;, &#39;on_red&#39;]</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">merged_segs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c"># These occur only as prefixes, so they can always be merged:</span>
+    <span class="n">mergeable_prefixes</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;on&#39;</span><span class="p">,</span> <span class="s">&#39;bright&#39;</span><span class="p">,</span> <span class="s">&#39;on_bright&#39;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">compound</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;_&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">merged_segs</span> <span class="ow">and</span> <span class="n">merged_segs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">mergeable_prefixes</span><span class="p">:</span>
+            <span class="n">merged_segs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="s">&#39;_&#39;</span> <span class="o">+</span> <span class="n">s</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">merged_segs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">merged_segs</span>
+</pre></div>
+
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, Lowe Thiderman, Daniele Sluijters.
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.0.2',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
