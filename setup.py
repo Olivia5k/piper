@@ -5,7 +5,7 @@ from setuptools.command.test import test as TestCommand
 
 # http://stackoverflow.com/questions/11472810/#14405269
 install_requires = (
-    'Flask-RESTful>=0.3.2,<1.0.0a0',
+    'aiohttp>=0.15.3,<1.0.0a0',
     'Logbook>=0.9.0,<1.0.0a0',
     'PyYAML>=3.11,<4.0a0',
     'ago>=0.0.6,<1.0.0a0',
