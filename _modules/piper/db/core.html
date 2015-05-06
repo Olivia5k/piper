@@ -173,7 +173,7 @@
 <span class="kn">import</span> <span class="nn">logbook</span>
 
 
-<div class="viewcode-block" id="LazyDatabaseMixin"><a class="viewcode-back" href="../../../reference/piper.db.core.html#piper.db.core.LazyDatabaseMixin">[docs]</a><span class="k">class</span> <span class="nc">LazyDatabaseMixin</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="LazyDatabaseMixin"><a class="viewcode-back" href="../../../reference/piper.db.core.html#piper.db.core.LazyDatabaseMixin">[docs]</a><span class="k">class</span> <span class="nc">LazyDatabaseMixin</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A mixin class that gives the subclass lazy access to the database layer</span>
 
@@ -202,7 +202,7 @@
     <span class="n">db</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">_get_db</span><span class="p">,</span> <span class="n">_set_db</span><span class="p">)</span>
 
 </div>
-<div class="viewcode-block" id="AgentManager"><a class="viewcode-back" href="../../../reference/piper.db.core.html#piper.db.core.AgentManager">[docs]</a><span class="k">class</span> <span class="nc">AgentManager</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="AgentManager"><a class="viewcode-back" href="../../../reference/piper.db.core.html#piper.db.core.AgentManager">[docs]</a><span class="k">class</span> <span class="nc">AgentManager</span><span class="p">:</span>
 <div class="viewcode-block" id="AgentManager.get"><a class="viewcode-back" href="../../../reference/piper.db.core.html#piper.db.core.AgentManager.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Lazily get an agent.</span>
@@ -231,7 +231,7 @@
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
 
 </div></div>
-<div class="viewcode-block" id="BuildManager"><a class="viewcode-back" href="../../../reference/piper.db.core.html#piper.db.core.BuildManager">[docs]</a><span class="k">class</span> <span class="nc">BuildManager</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="BuildManager"><a class="viewcode-back" href="../../../reference/piper.db.core.html#piper.db.core.BuildManager">[docs]</a><span class="k">class</span> <span class="nc">BuildManager</span><span class="p">:</span>
 <div class="viewcode-block" id="BuildManager.add"><a class="viewcode-back" href="../../../reference/piper.db.core.html#piper.db.core.BuildManager.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">build</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Register a build to the database.</span>
@@ -283,7 +283,7 @@
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
 
 </div></div>
-<div class="viewcode-block" id="ConfigManager"><a class="viewcode-back" href="../../../reference/piper.db.core.html#piper.db.core.ConfigManager">[docs]</a><span class="k">class</span> <span class="nc">ConfigManager</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="ConfigManager"><a class="viewcode-back" href="../../../reference/piper.db.core.html#piper.db.core.ConfigManager">[docs]</a><span class="k">class</span> <span class="nc">ConfigManager</span><span class="p">:</span>
 <div class="viewcode-block" id="ConfigManager.register"><a class="viewcode-back" href="../../../reference/piper.db.core.html#piper.db.core.ConfigManager.register">[docs]</a>    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">build</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Register a configuration to the database.</span>
@@ -293,7 +293,7 @@
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
 
 </div></div>
-<div class="viewcode-block" id="ProjectManager"><a class="viewcode-back" href="../../../reference/piper.db.core.html#piper.db.core.ProjectManager">[docs]</a><span class="k">class</span> <span class="nc">ProjectManager</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="ProjectManager"><a class="viewcode-back" href="../../../reference/piper.db.core.html#piper.db.core.ProjectManager">[docs]</a><span class="k">class</span> <span class="nc">ProjectManager</span><span class="p">:</span>
 <div class="viewcode-block" id="ProjectManager.get"><a class="viewcode-back" href="../../../reference/piper.db.core.html#piper.db.core.ProjectManager.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">build</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Lazily get the project.</span>
@@ -306,7 +306,7 @@
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
 
 </div></div>
-<div class="viewcode-block" id="VCSManager"><a class="viewcode-back" href="../../../reference/piper.db.core.html#piper.db.core.VCSManager">[docs]</a><span class="k">class</span> <span class="nc">VCSManager</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="VCSManager"><a class="viewcode-back" href="../../../reference/piper.db.core.html#piper.db.core.VCSManager">[docs]</a><span class="k">class</span> <span class="nc">VCSManager</span><span class="p">:</span>
 <div class="viewcode-block" id="VCSManager.get"><a class="viewcode-back" href="../../../reference/piper.db.core.html#piper.db.core.VCSManager.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">build</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Lazily get the VCS.</span>
@@ -316,7 +316,7 @@
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
 
 </div></div>
-<div class="viewcode-block" id="PropertyManager"><a class="viewcode-back" href="../../../reference/piper.db.core.html#piper.db.core.PropertyManager">[docs]</a><span class="k">class</span> <span class="nc">PropertyManager</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="PropertyManager"><a class="viewcode-back" href="../../../reference/piper.db.core.html#piper.db.core.PropertyManager">[docs]</a><span class="k">class</span> <span class="nc">PropertyManager</span><span class="p">:</span>
 <div class="viewcode-block" id="PropertyManager.update"><a class="viewcode-back" href="../../../reference/piper.db.core.html#piper.db.core.PropertyManager.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update agent properties.</span>
@@ -326,11 +326,11 @@
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
 
 </div></div>
-<div class="viewcode-block" id="PropertyNamespaceManager"><a class="viewcode-back" href="../../../reference/piper.db.core.html#piper.db.core.PropertyNamespaceManager">[docs]</a><span class="k">class</span> <span class="nc">PropertyNamespaceManager</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="PropertyNamespaceManager"><a class="viewcode-back" href="../../../reference/piper.db.core.html#piper.db.core.PropertyNamespaceManager">[docs]</a><span class="k">class</span> <span class="nc">PropertyNamespaceManager</span><span class="p">:</span>
     <span class="k">pass</span>
 
 </div>
-<div class="viewcode-block" id="Database"><a class="viewcode-back" href="../../../reference/piper.db.core.html#piper.db.core.Database">[docs]</a><span class="k">class</span> <span class="nc">Database</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="Database"><a class="viewcode-back" href="../../../reference/piper.db.core.html#piper.db.core.Database">[docs]</a><span class="k">class</span> <span class="nc">Database</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Abstract class representing a persistance layer</span>
 
