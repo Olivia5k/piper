@@ -1,13 +1,18 @@
 import asyncio
 import json
+import logbook
 
 from aiohttp import web
 from piper.db.core import LazyDatabaseMixin
 
 
 class ApiCLI(LazyDatabaseMixin):
+    _modules = None
+
     def __init__(self, config):
         self.config = config
+
+        self.log = logbook.Logger(self.__class__.__name__)
 
     def compose(self, parser):  # pragma: nocover
         api = parser.add_parser('api', help='Control the REST API')
@@ -18,7 +23,7 @@ class ApiCLI(LazyDatabaseMixin):
         return 'api', self.run
 
     @property
-    def modules(self):
+    def modules(self):  # pragma: nocover
         """
         Get a tuple of the modules that should be in the API.
 
@@ -26,35 +31,40 @@ class ApiCLI(LazyDatabaseMixin):
 
         """
 
+        if self._modules is not None:
+            return self._modules
+
         from piper.build import BuildAPI
 
         return (
             BuildAPI(self.config),
         )
 
+    @asyncio.coroutine
+    def setup_loop(self, loop):
+        app = web.Application(loop=loop)
+
+        for mod in self.modules:
+            mod.setup(app)
+
+        srv = yield from loop.create_server(
+            app.make_handler(),
+            '127.0.0.1',
+            8000,
+        )
+
+        self.log.info("Server started at http://127.0.0.1:8000")
+        return srv
+
     def setup(self):
-        @asyncio.coroutine
-        def init(loop):
-            app = web.Application(loop=loop)
-
-            for mod in self.modules:
-                mod.setup(app)
-
-            srv = yield from loop.create_server(
-                app.make_handler(),
-                '127.0.0.1',
-                8000
-            )
-
-            print("Server started at http://127.0.0.1:8000")
-            return srv
-
-        self.loop = asyncio.get_event_loop()
-        self.loop.run_until_complete(init(self.loop))
+        loop = asyncio.get_event_loop()
+        setup_future = self.setup_loop(loop)
+        loop.run_until_complete(setup_future)
+        return loop
 
     def run(self):
-        self.setup()
-        self.loop.run_forever()
+        loop = self.setup()
+        loop.run_forever()
 
 
 class RESTful(LazyDatabaseMixin):
