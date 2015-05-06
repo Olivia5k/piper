@@ -43,7 +43,6 @@ def rethink(request):
 
     def fin():
         rdb.db_drop(db_name).run(conn)
-        pass
 
     request.addfinalizer(fin)
 
