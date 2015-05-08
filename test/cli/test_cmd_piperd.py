@@ -24,10 +24,3 @@ class TestEntry:
     def test_return_value(self, clibase):
         ret = cmd_piperd.entry()
         assert ret is clibase.return_value.entry.return_value
-
-
-class TestEntryIntegration:
-    @mock.patch('piper.api.api.Flask')
-    def test_api_start(self, flask):
-        cmd_piperd.entry(['api', 'start'])
-        flask.return_value.run.assert_called_once_with(debug=True)
