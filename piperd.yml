@@ -12,3 +12,7 @@ db:
   db: piper
   host: localhost
   port: 28015
+
+api:
+  address: localhost
+  port: 27001

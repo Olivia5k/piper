@@ -49,8 +49,8 @@ class ApiCLI(LazyDatabaseMixin):
 
         srv = yield from loop.create_server(
             app.make_handler(),
-            '127.0.0.1',
-            8000,
+            self.config.raw['api']['address'],
+            self.config.raw['api']['port'],
         )
 
         self.log.info("Server started at http://127.0.0.1:8000")

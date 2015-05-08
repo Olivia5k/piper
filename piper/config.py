@@ -228,6 +228,22 @@ class AgentConfig(Config):
                     },
                 },
             },
+            'api': {
+                'description': 'API configuration',
+                'type': 'object',
+                'additionalProperties': False,
+                'required': ['address', 'port'],
+                'properties': {
+                    'address': {
+                        'description': 'Address to bind to',
+                        'type': 'string',
+                    },
+                    'port': {
+                        'description': 'Port to listen on',
+                        'type': 'integer',
+                    },
+                },
+            },
         },
     }
 
