@@ -73,12 +73,11 @@
           
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="readme.html">Piper</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="readme.html#huh">Huh?</a></li>
-<li class="toctree-l2"><a class="reference internal" href="readme.html#selling-points">Selling points</a></li>
-<li class="toctree-l2"><a class="reference internal" href="readme.html#things-piper-lets-other-systems-do-better">Things piper lets other systems do better</a></li>
 <li class="toctree-l2"><a class="reference internal" href="readme.html#rationale">Rationale</a></li>
-<li class="toctree-l2"><a class="reference internal" href="readme.html#design">Design</a></li>
-<li class="toctree-l2"><a class="reference internal" href="readme.html#build">Build()</a></li>
+<li class="toctree-l2"><a class="reference internal" href="readme.html#how-it-works">How it works</a></li>
+<li class="toctree-l2"><a class="reference internal" href="readme.html#features">Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="readme.html#what-it-is-built-on">What it is built on</a></li>
+<li class="toctree-l2"><a class="reference internal" href="readme.html#what-piper-does-not-do">What piper does not do</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
@@ -118,6 +117,7 @@
 </li>
 <li class="toctree-l1 current"><a class="current reference internal" href="">Contributing to piper</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#development-environment">Development environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#working-on-the-code">Working on the code</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#code-and-code-guidelines">Code and code guidelines</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#test-naming">Test naming</a></li>
 </ul>
@@ -176,8 +176,31 @@
 <h2>Development environment<a class="headerlink" href="#development-environment" title="Permalink to this headline">¶</a></h2>
 <p><cite>piper</cite> uses a straight-forward Python setup. <a class="reference external" href="https://github.com/yyuu/pyenv">pyenv</a> and <a class="reference external" href="https://virtualenv.pypa.io/en/latest/">virtualenv</a> are
 recommended.</p>
-<p>Once in a virtualenv, the tests can be run by <cite>python setup.py test</cite>, which
-will download all dependencies.</p>
+<p>Once you have <a class="reference external" href="https://github.com/yyuu/pyenv">pyenv</a> installed and loaded:</p>
+<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span>pyenv install 3.4.3
+<span class="nv">$ PYENV_VERSION</span><span class="o">=</span>3.4.3 pip install virtualenv
+</pre></div>
+</div>
+</div>
+<div class="section" id="working-on-the-code">
+<h2>Working on the code<a class="headerlink" href="#working-on-the-code" title="Permalink to this headline">¶</a></h2>
+<p>Once you&#8217;ve grabbed a copy of the source code:</p>
+<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span><span class="nb">cd </span>source_code_checkout
+<span class="nv">$ </span>pyenv <span class="nb">local </span>3.4.3
+<span class="nv">$ </span>virtualenv piper
+<span class="nv">$ </span><span class="nb">source </span>bin/activate
+<span class="nv">$ </span>pip install -e .
+</pre></div>
+</div>
+<p>Unfortunately <cite>pip</cite> can&#8217;t be told to install the <cite>tests_require</cite> dependencies
+so we have to install those manually:</p>
+<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span>pip install pytest-cov mock tox
+</pre></div>
+</div>
+<p>In order to generate the documentation:</p>
+<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span>pip install sphinx sphinx_rtd_theme
+</pre></div>
+</div>
 </div>
 <div class="section" id="code-and-code-guidelines">
 <h2>Code and code guidelines<a class="headerlink" href="#code-and-code-guidelines" title="Permalink to this headline">¶</a></h2>
@@ -192,6 +215,8 @@ encouraged.</li>
 <li>If unsure, strive to emulate the look and feel of the rest of the code.
 Consitency is king!</li>
 </ul>
+<p>This code is checked with <cite>flake8</cite> for style, no exceptions. Keep in mind that
+making code PEP8 compliant doesn&#8217;t necessarily make it Pythonic.</p>
 <div class="section" id="test-naming">
 <h3>Test naming<a class="headerlink" href="#test-naming" title="Permalink to this headline">¶</a></h3>
 <p>All functions have a corresponding test class in the corresponding test file:</p>

@@ -73,12 +73,11 @@
           
               <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="">Piper</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#huh">Huh?</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#selling-points">Selling points</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#things-piper-lets-other-systems-do-better">Things piper lets other systems do better</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#rationale">Rationale</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#design">Design</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#build">Build()</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-it-works">How it works</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#features">Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#what-it-is-built-on">What it is built on</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#what-piper-does-not-do">What piper does not do</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
@@ -118,6 +117,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing to piper</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="contributing.html#development-environment">Development environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#working-on-the-code">Working on the code</a></li>
 <li class="toctree-l2"><a class="reference internal" href="contributing.html#code-and-code-guidelines">Code and code guidelines</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="contributing.html#test-naming">Test naming</a></li>
 </ul>
@@ -173,39 +173,81 @@
   <div class="section" id="piper">
 <h1>Piper<a class="headerlink" href="#piper" title="Permalink to this headline">¶</a></h1>
 <p><cite>piper</cite> is a build agent that you can run locally!</p>
-<div class="section" id="huh">
-<h2>Huh?<a class="headerlink" href="#huh" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="rationale">
+<h2>Rationale<a class="headerlink" href="#rationale" title="Permalink to this headline">¶</a></h2>
+<p><em>&#8220;Whatever you do, don&#8217;t ever build a new build system. That would be the worst
+possible thing to do.&#8221;</em> - one of my managers, not realizing that telling
+a hacker what they cannot do is the most inspiring thing that exists.</p>
+<p>Build systems are a pervasive problem. Every single one of them has its pros
+and cons and are both terrible and great in their own special way. Piper tries
+to solve this problem in its own way, by focussing on providing a tool that
+will allow you to easily reproduce builds locally and power a decentralised
+build infrastructure.</p>
+</div>
+<div class="section" id="how-it-works">
+<h2>How it works<a class="headerlink" href="#how-it-works" title="Permalink to this headline">¶</a></h2>
 <p><cite>piper</cite> does two things:</p>
 <ul class="simple">
-<li>It&#8217;s a build agent. It recieves requests about things it should build and
+<li>It&#8217;s a build agent. It receives requests about things it should build and
 subsequently builds it. If you run <cite>piperd start</cite> it will start in daemon
-mode and start listnening for requests.</li>
+mode and start listening for requests.</li>
 <li>It&#8217;s a build executor. It reads configuration files, figures out what to
 execute, and executes it. If you run <cite>piper exec &lt;pipeline&gt;</cite> it will build
 that pipeline for you locally.</li>
 </ul>
 </div>
-<div class="section" id="selling-points">
-<h2>Selling points<a class="headerlink" href="#selling-points" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="features">
+<h2>Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h2>
+<p>This list of features is what we&#8217;re working towards. A lot of them are already
+in place.</p>
 <ul class="simple">
-<li>Build configuration is in the repository. This gives it versioning and anyone
-with the repository has access to the steps required to build it.</li>
+<li>Configuration with code. The configuration to build your project is stored
+with the rest of the code. There is no difference between running it locally
+or on a build agent.</li>
+<li>Versioning: Since your configuration lives with your code, it has a version
+history just like the rest of your project.</li>
 <li>The project is the executor, the agent <em>and</em> the scheduler; you can run the
 exact same steps locally as a build agent would.</li>
 <li>Build pipelines are first-class citizens. Chaining builds together and
-triggering other builds upon success is one of the main features.</li>
-<li>The configuration is completely centered on running other command lines as
-subprocesses. Whatever step is having troubles, you should be able to run the
-same command yourself.</li>
-<li>The main interface is the command line, and there is completion!</li>
-<li>It&#8217;s lightweight and starts in less than a second.</li>
-<li>It&#8217;s distributed; all agents can recieve requests to build anything, and they
+triggering other builds upon success is the core of it all.</li>
+<li>Use your tools. A build just executes different commands for you. It doesn&#8217;t
+hide what it does or impose a tool chain on you.</li>
+<li>API: everything is built on top of the same API, no exceptions.</li>
+<li>It has a CLI with completion support.</li>
+<li>Web UI to see build status, progress and retrigger builds.</li>
+<li>Lightweight: it starts in a couple of seconds.</li>
+<li>Distributed; all agents can receive requests to build anything, and they
 will sort out which agent should execute what builds. The only central point
 is a database.</li>
+<li>Logs are stored and can be viewed from a central location.</li>
 </ul>
 </div>
-<div class="section" id="things-piper-lets-other-systems-do-better">
-<h2>Things piper lets other systems do better<a class="headerlink" href="#things-piper-lets-other-systems-do-better" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="what-it-is-built-on">
+<h2>What it is built on<a class="headerlink" href="#what-it-is-built-on" title="Permalink to this headline">¶</a></h2>
+<p>Piper stands on the shoulders of other open source giants:</p>
+<ul class="simple">
+<li><a class="reference external" href="https://www.python.org">Python</a> 3.4+</li>
+<li><a class="reference external" href="http://rethinkdb.com">RethinkDB</a></li>
+<li><a class="reference external" href="https://www.elastic.co/products/elasticsearch">Elasticsearch</a></li>
+</ul>
+<p>This whole project is written in Python 3.4, it is not compatible with older
+versions of Python 3 or Python 2. We rely on new features in Python 3.4
+including but not limited to <a class="reference external" href="https://docs.python.org/3.4/library/asyncio.html">asyncio</a>.</p>
+<p><a class="reference external" href="http://rethinkdb.com">RethinkDB</a> is the database of our choosing to store all kinds of information.
+It scales well and has a very nice query language. Since we just end up
+passing <a class="reference external" href="http://www.json.org">JSON</a> around it fits our needs really well.</p>
+<p><a class="reference external" href="https://www.elastic.co/products/elasticsearch">Elasticsearch</a> is optional but can be used for build log storage. By default
+logs are shipped off to RethinkDB instead but especially for bigger sites
+storing and indexing that data into Elasticsearch can provide much more
+insight into what&#8217;s happening across your builds.</p>
+</div>
+<div class="section" id="what-piper-does-not-do">
+<h2>What piper does not do<a class="headerlink" href="#what-piper-does-not-do" title="Permalink to this headline">¶</a></h2>
+<p>A lot of build systems end up becoming more and more complex because they want
+to solve every single problem from build to deploy and everything in between
+for you.</p>
+<p>With Piper we chose to focus on being good at one thing, building your software,
+and integrates with other tools to do the rest:</p>
 <ul class="simple">
 <li>Statistics and graphing</li>
 <li>Artifact storage</li>
@@ -213,34 +255,6 @@ is a database.</li>
 <li>VCS tracking</li>
 <li>Issue tracking</li>
 <li>Code and test introspection</li>
-</ul>
-<p>That said, <cite>piper</cite> has lots of helpful facilities to send data to the systems
-that do these things better.</p>
-</div>
-<div class="section" id="rationale">
-<h2>Rationale<a class="headerlink" href="#rationale" title="Permalink to this headline">¶</a></h2>
-<p><em>&#8220;Whatever you do, don&#8217;t ever build a new build system. That would be the worst
-possible thing to do.&#8221;</em> - one of my managers, not realizing that telling
-a hacker what they cannot do is the most inspiring thing that exists.</p>
-</div>
-<div class="section" id="design">
-<h2>Design<a class="headerlink" href="#design" title="Permalink to this headline">¶</a></h2>
-<p>The meat of the application lies in the <a class="reference external" href="http://www.yaml.org/">YAML</a> configuration file
-<cite>piper.yml</cite>, found in the root of the repository. Its contents dictate what
-<cite>piper</cite> will do in its execution steps and in which order.</p>
-</div>
-<div class="section" id="build">
-<h2>Build()<a class="headerlink" href="#build" title="Permalink to this headline">¶</a></h2>
-<p>The main executor of the <cite>piper</cite> pipeline is the <cite>Build()</cite> class. It reads the
-configuration and uses that configuration to configure some runner classes:</p>
-<ul class="simple">
-<li><cite>Env()</cite>: Creates and tears the execution environemnt. The environment can be
-a temporary directory, an AWS machine, a schroot or something of the sort.
-Can optionally provide a wrapper method for <cite>Step()</cite> that all execution will
-run through, e.g. <cite>schroot -c &#8216;squeeze-amd64&#8217; &#8211; {0}</cite> to run something in
-a schroot.</li>
-<li><cite>Step()</cite>: A build step. <cite>Build()</cite> has a list of these and will
-execute them in order.</li>
 </ul>
 </div>
 </div>
