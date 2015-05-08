@@ -8,8 +8,39 @@ Development environment
 `piper` uses a straight-forward Python setup. pyenv_ and virtualenv_ are
 recommended.
 
-Once in a virtualenv, the tests can be run by `python setup.py test`, which
-will download all dependencies.
+Once you have pyenv_ installed and loaded:
+
+.. code-block:: shell
+
+   $ pyenv install 3.4.3
+   $ PYENV_VERSION=3.4.3 pip install virtualenv
+
+Working on the code
+-------------------
+
+Once you've grabbed a copy of the source code:
+
+.. code-block:: shell
+
+    $ cd source_code_checkout
+    $ pyenv local 3.4.3
+    $ virtualenv piper
+    $ source bin/activate
+    $ pip install -e .
+
+Unfortunately `pip` can't be told to install the `tests_require` dependencies
+so we have to install those manually:
+
+.. code-block:: shell
+
+    $ pip install pytest-cov mock tox
+
+In order to generate the documentation:
+
+.. code-block:: shell
+
+    $ pip install sphinx sphinx_rtd_theme
+
 
 Code and code guidelines
 ------------------------
@@ -25,6 +56,9 @@ Things to generally think about:
 * Unit tests are required, integration tests are encouraged.
 * If unsure, strive to emulate the look and feel of the rest of the code.
   Consitency is king!
+
+This code is checked with `flake8` for style, no exceptions. Keep in mind that
+making code PEP8 compliant doesn't necessarily make it Pythonic.
 
 Test naming
 ^^^^^^^^^^^
