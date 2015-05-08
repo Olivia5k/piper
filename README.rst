@@ -75,7 +75,7 @@ It scales well and has a very nice query language. Since we just end up
 passing JSON_ around it fits our needs really well.
 
 Elasticsearch_ is optional but can be used for build log storage. By default
-logs are shipped of to RethinkDB instead but especially for bigger sites
+logs are shipped off to RethinkDB instead but especially for bigger sites
 storing and indexing that data into Elasticsearch can provide much more
 insight into what's happening across your builds.
 
