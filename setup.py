@@ -20,6 +20,7 @@ install_requires = (
 tests_require = (
     'mock',
     'pytest-cov',
+    'pytest-asyncio',
     'tox',
     'sphinx',
     'sphinx_rtd_theme',
