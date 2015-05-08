@@ -42,7 +42,7 @@ class TestApiCLIRun:
         cli.setup().run_forever.assert_called_once_with()
 
 
-class TestApiCliSetupEvent_Loop(object):
+class TestApiCliSetupLoop(object):
     @patch('aiohttp.web.Application')
     def test_application_creation(self, Application, cli, event_loop):
         event_loop.create_server = MagicMock()
