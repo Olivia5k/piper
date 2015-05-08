@@ -56,7 +56,7 @@ class ApiCLI(LazyDatabaseMixin):
         self.log.info("Server started at http://127.0.0.1:8000")
         return srv
 
-    def setup(self):
+    def setup(self):  # pragma: nocover
         loop = asyncio.get_event_loop()
         setup_future = self.setup_loop(loop)
         loop.run_until_complete(setup_future)
@@ -103,43 +103,43 @@ class RESTful(LazyDatabaseMixin):
 
     def endpoint(self, func):
         """
-        Decorator method that takes care of post processing responses.
-
-        Adds handling of responses, additional defaulting of status codes,
-        JSON encoding and header adding.
+        Decorator method that takes care of calling and post processing
+        responses.
 
         """
 
         def wrap(*args, **kwargs):
-            ret = func(*args, **kwargs)
-
-            if isinstance(ret, tuple):
-                # There was a status code, yay!
-                body, code = ret
-            else:
-                # No status code, assume 200!
-                body = ret
-                code = 200
+            body = func(*args, **kwargs)
+            code = 200
 
             # TODO: Add JSONschema validation
-            body = json.dumps(
-                body,
-                indent=2,
-                sort_keys=True,
-                default=date_handler,
-            )
+            if isinstance(body, tuple):
+                # If the result was a 2-tuple, use the second item as the
+                # status code.
+                body, code = body
 
-            response = web.Response(
-                body=body.encode(),
-                status=code,
-                headers={'content-type': 'application/json'}
-            )
-            return response
+            return self.encode_response(body, code)
 
         return asyncio.coroutine(wrap)
 
+    def encode_response(self, body, code):
+        body = json.dumps(
+            body,
+            indent=2,
+            sort_keys=True,
+            default=date_handler,
+        )
 
-def date_handler(obj):
+        response = web.Response(
+            body=body.encode(),
+            status=code,
+            headers={'content-type': 'application/json'}
+        )
+
+        return response
+
+
+def date_handler(obj):  # pragma: nocover
     """
     This is why we cannot have nice things.
     https://stackoverflow.com/questions/455580/
