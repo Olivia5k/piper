@@ -1,9 +1,28 @@
 import mock
+import pytest
+
+from mock import Mock
 
 from piper.build import Build
+from piper.build import BuildAPI
 from piper.build import ExecCLI
+from piper.config import AgentConfig
 
 from test.utils import BASE_CONFIG
+
+
+@pytest.fixture
+def api():
+    config = AgentConfig()
+    api = BuildAPI(config)
+    api.db = Mock()
+
+    return api
+
+
+@pytest.fixture
+def request():
+    return Mock()
 
 
 class BuildTest:
@@ -328,3 +347,22 @@ class TestExecCLIRun:
         ret = self.cli.run()
 
         assert ret == 1
+
+
+class TestBuildApiGet(object):
+    def test_existing_build(self, api, request):
+        build = Mock()
+        api.db.build.get.return_value = build
+
+        ret = api.get(request)
+
+        assert ret is build
+        api.db.build.get.assert_called_once_with(
+            request.match_info.get.return_value
+        )
+
+    def test_nonexisting_build(self, api, request):
+        api.db.build.get.return_value = None
+
+        ret = api.get(request)
+        assert ret == ({}, 404)
