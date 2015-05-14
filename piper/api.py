@@ -53,7 +53,11 @@ class ApiCLI(LazyDatabaseMixin):
             self.config.raw['api']['port'],
         )
 
-        self.log.info("Server started at http://127.0.0.1:8000")
+        self.log.info(
+            "Server started at http://{address}:{port}".format(
+                **self.config.raw['api']
+            )
+        )
         return srv
 
     def setup(self):  # pragma: nocover

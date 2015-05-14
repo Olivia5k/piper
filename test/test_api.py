@@ -19,7 +19,6 @@ def cli():
     cli.setup = Mock()
     cli._modules = [Mock(), Mock()]
 
-
     return cli
 
 
