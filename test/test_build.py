@@ -7,6 +7,7 @@ from piper.build import Build
 from piper.build import BuildAPI
 from piper.build import ExecCLI
 from piper.config import AgentConfig
+from piper.config import BuildConfig
 
 from test.utils import BASE_CONFIG
 
@@ -23,6 +24,15 @@ def api():
 @pytest.fixture
 def request():
     return Mock()
+
+
+@pytest.fixture
+def build():
+    config = BuildConfig()
+    build = Build(config)
+    build.db = Mock()
+
+    return build
 
 
 class BuildTest:
@@ -366,3 +376,24 @@ class TestBuildApiGet(object):
 
         ret = api.get(request)
         assert ret == ({}, 404)
+
+
+class TestBuildAsDict(object):
+    def test_without_id_key(self, build):
+        ret = build.as_dict()
+        assert 'id' not in ret
+
+    def test_with_id_key(self, build):
+        build.id = True  # Can't use a mock because it will have a .raw
+        ret = build.as_dict()
+        assert ret['id'] is build.id
+
+    @mock.patch('piper.utils.now')
+    def test_timestamp_is_added(self, now, build):
+        ret = build.as_dict()
+        assert ret['updated'] is now.return_value
+
+    def test_raw_value(self, build):
+        build.config = Mock()
+        ret = build.as_dict()
+        assert ret['config'] is build.config.raw
