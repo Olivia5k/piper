@@ -114,6 +114,11 @@ class Build(LazyDatabaseMixin):
         """
         Generate a dict representation of the build, suitable for DB use.
 
+        All attributes listed in `piper.Build.FIELDS_TO_DB` will be entered
+        into the resulting dictionary, even if they are **None**. The *id*
+        is an exception to this since the database would not be able to handle
+        that.
+
         """
 
         ret = {}
