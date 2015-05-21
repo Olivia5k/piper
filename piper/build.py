@@ -43,12 +43,11 @@ class Build(LazyDatabaseMixin):
 
         self.vcs = GitVCS('github', 'git@github.com')
 
-        self.started = utils.now()
-
         self.id = None
         self.version = None
         self.steps = {}
         self.order = []
+        self.started = None
         self.success = None
         self.crashed = False
         self.status = None
@@ -65,6 +64,7 @@ class Build(LazyDatabaseMixin):
         """
 
         self.log.info('Setting up {0}...'.format(self.config.pipeline))
+        self.started = utils.now()
 
         self.setup()
         self.execute()
