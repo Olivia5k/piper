@@ -154,6 +154,21 @@ class RESTful(LazyDatabaseMixin):
 
         return response
 
+    def extract_json(self, request):
+        """
+        Read the POST body of the request, decode it as JSON and return it.
+
+        :return: JSON-loaded dict of the POST body
+
+        """
+
+        content = yield from request.content.read()
+        body = content.decode('utf-8')
+
+        self.log.debug(body)
+        data = json.loads(body)
+        return data
+
 
 def date_handler(obj):  # pragma: nocover
     """
