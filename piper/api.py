@@ -123,7 +123,7 @@ class RESTful(LazyDatabaseMixin):
             # their handler functions will need to `yield from` and return
             # generator objects. If this is the case, we need to yield from
             # them to get the actual body out of there.
-            if isinstance(body, types.GeneratorType):
+            if isinstance(body, types.GeneratorType):  # pragma: nocover
                 body = yield from body
 
             # TODO: Add JSONschema validation
@@ -154,7 +154,7 @@ class RESTful(LazyDatabaseMixin):
 
         return response
 
-    def extract_json(self, request):
+    def extract_json(self, request):  # pragma: nocover
         """
         Read the POST body of the request, decode it as JSON and return it.
 
