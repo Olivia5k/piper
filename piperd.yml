@@ -14,5 +14,5 @@ db:
   port: 28015
 
 api:
-  address: localhost
+  address: 127.0.0.1
   port: 27001
