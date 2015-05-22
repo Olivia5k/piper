@@ -90,6 +90,8 @@ class RESTful(LazyDatabaseMixin):
     def __init__(self, config):
         self.config = config
 
+        self.log = logbook.Logger(self.__class__.__name__)
+
     def setup(self, app):
         """
         Register the routes to the application.
