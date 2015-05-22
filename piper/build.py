@@ -351,6 +351,7 @@ class BuildAPI(RESTful):
         super().__init__(config)
         self.routes = (
             ('GET', '/builds/{id}', self.get),
+            ('POST', '/builds/', self.create),
         )
 
     def get(self, request):
@@ -366,3 +367,24 @@ class BuildAPI(RESTful):
             return {}, 404
 
         return build
+
+    def create(self, request):
+        """
+        Put a build into the database.
+
+        :returns: id of created object
+
+        """
+
+        config = yield from self.extract_json(request)
+
+        build = Build(config)
+        build.created = utils.now()  # TODO: Should be in Build()?
+
+        id = self.db.build.add(build)
+
+        self.log.info('Build {0} added.'.format(id))
+        ret = {
+            'id': id,
+        }
+        return ret, 201

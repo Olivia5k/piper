@@ -2,6 +2,7 @@ import mock
 import pytest
 
 from mock import Mock
+from mock import MagicMock
 
 from piper.build import Build
 from piper.build import BuildAPI
@@ -24,6 +25,12 @@ def api():
 @pytest.fixture
 def request():
     return Mock()
+
+
+# NOTE: These two are kept separate for future changes.
+@pytest.fixture
+def post():
+    return MagicMock()
 
 
 @pytest.fixture
@@ -376,6 +383,21 @@ class TestBuildApiGet(object):
 
         ret = api.get(request)
         assert ret == ({}, 404)
+
+
+class TestBuildApiCreate(object):
+    def test_return_values(self, api, post, event_loop):
+        api.extract_json = MagicMock()
+
+        out = api.create(post)
+        ret, code = event_loop.run_until_complete(out)
+
+        assert code is 201
+        assert ret == {
+            'id': api.db.build.add.return_value
+        }
+
+        api.extract_json.assert_called_once_with(post)
 
 
 class TestBuildAsDict(object):
