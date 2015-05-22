@@ -1,6 +1,7 @@
 import asyncio
 import json
 import logbook
+import types
 
 from aiohttp import web
 from piper.db.core import LazyDatabaseMixin
@@ -118,6 +119,13 @@ class RESTful(LazyDatabaseMixin):
             body = func(*args, **kwargs)
             code = 200
 
+            # POST requests will need to read from asyncio interfaces, and thus
+            # their handler functions will need to `yield from` and return
+            # generator objects. If this is the case, we need to yield from
+            # them to get the actual body out of there.
+            if isinstance(body, types.GeneratorType):
+                body = yield from body
+
             # TODO: Add JSONschema validation
             if isinstance(body, tuple):
                 # If the result was a 2-tuple, use the second item as the
@@ -129,6 +137,8 @@ class RESTful(LazyDatabaseMixin):
         return asyncio.coroutine(wrap)
 
     def encode_response(self, body, code):
+        # TODO: Add **headers argument
+
         body = json.dumps(
             body,
             indent=2,
