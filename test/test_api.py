@@ -119,19 +119,19 @@ class TestRestfulEndpoint(object):
         ret = restful.endpoint(func)
         assert ret is coroutine()
 
-    def test_wrap_result_with_code(self, restful):
+    def test_wrap_result_with_code(self, restful, event_loop):
         func = Mock(return_value=("stanton.creed", 3001))
 
         inner, enc = wrap(func)
-        ret = inner()
+        ret = event_loop.run_until_complete(inner())
         assert ret is enc.return_value
         enc.assert_called_once_with("stanton.creed", 3001)
 
-    def test_wrap_result_without_code(self, restful):
+    def test_wrap_result_without_code(self, restful, event_loop):
         func = Mock(return_value=("six.to.midnight"))
 
         inner, enc = wrap(func)
-        ret = inner()
+        ret = event_loop.run_until_complete(inner())
         assert ret is enc.return_value
         enc.assert_called_once_with("six.to.midnight", 200)
 
@@ -142,6 +142,7 @@ class TestRestfulEncodeResponse(object):
     def test_encoding(self, response, dumps, restful):
         body = {'autumn': 'fight like a girl'}
         code = 2012
+
         ret = restful.encode_response(body, code)
 
         assert ret is response.return_value
