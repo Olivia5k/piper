@@ -39,13 +39,18 @@ def wrap(func):
     enc = Mock()
     rest.encode_response = enc
     with patch('asyncio.coroutine') as cr:
-        func = rest.endpoint(func)
+        func = rest.endpoint(func, 'WRAP', '/wrap')
         return (cr.call_args_list[0][0][0], enc)
 
 
 @pytest.fixture
 def app():
     return Mock()
+
+
+@pytest.fixture
+def request():
+    return MagicMock()
 
 
 class TestApiCLIRun:
@@ -116,22 +121,22 @@ class TestRestfulEndpoint(object):
     @patch('asyncio.coroutine')
     def test_result_is_a_coroutine(self, coroutine, restful):
         func = Mock()
-        ret = restful.endpoint(func)
+        ret = restful.endpoint(func, 'TEST', '/hehe/url')
         assert ret is coroutine()
 
-    def test_wrap_result_with_code(self, restful, event_loop):
+    def test_wrap_result_with_code(self, restful, event_loop, request):
         func = Mock(return_value=("stanton.creed", 3001))
 
         inner, enc = wrap(func)
-        ret = event_loop.run_until_complete(inner())
+        ret = event_loop.run_until_complete(inner(request))
         assert ret is enc.return_value
         enc.assert_called_once_with("stanton.creed", 3001)
 
-    def test_wrap_result_without_code(self, restful, event_loop):
+    def test_wrap_result_without_code(self, restful, event_loop, request):
         func = Mock(return_value=("six.to.midnight"))
 
         inner, enc = wrap(func)
-        ret = event_loop.run_until_complete(inner())
+        ret = event_loop.run_until_complete(inner(request))
         assert ret is enc.return_value
         enc.assert_called_once_with("six.to.midnight", 200)
 

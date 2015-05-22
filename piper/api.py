@@ -1,4 +1,5 @@
 import asyncio
+import blessings
 import json
 import logbook
 import types
@@ -91,6 +92,7 @@ class RESTful(LazyDatabaseMixin):
     def __init__(self, config):
         self.config = config
 
+        self.t = blessings.Terminal()
         self.log = logbook.Logger(self.__class__.__name__)
 
     def setup(self, app):
@@ -105,10 +107,10 @@ class RESTful(LazyDatabaseMixin):
             app.router.add_route(
                 method,
                 route,
-                self.endpoint(function),
+                self.endpoint(function, method, route),
             )
 
-    def endpoint(self, func):
+    def endpoint(self, func, method, route):
         """
         Decorator method that takes care of calling and post processing
         responses.
@@ -116,6 +118,15 @@ class RESTful(LazyDatabaseMixin):
         """
 
         def wrap(*args, **kwargs):
+            uri = route.format(**args[0].match_info)
+            self.log.debug(
+                '{t.bold_black}>>{t.white} {method} {t.normal}{uri}'.format(
+                    method=method,
+                    uri=uri,
+                    t=self.t
+                )
+            )
+
             body = func(*args, **kwargs)
             code = 200
 
@@ -132,6 +143,15 @@ class RESTful(LazyDatabaseMixin):
                 # status code.
                 body, code = body
 
+            s = '{t.bold_black}<<{t.white} {method} {t.normal}{uri}: {code}'
+            self.log.info(
+                s.format(
+                    method=method,
+                    uri=uri,
+                    code=code,
+                    t=self.t
+                )
+            )
             return self.encode_response(body, code)
 
         return asyncio.coroutine(wrap)
