@@ -82,7 +82,7 @@ class Colorizer:
 
             return bool(match), message
 
-        except TypeError:
+        except TypeError:  # pragma: nocover
             # We were passed something we don't understand. Just pass down.
             return True, message
 
