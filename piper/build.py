@@ -239,12 +239,6 @@ class Build(LazyDatabaseMixin):
         if self.success is not False:
             self.success = True
 
-    def save_state(self):
-        """
-        Collects all data about the pipeline being built and persists it.
-
-        """
-
     def teardown(self):
         self.teardown_env()
         self.unlock_agent()
@@ -257,19 +251,6 @@ class Build(LazyDatabaseMixin):
 
         self.env.log.debug('Tearing down env...')
         self.env.teardown()
-
-    def default_db_kwargs(self):  # pragma: nocover
-        """
-        Generate a dict with keys to update in the database
-
-        """
-
-        return {
-            'success': self.success,
-            'crashed': self.crashed,
-            'status': self.status,
-            'updated': utils.now()
-        }
 
     def lock_agent(self):
         self.log.info('Locking agent')
