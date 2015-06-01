@@ -49,6 +49,9 @@ class BuildManager(RethinkManager, db.BuildManager):
     def all(self):
         raise NotImplementedError()
 
+    def feed(self):
+        return self.table.changes()
+
 
 class RethinkDB(db.Database):
     managers = (

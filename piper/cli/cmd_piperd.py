@@ -1,3 +1,4 @@
+from piper import agent
 from piper import api
 from piper import config
 from piper import prop
@@ -10,6 +11,7 @@ def entry(args=None):
         api.ApiCLI,
         db.DbCLI,
         prop.PropCLI,
+        agent.AgentCLI,
     )
     cli = CLI('piperd', classes, config.AgentConfig, args=args)
     return cli.entry()
