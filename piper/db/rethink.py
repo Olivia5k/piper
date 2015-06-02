@@ -19,15 +19,6 @@ class AgentManager(RethinkManager, db.AgentManager):
     def get(self):
         raise NotImplementedError()
 
-    def lock(self, build):
-        self.set_lock(build, True)
-
-    def unlock(self, build):
-        self.set_lock(build, False)
-
-    def set_lock(self, build, locked):
-        pass
-
 
 class BuildManager(RethinkManager, db.BuildManager):
     table_name = 'build'
