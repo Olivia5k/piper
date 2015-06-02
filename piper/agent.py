@@ -1,6 +1,7 @@
 import json
 import logbook
 
+from piper.build import Build
 from piper.db.core import LazyDatabaseMixin
 from piper.utils import oneshot
 
@@ -46,16 +47,48 @@ class Agent(LazyDatabaseMixin):
         """
 
         for change in self.db.build.feed():
-            self.log.debug(change)
             self.handle(change)
 
     def handle(self, change):
         """
-        Handle a changeset from Rethink
+        Handle a changeset from Rethink.
+
+        Will check for whether the changeset is eligible to be built. It is not
+        if:
+        * The build has been deleted.
+        * This agent ID is not present in the `eligible_agents` list.
+        * The build is already started by another agent.
+
+        By default the changes are squashed and only the latest state of the
+        changeset is sent to this function. See the
+        `RethinkDB documentation <http://rethinkdb.com/api/python/changes/>`_.
 
         """
 
-        ...
+        self.log.debug(change)
+
+        if change['new_val'] is None:
+            # Request has been deleted. This is not really supposed to happen,
+            # but might happen because of administrative reasons. Just don't
+            # handle the request.
+            self.log.warn(
+                'Incoming request {id} was deleted'.format(**change['old_val'])
+            )
+            return False
+
+        config = change['new_val']
+        self.log.info('Incoming request {0}'.format(config['id']))
+
+        if self.id not in config.get('eligible_agents', []):
+            self.log.info('Not able to build. Doing nothing.')
+            return
+
+        if config.get('started') is not None:
+            self.log.info('Build already started. Doing nothing.')
+            return
+
+        self.log.info('Starting build...')
+        return Build(config).run()
 
     def update(self):
         """
