@@ -1,5 +1,6 @@
 from piper.cli import cmd_piperd
 from piper import api
+from piper import agent
 from piper.db import core as db
 from piper import prop
 from piper import config
@@ -14,7 +15,12 @@ class TestEntry:
         cmd_piperd.entry(self.mock)
         clibase.assert_called_once_with(
             'piperd',
-            (api.ApiCLI, db.DbCLI, prop.PropCLI),
+            (
+                api.ApiCLI,
+                db.DbCLI,
+                prop.PropCLI,
+                agent.AgentCLI,
+            ),
             config.AgentConfig,
             args=self.mock
         )
