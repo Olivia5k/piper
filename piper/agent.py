@@ -1,3 +1,4 @@
+import contextlib
 import json
 import logbook
 
@@ -87,8 +88,24 @@ class Agent(LazyDatabaseMixin):
             self.log.info('Build already started. Doing nothing.')
             return
 
-        self.log.info('Starting build...')
-        return Build(config).run()
+        return self.build(config)
+
+    def build(self, config):
+        """
+        Run a build of a configuration.
+
+        """
+
+        with self.busy(config):
+            # Set the config as being built by this agent.
+            config['agent'] = self
+
+            self.log.info('Starting build...')
+
+            build = Build(config)
+            ret = build.run()
+
+            self.log.debug('Build returned {0}'.format(ret))
 
     def update(self):
         """
@@ -115,6 +132,32 @@ class Agent(LazyDatabaseMixin):
             self._properties = data
 
         return self._properties
+
+    @property
+    def raw(self):
+        return self.id
+
+    @contextlib.contextmanager
+    def busy(self, config):
+        """
+        Context locker that sets and resets the `building` attribute.
+
+        """
+
+        # NOTE: It might make sense to duplicate the entire config object
+        # to save on queries for stats.
+        self.building = config['id']
+        self.update()
+
+        try:
+            yield
+
+        except Exception:
+            self.log.exception('Build threw internal exception')
+
+        finally:
+            self.building = None
+            self.update()
 
 
 class AgentCLI(LazyDatabaseMixin):

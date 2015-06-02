@@ -65,6 +65,13 @@ def applicable_change():
     }
     return change
 
+@pytest.fixture
+def config():
+    config = {
+        'id': 'bailando'
+    }
+    return config
+
 
 class TestAgentListen:
     def test_feed_handles_incoming(self, agent):
@@ -103,10 +110,44 @@ class TestAgentHandle:
 
         assert ret is None
 
-    @patch('piper.agent.Build')
-    def test_passing(self, build, agent, applicable_change):
+    def test_passing(self, agent, applicable_change):
+        agent.build = Mock()
         ret = agent.handle(applicable_change)
 
-        assert ret is build.return_value.run.return_value
-        build.assert_called_once_with(applicable_change['new_val'])
+        assert ret is agent.build.return_value
+        agent.build.assert_called_once_with(applicable_change['new_val'])
+
+
+class TestAgentBuild:
+    @patch('piper.agent.Build')
+    def test_busy_setting(self, build, agent, config):
+        agent.update = Mock()
+        agent.build(config)
+
+        # One to lock, one to unlock.
+        assert agent.update.call_count == 2
+
+    @patch('piper.agent.Build')
+    def test_busy_exception_handling(self, build, agent, config):
+        agent.update = Mock()
+        agent.log = Mock()
+        build.side_effect = Exception()
+
+        agent.build(config)
+
+        # It's inherently silly to mock logging, but in this case we actually
+        # want to make sure that the logging is logging the exception.
+        agent.log.exception.assert_called_once_with(
+            'Build threw internal exception'
+        )
+
+        assert agent.update.call_count == 2
+        assert agent.building is None
+
+    @patch('piper.agent.Build')
+    def test_build_calls(self, build, agent, config):
+        agent.update = Mock()
+        agent.build(config)
+
+        build.assert_called_once_with(config)
         build.return_value.run.assert_called_once_with()
