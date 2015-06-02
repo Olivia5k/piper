@@ -165,3 +165,13 @@ class TestAgentProperties:
 
         assert ret is loads.return_value
         assert agent._properties is ret
+
+
+class TestAgentUpdate:
+    def test_send(self, agent):
+        agent.as_dict = Mock()
+        agent.update()
+
+        agent.db.agent.update.assert_called_once_with(
+            agent.as_dict.return_value
+        )

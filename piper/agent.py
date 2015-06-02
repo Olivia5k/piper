@@ -13,8 +13,6 @@ class Agent(LazyDatabaseMixin):
 
     """
 
-    _properties = None
-
     FIELDS_TO_DB = (
         # Main fields
         'id',
@@ -38,6 +36,7 @@ class Agent(LazyDatabaseMixin):
         self.id = None
         self.building = None
         self.status = None
+        self._properties = None
 
         self.log = logbook.Logger(self.__class__.__name__)
 
@@ -113,7 +112,8 @@ class Agent(LazyDatabaseMixin):
 
         """
 
-        ...
+        data = self.as_dict()
+        self.db.agent.update(data)
 
     @property
     def properties(self):
@@ -134,7 +134,7 @@ class Agent(LazyDatabaseMixin):
         return self._properties
 
     @property
-    def raw(self):
+    def raw(self):  # pragma: nocover
         return self.id
 
     @contextlib.contextmanager
