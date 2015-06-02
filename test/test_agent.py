@@ -35,6 +35,7 @@ def started_change():
         'new_val': {
             'id': 'alice-in-videoland',
             'started': utils.now(),
+            'eligible_agents': ['maiden-voyage']
         },
     }
     return change
