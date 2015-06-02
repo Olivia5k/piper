@@ -21,6 +21,7 @@ tests_require = (
     'mock',
     'pytest-cov',
     'pytest-asyncio',
+    'pytest-quickcheck',
     'tox',
     'sphinx',
     'sphinx_rtd_theme',
