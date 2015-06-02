@@ -151,3 +151,16 @@ class TestAgentBuild:
 
         build.assert_called_once_with(config)
         build.return_value.run.assert_called_once_with()
+
+
+class TestAgentProperties:
+    @patch('json.loads')
+    @patch('piper.agent.oneshot')
+    def test_calls(self, oneshot, loads, agent):
+        ret = agent.properties
+
+        oneshot.assert_called_once_with('facter --json')
+        loads.assert_called_once_with(oneshot.return_value)
+
+        assert ret is loads.return_value
+        assert agent._properties is ret
