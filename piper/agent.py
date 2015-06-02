@@ -1,6 +1,5 @@
 import json
 import logbook
-import rethinkdb as rdb
 
 from piper.db.core import LazyDatabaseMixin
 from piper.utils import oneshot
@@ -46,8 +45,17 @@ class Agent(LazyDatabaseMixin):
 
         """
 
-        for build in self.db.build.feed():
-            self.log.debug(build)
+        for change in self.db.build.feed():
+            self.log.debug(change)
+            self.handle(change)
+
+    def handle(self, change):
+        """
+        Handle a changeset from Rethink
+
+        """
+
+        ...
 
     def update(self):
         """
