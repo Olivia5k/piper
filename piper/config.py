@@ -57,7 +57,7 @@ class Config:
         else:
             self.log.debug('Using provided raw configuration.')
 
-        self.validate_config()
+        # self.validate_config()
         self.load_classes()
         return self
 
