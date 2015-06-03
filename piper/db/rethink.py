@@ -16,8 +16,14 @@ class RethinkManager:
 class AgentManager(RethinkManager, db.AgentManager):
     table_name = 'agent'
 
-    def get(self):
-        raise NotImplementedError()
+    def get(self, id):
+        return self.table.get(id).run(self.conn)
+
+    def add(self, data):
+        return self.table.insert(data).run(self.conn)
+
+    def update(self, data):
+        self.table.replace(data).run(self.conn)
 
 
 class BuildManager(RethinkManager, db.BuildManager):
