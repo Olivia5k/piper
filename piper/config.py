@@ -192,11 +192,11 @@ class AgentConfig(Config):
                 'description': 'Agent configuration',
                 'type': 'object',
                 'additionalProperties': False,
-                'required': ['name', 'fqdn', 'active'],
+                'required': ['id', 'fqdn', 'active'],
                 'properties': {
-                    'name': {
+                    'id': {
                         'description':
-                            'Descriptive name, used for display in interfaces',
+                            'Agent identifier',
                         'type': 'string',
                     },
                     'fqdn': {
