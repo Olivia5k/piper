@@ -63,7 +63,7 @@ class Build(LazyDatabaseMixin):
 
         """
 
-        self.log.info('Setting up {0}...'.format(self.config.pipeline))
+        self.log.info('Setting up {0}...'.format(self.config.raw['pipeline']))
         self.started = utils.now()
 
         self.setup()
@@ -157,7 +157,7 @@ class Build(LazyDatabaseMixin):
         """
 
         self.log.debug('Loading environment...')
-        env_config = self.config.raw['envs'][self.config.env]
+        env_config = self.config.raw['envs'][self.config.raw['env']]
         cls = self.config.classes[env_config['class']]
 
         self.env = cls(self, env_config)
@@ -186,7 +186,8 @@ class Build(LazyDatabaseMixin):
 
         """
 
-        for step_key in self.config.raw['pipelines'][self.config.pipeline]:
+        key = self.config.raw['pipeline']
+        for step_key in self.config.raw['pipelines'][key]:
             step = self.steps[step_key]
             self.order.append(step)
 
@@ -212,14 +213,15 @@ class Build(LazyDatabaseMixin):
         """
 
         total = len(self.order)
-        self.log.info('Running {0}...'.format(self.config.pipeline))
+        pipeline = self.config.raw['pipeline']
+        self.log.info('Running {0}...'.format(pipeline))
 
         for x, step in enumerate(self.order, start=1):
             step.set_index(x, total)
 
             # Update db status to show that we are running this build
             self.status = '{0}/{1}: {2}'.format(x, total, step.key)
-            self.db.build.update(self)
+            # self.db.build.update(self)
 
             step.log.info('Running...')
             proc = self.env.execute(step)
@@ -229,7 +231,7 @@ class Build(LazyDatabaseMixin):
             else:
                 # If the success is not positive, bail and stop running.
                 step.log.error('Step failed.')
-                self.log.error('{0} failed.'.format(self.config.pipeline))
+                self.log.error('{0} failed.'.format(pipeline))
                 self.success = False
                 break
 
