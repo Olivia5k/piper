@@ -66,6 +66,7 @@ def applicable_change():
     }
     return change
 
+
 @pytest.fixture
 def config():
     config = {
