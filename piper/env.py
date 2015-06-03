@@ -1,5 +1,6 @@
 import os
 import tempfile
+import sh
 import shutil
 
 from piper.abc import DynamicItem
@@ -31,6 +32,15 @@ class Env(DynamicItem):
         proc.run()
 
         return proc
+
+
+class PythonVirtualEnv(Env):
+    def setup(self):
+        if not os.path.exists('bin/python'):
+            # TODO: Should use Process()
+            self.log.info('Setting up virtualenv...')
+            for line in sh.Command('virtualenv')(['.'], _iter=True):
+                self.log.debug(line)
 
 
 class TempDirEnv(Env):
