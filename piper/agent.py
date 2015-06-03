@@ -18,8 +18,6 @@ class Agent(LazyDatabaseMixin):
         # Main fields
         'id',
         'config',
-        'local',
-        'active',
 
         # Relationship fields
         'building',
