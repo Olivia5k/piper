@@ -3,6 +3,7 @@ import json
 import logbook
 
 from piper.build import Build
+from piper.config import BuildConfig
 from piper.db.core import LazyDatabaseMixin
 from piper.utils import oneshot
 
@@ -81,29 +82,31 @@ class Agent(LazyDatabaseMixin):
             )
             return False
 
-        config = change['new_val']
-        self.log.info('Incoming request {0}'.format(config['id']))
+        id = change['new_val']['id']
+        config = change['new_val']['config']
+        self.log.info('Incoming request {0}'.format(id))
 
-        if self.id not in config.get('eligible_agents', []):
-            self.log.info('Not able to build. Doing nothing.')
-            return
+        # if self.id not in config.get('eligible_agents', []):
+        #     self.log.info('Not able to build. Doing nothing.')
+        #     return
 
         if config.get('started') is not None:
             self.log.info('Build already started. Doing nothing.')
             return
 
-        return self.build(config)
+        return self.build(id, config)
 
-    def build(self, config):
+    def build(self, id, config):
         """
         Run a build of a configuration.
 
         """
 
-        with self.busy(config):
+        with self.busy(id):
             # Set the config as being built by this agent.
-            config['agent'] = self
+            # config['agent'] = self
 
+            config = BuildConfig(raw=config).load()
             self.log.info('Starting build...')
 
             build = Build(config)
@@ -143,15 +146,14 @@ class Agent(LazyDatabaseMixin):
         return self.id
 
     @contextlib.contextmanager
-    def busy(self, config):
+    def busy(self, id):
         """
         Context locker that sets and resets the `building` attribute.
 
         """
 
-        # NOTE: It might make sense to duplicate the entire config object
-        # to save on queries for stats.
-        self.building = config['id']
+        self.building = id
+        self.log.info('Locking for build {0}'.format(id))
         self.update()
 
         try:
@@ -162,6 +164,7 @@ class Agent(LazyDatabaseMixin):
 
         finally:
             self.building = None
+            self.log.info('Unlocking from build {0}'.format(id))
             self.update()
 
 
