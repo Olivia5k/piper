@@ -75,7 +75,7 @@ class Build(LazyDatabaseMixin):
 
     def finish(self):
         self.ended = utils.now()
-        self.db.build.update(self)
+        # self.db.build.update(self)
 
         verb = 'finished successfully in'
         if not self.success:
@@ -99,9 +99,9 @@ class Build(LazyDatabaseMixin):
 
         """
 
-        self.add_build()
+        # self.add_build()
         self.set_logfile()
-        self.lock_agent()
+        # self.lock_agent()
         self.set_version()
 
         self.configure_env()
