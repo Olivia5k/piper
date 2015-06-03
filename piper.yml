@@ -7,15 +7,18 @@ envs:
     class: 'piper.env.Env'
     requirements:
       is_not_virtual:
-        reason: 'The base environment cannot run if virtualized'
+        reason: 'The base environment cannot run if hardware is virtualized'
         class: 'piper.prop.FacterProp'
         key: 'virtual'
         equals: 'physical'
+  venv:
+    class: 'piper.env.PythonVirtualEnv'
+    requirements: null
 
 steps:
   test:
     class: 'piper.step.CommandLineStep'
-    command: 'tox'
+    command: 'python setup.py test'
     requirements: null
   lint:
     class: 'piper.step.CommandLineStep'
@@ -36,8 +39,8 @@ pipelines:
     - 'test'
     - 'build'
 
-db:
-  class: 'piper.db.RethinkDB'
-  host: 'localhost'
-  port: 28015
-  db: 'piper'
+# db:
+#   class: 'piper.db.RethinkDB'
+#   host: 'localhost'
+#   port: 28015
+#   db: 'piper'
