@@ -32,12 +32,16 @@ class Agent(LazyDatabaseMixin):
     def __init__(self, config):
         self.config = config
 
-        self.id = None
+        self.id = config.raw['agent']['id']
         self.building = None
-        self.status = None
         self._properties = None
 
-        self.log = logbook.Logger(self.__class__.__name__)
+        self.log = logbook.Logger(self.id)
+
+    def register(self):
+        if self.db.agent.get(self.id) is None:
+            self.log.info('Registering new agent.')
+            self.db.agent.add(self.as_dict())
 
     def listen(self):
         """
