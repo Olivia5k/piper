@@ -1,3 +1,4 @@
+import uuid
 import pytest
 from mock import Mock
 from mock import patch
@@ -9,7 +10,7 @@ from piper.config import AgentConfig
 
 @pytest.fixture
 def agent():
-    config = AgentConfig()
+    config = AgentConfig().load()
     agent = Agent(config)
     agent.id = 'maiden-voyage'
     agent.db = Mock()
@@ -35,7 +36,9 @@ def started_change():
         'new_val': {
             'id': 'alice-in-videoland',
             'started': utils.now(),
-            'eligible_agents': ['maiden-voyage']
+            'config': {
+                'eligible_agents': ['maiden-voyage']
+            },
         },
     }
     return change
@@ -47,7 +50,9 @@ def nonapplicable_change():
         'old_val': None,
         'new_val': {
             'id': 'alice-in-videoland',
-            'eligible_agents': []
+            'config': {
+                'eligible_agents': [],
+            },
         },
     }
     return change
@@ -59,9 +64,11 @@ def applicable_change():
         'old_val': None,
         'new_val': {
             'id': 'alice-in-videoland',
-            'eligible_agents': [
-                'maiden-voyage',
-            ]
+            'config': {
+                'eligible_agents': [
+                    'maiden-voyage',
+                ],
+            },
         },
     }
     return change
@@ -73,6 +80,11 @@ def config():
         'id': 'bailando'
     }
     return config
+
+
+@pytest.fixture
+def build_id():
+    return uuid.uuid4()
 
 
 class TestAgentListen:
@@ -117,14 +129,17 @@ class TestAgentHandle:
         ret = agent.handle(applicable_change)
 
         assert ret is agent.build.return_value
-        agent.build.assert_called_once_with(applicable_change['new_val'])
+        agent.build.assert_called_once_with(
+            applicable_change['new_val']['id'],
+            applicable_change['new_val']['config']
+        )
 
 
 class TestAgentBuild:
     @patch('piper.agent.Build')
-    def test_busy_setting(self, build, agent, config):
+    def test_busy_setting(self, build, agent, build_id, config):
         agent.update = Mock()
-        agent.build(config)
+        agent.build(build_id, config)
 
         # One to lock, one to unlock.
         assert agent.update.call_count == 2
@@ -135,7 +150,7 @@ class TestAgentBuild:
         agent.log = Mock()
         build.side_effect = Exception()
 
-        agent.build(config)
+        agent.build(build_id, config)
 
         # It's inherently silly to mock logging, but in this case we actually
         # want to make sure that the logging is logging the exception.
@@ -146,12 +161,14 @@ class TestAgentBuild:
         assert agent.update.call_count == 2
         assert agent.building is None
 
+    @patch('piper.agent.BuildConfig')
     @patch('piper.agent.Build')
-    def test_build_calls(self, build, agent, config):
+    def test_build_calls(self, build, buildconfig, agent, config):
         agent.update = Mock()
-        agent.build(config)
+        agent.build(build_id, config)
 
-        build.assert_called_once_with(config)
+        load = buildconfig.return_value.load.return_value
+        build.assert_called_once_with(load)
         build.return_value.run.assert_called_once_with()
 
 
