@@ -2,6 +2,7 @@ import contextlib
 import json
 import logbook
 
+from piper.api import RESTful
 from piper.build import Build
 from piper.config import BuildConfig
 from piper.db.core import LazyDatabaseMixin
@@ -39,7 +40,8 @@ class Agent(LazyDatabaseMixin):
         self.log = logbook.Logger(self.id)
 
     def register(self):
-        if self.db.agent.get(self.id) is None:
+        agent = self.db.agent.get(self.id)
+        if agent is None:
             self.log.info('Registering new agent.')
             self.db.agent.add(self.as_dict())
 
@@ -49,6 +51,7 @@ class Agent(LazyDatabaseMixin):
 
         """
 
+        self.register()
         self.log.info('Opening changes() feed from database...')
         try:
             for change in self.db.build.feed():
@@ -192,3 +195,30 @@ class AgentCLI(LazyDatabaseMixin):
         if self.config.agent_command in (None, 'start'):
             self.log.info('Starting agent')
             self.agent.listen()
+
+
+class AgentAPI(RESTful):
+    """
+    API endpoint for CRUD operations on agents.
+
+    """
+
+    def __init__(self, config):
+        super().__init__(config)
+        self.routes = (
+            ('GET', '/agents/{id}', self.get),
+        )
+
+    def get(self, request):
+        """
+        Get one agent.
+
+        """
+
+        id = request.match_info.get('id')
+        agent = self.db.agent.get(id)
+
+        if agent is None:
+            return {}, 404
+
+        return agent

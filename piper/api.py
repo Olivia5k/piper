@@ -36,9 +36,11 @@ class ApiCLI(LazyDatabaseMixin):
         if self._modules is not None:
             return self._modules
 
+        from piper.agent import AgentAPI
         from piper.build import BuildAPI
 
         return (
+            AgentAPI(self.config),
             BuildAPI(self.config),
         )
 
