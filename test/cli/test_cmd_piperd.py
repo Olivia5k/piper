@@ -2,7 +2,6 @@ from piper.cli import cmd_piperd
 from piper import api
 from piper import agent
 from piper.db import core as db
-from piper import prop
 from piper import config
 
 import mock
@@ -18,7 +17,6 @@ class TestEntry:
             (
                 api.ApiCLI,
                 db.DbCLI,
-                prop.PropCLI,
                 agent.AgentCLI,
             ),
             config.AgentConfig,

@@ -8,7 +8,6 @@ envs:
     requirements:
       is_not_virtual:
         reason: 'The base environment cannot run if hardware is virtualized'
-        class: 'piper.prop.FacterProp'
         key: 'virtual'
         equals: 'physical'
   venv:

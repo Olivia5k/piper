@@ -218,4 +218,4 @@ class TestAgentConfigValidateConfig(AgentConfigTest):
 class TestAgentConfigCollectClasses(AgentConfigTest):
     def test_collection(self):
         ret = self.config.collect_classes()
-        assert ret == set(['piper.db.RethinkDB', 'piper.prop.FacterProp'])
+        assert ret == set(['piper.db.RethinkDB'])

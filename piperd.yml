@@ -3,10 +3,6 @@ agent:
   fqdn: esm1-buildagent-a1.piper.ninjaloot.se
   active: true
 
-properties:
-  classes:
-    - piper.prop.FacterProp
-
 db:
   class: piper.db.RethinkDB
   db: piper

@@ -51,19 +51,10 @@ class DynamicItem:
 
     def validate_requirements(self):
         """
-        Validate the requirements of this object
+        Temporarily removed until its existence can be approved.
 
-        Raises an PropValidationError() if something does not validate.
+        Check the VCS log to see what it used to look like.
 
         """
 
-        reqs = self.config.get('requirements')
-
-        # No requirements, so this is valid by default.
-        if not reqs:
-            return
-
-        for key, req in reqs.items():
-            prop_cls = self.build.config.classes[req['class']]
-
-            prop_cls(req['key']).validate(req)
+        ...
