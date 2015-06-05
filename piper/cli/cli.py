@@ -84,6 +84,6 @@ class CLI:
             return 0
 
         # Actually execute the command
-        exitcode = runners[self.config.command]()
+        exitcode = runners[self.config.command](ns)
 
         return exitcode

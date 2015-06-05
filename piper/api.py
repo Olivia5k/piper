@@ -70,7 +70,7 @@ class ApiCLI(LazyDatabaseMixin):
         loop.run_until_complete(setup_future)
         return loop
 
-    def run(self):
+    def run(self, ns):
         loop = self.setup()
         loop.run_forever()
 
