@@ -53,10 +53,12 @@ class Agent(LazyDatabaseMixin):
 
         self.register()
         self.log.info('Opening changes() feed from database...')
+
         try:
             for change in self.db.build.feed():
                 self.handle(change)
-        except KeyboardInterrupt:
+
+        except KeyboardInterrupt:  # pragma: nocover
             print()
             self.log.info('Kill signal recieved. Exiting.')
 
