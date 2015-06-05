@@ -15,6 +15,7 @@ Modules
 .. toctree::
 
    piper.abc
+   piper.agent
    piper.api
    piper.build
    piper.config

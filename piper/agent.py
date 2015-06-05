@@ -66,6 +66,7 @@ class Agent(LazyDatabaseMixin):
 
         Will check for whether the changeset is eligible to be built. It is not
         if:
+
         * The build has been deleted.
         * This agent ID is not present in the `eligible_agents` list.
         * The build is already started by another agent.
