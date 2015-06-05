@@ -34,7 +34,7 @@ class Env(DynamicItem):
         return proc
 
 
-class PythonVirtualEnv(Env):
+class PythonVirtualEnv(Env):  # pragma: nocover
     def setup(self):
         if not os.path.exists('bin/python'):
             # TODO: Should use Process()
