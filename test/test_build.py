@@ -33,6 +33,11 @@ def post():
 
 
 @pytest.fixture
+def ns():
+    return MagicMock()
+
+
+@pytest.fixture
 def build():
     config = BuildConfig()
     build = Build(config)
@@ -274,13 +279,18 @@ class TestBuildTeardown(BuildTest):
         self.build.env.teardown.assert_called_once_with()
 
 
-class TestBuildAddBuild(BuildTest):
-    def test_add_build(self):
-        self.build.db = mock.Mock()
-        self.build.add_build()
-
-        assert self.build.id is self.build.db.build.add.return_value
-        self.build.db.build.add.assert_called_once_with(self.build)
+class TestBuildQueue(BuildTest):
+    @mock.patch('piper.config.get_app_config')
+    @mock.patch('requests.post')
+    def test_queue(self, post, gac):
+        gac.return_value = {
+            'masters': ['protocol://hehe:1000']
+        }
+        self.build.queue('pipeline', 'env')
+        post.assert_called_once_with(
+            'protocol://hehe:1000/builds/',
+            json=self.build.config.raw,
+        )
 
 
 class TestBuildFinish(BuildTest):
@@ -356,17 +366,17 @@ class TestExecCLIRun:
         self.cli = ExecCLI(self.config)
 
     @mock.patch('piper.build.Build')
-    def test_calls(self, b):
-        ret = self.cli.run()
+    def test_calls(self, b, ns):
+        ret = self.cli.run(ns)
 
         assert ret == 0
         b.assert_called_once_with(self.config)
         b.return_value.run.assert_called_once_with()
 
     @mock.patch('piper.build.Build')
-    def test_nonzero_exitcode_on_failure(self, b):
+    def test_nonzero_exitcode_on_failure(self, b, ns):
         b.return_value.run.return_value = False
-        ret = self.cli.run()
+        ret = self.cli.run(ns)
 
         assert ret == 1
 

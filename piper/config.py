@@ -3,6 +3,7 @@ import yaml
 import logbook
 import jsonschema
 
+from xdg import BaseDirectory
 from piper.utils import dynamic_load
 
 
@@ -240,3 +241,24 @@ class AgentConfig(Config):
             filename = 'piperd.yml'
 
         super(AgentConfig, self).__init__(filename)
+
+
+def get_app_config():  # pragma: nocover
+    """
+    Gets a dict with the global configuration files set in the XDG dirs.
+
+    """
+
+    # NOTE: This is very quick and dirty and should be baked into the
+    # configuration ecosystem of piper at a later point.
+
+    ret = {}
+    files = [f for f in BaseDirectory.load_config_paths('piper', 'piper.yml')]
+    files.reverse()
+
+    for conf in files:
+        with open(conf) as f:
+            data = yaml.safe_load(f.read())
+            ret.update(data)
+
+    return ret

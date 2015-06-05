@@ -30,8 +30,12 @@ class TestCLIEntry:
         self.cli.set_debug.assert_called_once_with()
         self.cli.load_config.assert_called_once_with()
         self.cli.build_parser.assert_called_once_with()
+
+        parser, runners = self.cli.build_parser.return_value
+        ns = parser.parse_args.return_value
+
         cmd = self.runners[self.cli.config.command]
-        cmd.assert_called_once_with()
+        cmd.assert_called_once_with(ns)
 
         for handler in self.cli.log_handlers:
             handler.push_application.assert_called_once_with()

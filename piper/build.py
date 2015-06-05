@@ -1,6 +1,8 @@
 import ago
 import logbook
+import requests
 
+from piper import config
 from piper import logging
 from piper import utils
 from piper.api import RESTful
@@ -110,15 +112,21 @@ class Build(LazyDatabaseMixin):
 
         self.setup_env()
 
-    def add_build(self):
+    def queue(self, pipeline, env):
         """
-        Add a build object and its configuration to the database
-
-        Also store the reference to the build
+        Use the API to enqueue a build.
 
         """
 
-        self.id = self.db.build.add(self)
+        self.log.info('Adding to queue: {0} {1}'.format(pipeline, env))
+        app_conf = config.get_app_config()
+
+        url = '{0}/builds/'.format(app_conf['masters'][0])
+
+        self.config.raw['pipeline'] = pipeline
+        self.config.raw['env'] = env
+
+        requests.post(url, json=self.config.raw)
 
     def set_logfile(self):
         """
@@ -268,7 +276,7 @@ class ExecCLI:
         self.config = config
 
     def compose(self, parser):  # pragma: nocover
-        cli = parser.add_parser('exec', help='Execute a pipeline')
+        cli = parser.add_parser('exec', help='Execute a pipeline locally')
 
         cli.add_argument(
             'pipeline',
@@ -286,8 +294,37 @@ class ExecCLI:
 
         return 'exec', self.run
 
-    def run(self):
+    def run(self, ns):
         success = Build(self.config).run()
+
+        return 0 if success else 1
+
+
+class BuildCLI:
+    def __init__(self, config):
+        self.config = config
+
+    def compose(self, parser):  # pragma: nocover
+        cli = parser.add_parser('build', help='Build on an agent')
+
+        cli.add_argument(
+            'pipeline',
+            nargs='?',
+            default='build',
+            help='The pipeline to execute',
+        )
+
+        cli.add_argument(
+            'env',
+            nargs='?',
+            default='local',
+            help='The environment to execute in',
+        )
+
+        return 'build', self.run
+
+    def run(self, ns):
+        success = Build(self.config).queue(ns.pipeline, ns.env)
 
         return 0 if success else 1
 
