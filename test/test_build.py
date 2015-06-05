@@ -57,7 +57,6 @@ class TestBuildSetup(BuildTest):
         self.methods = (
             # 'add_build',
             'set_logfile',
-            # 'lock_agent',
             'set_version',
 
             'configure_env',
@@ -336,28 +335,6 @@ class TestBuildSetLogfile(BuildTest):
         assert gfl.call_count == 1
         assert gfl.return_value is self.build.log_handler
         self.build.log_handler.push_application.assert_called_once_with()
-
-
-class TestBuildLockAgent(BuildTest):
-    def setup_method(self, method):
-        super(TestBuildLockAgent, self).setup_method(method)
-        self.build.db = mock.Mock()
-
-    @pytest.mark.skipif(True, reason="refactor skip")
-    def test_lock_db_call(self):
-        self.build.lock_agent()
-        self.build.db.agent.lock.assert_called_once_with(self.build)
-
-
-class TestBuildUnlockAgent(BuildTest):
-    def setup_method(self, method):
-        super(TestBuildUnlockAgent, self).setup_method(method)
-        self.build.db = mock.Mock()
-
-    @pytest.mark.skipif(True, reason="refactor skip")
-    def test_lock_db_call(self):
-        self.build.unlock_agent()
-        self.build.db.agent.unlock.assert_called_once_with(self.build)
 
 
 class TestExecCLIRun:

@@ -103,7 +103,6 @@ class Build(LazyDatabaseMixin):
 
         # self.add_build()
         self.set_logfile()
-        # self.lock_agent()
         self.set_version()
 
         self.configure_env()
@@ -251,7 +250,6 @@ class Build(LazyDatabaseMixin):
 
     def teardown(self):
         self.teardown_env()
-        # self.unlock_agent()
 
     def teardown_env(self):
         """
@@ -261,14 +259,6 @@ class Build(LazyDatabaseMixin):
 
         self.env.log.debug('Tearing down env...')
         self.env.teardown()
-
-    def lock_agent(self):
-        self.log.info('Locking agent')
-        # self.db.agent.lock(self)
-
-    def unlock_agent(self):
-        self.log.info('Unlocking agent')
-        # self.db.agent.unlock(self)
 
 
 class ExecCLI:
