@@ -276,7 +276,7 @@ class ExecCLI:
         self.config = config
 
     def compose(self, parser):  # pragma: nocover
-        cli = parser.add_parser('exec', help='Execute a pipeline')
+        cli = parser.add_parser('exec', help='Execute a pipeline locally')
 
         cli.add_argument(
             'pipeline',
@@ -294,8 +294,37 @@ class ExecCLI:
 
         return 'exec', self.run
 
-    def run(self):
+    def run(self, ns):
         success = Build(self.config).run()
+
+        return 0 if success else 1
+
+
+class BuildCLI:
+    def __init__(self, config):
+        self.config = config
+
+    def compose(self, parser):  # pragma: nocover
+        cli = parser.add_parser('build', help='Build on an agent')
+
+        cli.add_argument(
+            'pipeline',
+            nargs='?',
+            default='build',
+            help='The pipeline to execute',
+        )
+
+        cli.add_argument(
+            'env',
+            nargs='?',
+            default='local',
+            help='The environment to execute in',
+        )
+
+        return 'build', self.run
+
+    def run(self, ns):
+        success = Build(self.config).queue(ns.pipeline, ns.env)
 
         return 0 if success else 1
 
