@@ -230,8 +230,10 @@ class TestBuildExecute:
         self.build = Build(mock.Mock())
         self.build.order = [mock.Mock() for _ in range(3)]
         self.build.env = mock.Mock()
+        self.build.config.raw = {
+            'pipeline': 'gemma',
+        }
 
-    @pytest.mark.skipif(True, reason="refactor skip")
     def test_all_successful(self):
         self.build.execute()
 
@@ -239,7 +241,6 @@ class TestBuildExecute:
         assert self.build.env.execute.call_args_list == calls
         assert self.build.success is True
 
-    @pytest.mark.skipif(True, reason="refactor skip")
     def test_execution_stops_by_failed_step(self):
         self.build.order[1].success = False
         self.build.env.execute.side_effect = (
