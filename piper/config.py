@@ -88,18 +88,17 @@ class Config:
         self.log.debug('Configuration file loaded.')
 
     def collect_classes(self):
-        def traverse(data):
-            # yield from :'(
-            ret = []
-            for key, value in data.items():
-                if key == 'class':
-                    ret.append(value)
-                elif key == 'classes':
-                    ret.extend(value)
-                elif isinstance(value, dict):
-                    ret.extend(traverse(value))
+        """
+        Return a set of all class package strings in the configuration tree.
 
-            return ret
+        """
+
+        def traverse(data):
+            for key, value in data.items():
+                if key in ('class', 'classes'):
+                    yield value
+                elif isinstance(value, dict):
+                    yield from traverse(value)
 
         return set(traverse(self.raw))
 
