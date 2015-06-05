@@ -2,6 +2,8 @@ import os
 import time
 import rethinkdb as rdb
 
+from piper.db.rethink import AgentManager
+from piper.db.rethink import BuildManager
 from piper.db.rethink import RethinkDB
 from piper.build import Build
 
@@ -16,6 +18,42 @@ from test import utils
 @pytest.fixture
 def piper():
     return utils.BASE_CONFIG
+
+
+@pytest.fixture
+def agent_manager():
+    db = Mock()
+    manager = AgentManager(db)
+    manager.table = Mock()
+    return manager
+
+
+@pytest.fixture
+def build_manager():
+    db = Mock()
+    manager = BuildManager(db)
+    manager.table = Mock()
+    return manager
+
+
+@pytest.fixture
+def rethinkdb():
+    """
+    An instance of the manager class, not the full DB fixture.
+
+    See :func:`rethink` for that.
+
+    """
+
+    rethink = RethinkDB()
+    rethink.conn = Mock()
+    rethink.managers = []
+
+    for key in ('a', 'b', 'c'):
+        m = Mock()
+        m.return_value.table_name = key
+        rethink.managers.append(m)
+    return rethink
 
 
 @pytest.fixture()
@@ -182,6 +220,17 @@ class TestRethinkDbCreateTable(RethinkDbTest):
         table_create.assert_called_once_with(self.manager.table_name)
 
 
+class TestRethinkDbSetupManagers:
+    def test_in_return_value(self, rethinkdb):
+        ret = rethinkdb.setup_managers()
+        assert ret == [m.return_value for m in rethinkdb.managers]
+
+    def test_manager_calls(self, rethinkdb):
+        rethinkdb.setup_managers()
+        for m in rethinkdb.managers:
+            m.assert_called_once_with(rethinkdb)
+
+
 class TestRethinkDbIntegration:
     def test_build_add(self, rethink, piper):
         """
@@ -215,3 +264,80 @@ class TestRethinkDbIntegration:
         assert len(ret.items) == 1
         item = ret.next()
         assert item['success'] is True
+
+
+class TestAgentManagerGet:
+    def test_get(self, agent_manager):
+        id = 'all.that.jazz'
+        ret = agent_manager.get(id)
+
+        run = agent_manager.table.get.return_value.run
+        agent_manager.table.get.assert_called_once_with(id)
+        assert run.call_count == 1
+        assert ret is run.return_value
+
+
+class TestAgentManagerAdd:
+    def test_add(self, agent_manager):
+        data = Mock()
+        ret = agent_manager.add(data)
+
+        run = agent_manager.table.insert.return_value.run
+        agent_manager.table.insert.assert_called_once_with(data)
+        assert run.call_count == 1
+        assert ret is run.return_value
+
+
+class TestAgentManagerUpdate:
+    def test_update(self, agent_manager):
+        data = Mock()
+        agent_manager.update(data)
+
+        agent_manager.table.replace.assert_called_once_with(data)
+        assert agent_manager.table.replace.return_value.run.call_count == 1
+
+
+class TestBuildManagerAdd:
+    def test_add(self, build_manager):
+        data = Mock()
+        run = build_manager.table.insert.return_value.run
+        run.return_value = {
+            'generated_keys': [
+                'pain'
+            ]
+        }
+        ret = build_manager.add(data)
+
+        build_manager.table.insert.assert_called_once_with(data.as_dict())
+        assert run.call_count == 1
+        assert ret is 'pain'
+
+
+class TestBuildManagerUpdate:
+    def test_update(self, build_manager):
+        data = Mock()
+        build_manager.update(data)
+
+        build_manager.table.update.assert_called_once_with(data.as_dict())
+        assert build_manager.table.update.return_value.run.call_count == 1
+
+
+class TestBuildManagerGet:
+    def test_get(self, build_manager):
+        id = 'guilty.of.loving.you'
+        ret = build_manager.get(id)
+
+        run = build_manager.table.get.return_value.run
+        build_manager.table.get.assert_called_once_with(id)
+        assert run.call_count == 1
+        assert ret is run.return_value
+
+
+class TestBuildManagerFeed:
+    def test_feed(self, build_manager):
+        ret = build_manager.feed()
+
+        run = build_manager.table.changes.return_value.run
+        build_manager.table.changes.assert_called_once_with()
+        assert run.call_count == 1
+        assert ret is run.return_value

@@ -43,9 +43,6 @@ class BuildManager(RethinkManager, db.BuildManager):
     def get(self, id):
         return self.table.get(id).run(self.conn)
 
-    def all(self):
-        raise NotImplementedError()
-
     def feed(self):
         return self.table.changes().run(self.conn)
 
