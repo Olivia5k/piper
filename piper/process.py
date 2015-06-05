@@ -35,8 +35,10 @@ class Process:
         try:
             for line in self.sh:
                 self.log.info(line.strip())
+
         except sh.ErrorReturnCode:
             self.log.error(self.sh.stderr)
+
         finally:
             exit = self.sh.exit_code
             self.success = exit == 0
