@@ -142,12 +142,12 @@ class TestBuildConfigureEnv:
                 env_key: {
                     'class': self.cls_key,
                 }
-            }
+            },
+            'env': env_key,
         }
 
         self.build = Build(self.config)
 
-    @pytest.mark.skipif(True, reason="refactor skip")
     def test_configure_env(self):
         self.build.configure_env()
 
