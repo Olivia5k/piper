@@ -12,6 +12,12 @@ from piper.config import AgentConfig
 from test import utils
 
 
+@pytest.fixture
+def config():
+    config = Config('piper.yml')
+    return config
+
+
 class BuildConfigTest:
     def setup_method(self, method):
         self.config = BuildConfig()
@@ -39,6 +45,17 @@ class TestConfigLoad:
 
         assert self.config.load_config.call_count == 0
         assert self.config.raw == self.raw
+
+    def test_filename_configuration(self):
+        self.config = Config('piper.yml')
+        self.config.load_config = mock.Mock()
+        self.config.load_classes = mock.Mock()
+        self.config.validate_config = mock.Mock()
+
+        self.config.load()
+
+        self.config.load_config.assert_called_once_with()
+        self.config.load_classes.assert_called_once_with()
 
 
 class TestConfigCollectClasses:
@@ -219,3 +236,44 @@ class TestAgentConfigCollectClasses(AgentConfigTest):
     def test_collection(self):
         ret = self.config.collect_classes()
         assert ret == set(['piper.db.RethinkDB'])
+
+
+class TestConfigLoadClasses(object):
+    @mock.patch('piper.config.dynamic_load')
+    def test_dynamic_load(self, dl, config):
+        first, second = mock.Mock(), mock.Mock()
+        config.collect_classes = mock.Mock(return_value=[first, second])
+
+        config.load_classes()
+
+        dl.assert_has_calls([
+            mock.call(first),
+            mock.call(second),
+        ])
+
+    @mock.patch('piper.config.dynamic_load')
+    def test_class_setting(self, dl, config):
+        first, second = mock.Mock(), mock.Mock()
+        config.collect_classes = mock.Mock(return_value=[first, second])
+
+        config.load_classes()
+
+        assert config.classes == {
+            first: dl.return_value,
+            second: dl.return_value,
+        }
+
+
+class TestConfigGetDatabase(object):
+    def test_grab(self, config):
+        key = "that's alright"
+        db = mock.Mock()
+        config.classes = {
+            key: db
+        }
+        config.raw = {
+            'db': {'class': key}
+        }
+
+        ret = config.get_database()
+        assert ret is db.return_value
