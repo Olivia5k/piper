@@ -14,7 +14,7 @@ class TestEntry:
         cmd_piper.entry(self.mock)
         clibase.assert_called_once_with(
             'piper',
-            (build.ExecCLI,),
+            (build.ExecCLI, build.BuildCLI),
             config.BuildConfig,
             args=self.mock
         )

@@ -279,13 +279,18 @@ class TestBuildTeardown(BuildTest):
         self.build.env.teardown.assert_called_once_with()
 
 
-class TestBuildAddBuild(BuildTest):
-    def test_add_build(self):
-        self.build.db = mock.Mock()
-        self.build.add_build()
-
-        assert self.build.id is self.build.db.build.add.return_value
-        self.build.db.build.add.assert_called_once_with(self.build)
+class TestBuildQueue(BuildTest):
+    @mock.patch('piper.config.get_app_config')
+    @mock.patch('requests.post')
+    def test_queue(self, post, gac):
+        gac.return_value = {
+            'masters': ['protocol://hehe:1000']
+        }
+        self.build.queue('pipeline', 'env')
+        post.assert_called_once_with(
+            'protocol://hehe:1000/builds/',
+            json=self.build.config.raw,
+        )
 
 
 class TestBuildFinish(BuildTest):
