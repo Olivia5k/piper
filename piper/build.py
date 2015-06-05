@@ -77,7 +77,6 @@ class Build(LazyDatabaseMixin):
 
     def finish(self):
         self.ended = utils.now()
-        # self.db.build.update(self)
 
         verb = 'finished successfully in'
         if not self.success:

@@ -6,6 +6,7 @@ from mock import MagicMock
 
 from piper.build import Build
 from piper.build import BuildAPI
+from piper.build import BuildCLI
 from piper.build import ExecCLI
 from piper.config import AgentConfig
 from piper.config import BuildConfig
@@ -44,6 +45,14 @@ def build():
     build.db = Mock()
 
     return build
+
+
+@pytest.fixture
+def build_cli():
+    config = AgentConfig()
+    cli = BuildCLI(config)
+    cli.db = Mock()
+    return cli
 
 
 class BuildTest:
@@ -299,17 +308,14 @@ class TestBuildFinish(BuildTest):
         self.build.db = mock.Mock()
         self.build.log_handler = mock.Mock()
 
-    @pytest.mark.skipif(True, reason="refactor skip")
     @mock.patch('ago.human')
     @mock.patch('piper.utils.now')
-    def test_build_is_updated_in_database(self, now, human):
+    def test_log_handler_is_popped(self, now, human):
         self.build.finish()
 
         assert self.build.ended is now.return_value
         now.assert_called_once_with()
-        self.build.db.build.update.assert_called_once_with(
-            self.build,
-        )
+        self.build.log_handler.pop_application.assert_called_once_with()
 
 
 class TestBuildSetLogfile(BuildTest):
@@ -391,3 +397,15 @@ class TestBuildApiCreate(object):
         }
 
         api.extract_json.assert_called_once_with(post)
+
+
+class TestBuildCliRun(object):
+    @mock.patch('piper.build.Build')
+    def test_queue(self, build, build_cli, ns):
+        build_cli.run(ns)
+
+        build.assert_called_once_with(build_cli.config)
+        build.return_value.queue.assert_called_once_with(
+            ns.pipeline,
+            ns.env,
+        )
