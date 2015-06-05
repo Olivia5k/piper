@@ -16,6 +16,11 @@ def lazy():
     return lazy
 
 
+@pytest.fixture
+def ns():
+    return mock.MagicMock()
+
+
 class DbCLITest:
     def setup_method(self, method):
         self.config = mock.Mock()
@@ -24,9 +29,9 @@ class DbCLITest:
 
 
 class TestDbCLIRun(DbCLITest):
-    def test_plain_run(self):
+    def test_plain_run(self, ns):
         self.cli.db.init = mock.Mock()
-        ret = self.cli.run()
+        ret = self.cli.run(ns)
 
         assert ret == 0
         self.cli.db.init.assert_called_once_with(self.config)

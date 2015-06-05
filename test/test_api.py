@@ -1,4 +1,5 @@
 from piper.api import ApiCLI
+
 from piper.api import RESTful
 from piper.api import date_handler
 from piper.config import AgentConfig
@@ -53,9 +54,14 @@ def request():
     return MagicMock()
 
 
+@pytest.fixture
+def ns():
+    return MagicMock()
+
+
 class TestApiCLIRun:
-    def test_calls(self, cli):
-        cli.run()
+    def test_calls(self, cli, ns):
+        cli.run(ns)
 
         cli.setup().run_forever.assert_called_once_with()
 

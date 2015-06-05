@@ -33,6 +33,11 @@ def post():
 
 
 @pytest.fixture
+def ns():
+    return MagicMock()
+
+
+@pytest.fixture
 def build():
     config = BuildConfig()
     build = Build(config)
@@ -356,17 +361,17 @@ class TestExecCLIRun:
         self.cli = ExecCLI(self.config)
 
     @mock.patch('piper.build.Build')
-    def test_calls(self, b):
-        ret = self.cli.run()
+    def test_calls(self, b, ns):
+        ret = self.cli.run(ns)
 
         assert ret == 0
         b.assert_called_once_with(self.config)
         b.return_value.run.assert_called_once_with()
 
     @mock.patch('piper.build.Build')
-    def test_nonzero_exitcode_on_failure(self, b):
+    def test_nonzero_exitcode_on_failure(self, b, ns):
         b.return_value.run.return_value = False
-        ret = self.cli.run()
+        ret = self.cli.run(ns)
 
         assert ret == 1
 
