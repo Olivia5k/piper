@@ -1,7 +1,7 @@
-piper.api.api
-=============
+piper.agent
+===========
 
-.. automodule:: piper.api.api
+.. automodule:: piper.agent
     :members:
     :undoc-members:
     :show-inheritance:

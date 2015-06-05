@@ -16,17 +16,14 @@ class RethinkManager:
 class AgentManager(RethinkManager, db.AgentManager):
     table_name = 'agent'
 
-    def get(self):
-        raise NotImplementedError()
+    def get(self, id):
+        return self.table.get(id).run(self.conn)
 
-    def lock(self, build):
-        self.set_lock(build, True)
+    def add(self, data):
+        return self.table.insert(data).run(self.conn)
 
-    def unlock(self, build):
-        self.set_lock(build, False)
-
-    def set_lock(self, build, locked):
-        pass
+    def update(self, data):
+        self.table.replace(data).run(self.conn)
 
 
 class BuildManager(RethinkManager, db.BuildManager):
@@ -43,11 +40,14 @@ class BuildManager(RethinkManager, db.BuildManager):
         data = build.as_dict()
         return self.table.update(data).run(self.conn)
 
-    def get(self, build_id):
-        raise NotImplementedError()
+    def get(self, id):
+        return self.table.get(id).run(self.conn)
 
     def all(self):
         raise NotImplementedError()
+
+    def feed(self):
+        return self.table.changes().run(self.conn)
 
 
 class RethinkDB(db.Database):

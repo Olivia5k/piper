@@ -34,7 +34,7 @@ class Process:
 
         try:
             for line in self.sh:
-                self.log.info(line)
+                self.log.info(line.strip())
         except sh.ErrorReturnCode:
             self.log.error(self.sh.stderr)
         finally:

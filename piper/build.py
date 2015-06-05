@@ -1,10 +1,11 @@
 import ago
 import logbook
 
+from piper import logging
+from piper import utils
+from piper.api import RESTful
 from piper.db.core import LazyDatabaseMixin
 from piper.vcs import GitVCS
-from piper import utils
-from piper import logging
 
 
 class Build(LazyDatabaseMixin):
@@ -42,12 +43,11 @@ class Build(LazyDatabaseMixin):
 
         self.vcs = GitVCS('github', 'git@github.com')
 
-        self.started = utils.now()
-
         self.id = None
         self.version = None
         self.steps = {}
         self.order = []
+        self.started = None
         self.success = None
         self.crashed = False
         self.status = None
@@ -63,7 +63,8 @@ class Build(LazyDatabaseMixin):
 
         """
 
-        self.log.info('Setting up {0}...'.format(self.config.pipeline))
+        self.log.info('Setting up {0}...'.format(self.config.raw['pipeline']))
+        self.started = utils.now()
 
         self.setup()
         self.execute()
@@ -74,7 +75,7 @@ class Build(LazyDatabaseMixin):
 
     def finish(self):
         self.ended = utils.now()
-        self.db.build.update(self)
+        # self.db.build.update(self)
 
         verb = 'finished successfully in'
         if not self.success:
@@ -98,9 +99,9 @@ class Build(LazyDatabaseMixin):
 
         """
 
-        self.add_build()
+        # self.add_build()
         self.set_logfile()
-        self.lock_agent()
+        # self.lock_agent()
         self.set_version()
 
         self.configure_env()
@@ -108,33 +109,6 @@ class Build(LazyDatabaseMixin):
         self.configure_pipeline()
 
         self.setup_env()
-
-    def as_dict(self):
-        """
-        Generate a dict representation of the build, suitable for DB use.
-
-        """
-
-        ret = {}
-
-        for key in self.FIELDS_TO_DB:
-            val = getattr(self, key, None)
-            if key == 'id' and val is None:
-                # id cannot be sent as a null value because the database
-                # will be sad.
-                continue
-
-            # Handling of special fields with raw notations
-            if hasattr(val, 'raw'):
-                val = val.raw
-            ret[key] = val
-
-        # Set the timestamp so that the database doesn't need to care. The
-        # timestamp will technically be a bit earlier than the insertion, but
-        # that probably doesn't matter much.
-        ret['updated'] = utils.now()
-
-        return ret
 
     def add_build(self):
         """
@@ -183,7 +157,7 @@ class Build(LazyDatabaseMixin):
         """
 
         self.log.debug('Loading environment...')
-        env_config = self.config.raw['envs'][self.config.env]
+        env_config = self.config.raw['envs'][self.config.raw['env']]
         cls = self.config.classes[env_config['class']]
 
         self.env = cls(self, env_config)
@@ -212,7 +186,8 @@ class Build(LazyDatabaseMixin):
 
         """
 
-        for step_key in self.config.raw['pipelines'][self.config.pipeline]:
+        key = self.config.raw['pipeline']
+        for step_key in self.config.raw['pipelines'][key]:
             step = self.steps[step_key]
             self.order.append(step)
 
@@ -238,14 +213,15 @@ class Build(LazyDatabaseMixin):
         """
 
         total = len(self.order)
-        self.log.info('Running {0}...'.format(self.config.pipeline))
+        pipeline = self.config.raw['pipeline']
+        self.log.info('Running {0}...'.format(pipeline))
 
         for x, step in enumerate(self.order, start=1):
             step.set_index(x, total)
 
             # Update db status to show that we are running this build
             self.status = '{0}/{1}: {2}'.format(x, total, step.key)
-            self.db.build.update(self)
+            # self.db.build.update(self)
 
             step.log.info('Running...')
             proc = self.env.execute(step)
@@ -255,7 +231,7 @@ class Build(LazyDatabaseMixin):
             else:
                 # If the success is not positive, bail and stop running.
                 step.log.error('Step failed.')
-                self.log.error('{0} failed.'.format(self.config.pipeline))
+                self.log.error('{0} failed.'.format(pipeline))
                 self.success = False
                 break
 
@@ -265,15 +241,9 @@ class Build(LazyDatabaseMixin):
         if self.success is not False:
             self.success = True
 
-    def save_state(self):
-        """
-        Collects all data about the pipeline being built and persists it.
-
-        """
-
     def teardown(self):
         self.teardown_env()
-        self.unlock_agent()
+        # self.unlock_agent()
 
     def teardown_env(self):
         """
@@ -284,26 +254,13 @@ class Build(LazyDatabaseMixin):
         self.env.log.debug('Tearing down env...')
         self.env.teardown()
 
-    def default_db_kwargs(self):  # pragma: nocover
-        """
-        Generate a dict with keys to update in the database
-
-        """
-
-        return {
-            'success': self.success,
-            'crashed': self.crashed,
-            'status': self.status,
-            'updated': utils.now()
-        }
-
     def lock_agent(self):
         self.log.info('Locking agent')
-        self.db.agent.lock(self)
+        # self.db.agent.lock(self)
 
     def unlock_agent(self):
         self.log.info('Unlocking agent')
-        self.db.agent.unlock(self)
+        # self.db.agent.unlock(self)
 
 
 class ExecCLI:
@@ -333,3 +290,52 @@ class ExecCLI:
         success = Build(self.config).run()
 
         return 0 if success else 1
+
+
+class BuildAPI(RESTful):
+    """
+    API endpoint for CRUD operations on builds.
+
+    """
+
+    def __init__(self, config):
+        super().__init__(config)
+        self.routes = (
+            ('GET', '/builds/{id}', self.get),
+            ('POST', '/builds/', self.create),
+        )
+
+    def get(self, request):
+        """
+        Get one build.
+
+        """
+
+        id = request.match_info.get('id')
+        build = self.db.build.get(id)
+
+        if build is None:
+            return {}, 404
+
+        return build
+
+    def create(self, request):
+        """
+        Put a build into the database.
+
+        :returns: id of created object
+
+        """
+
+        config = yield from self.extract_json(request)
+
+        build = Build(config)
+        build.created = utils.now()  # TODO: Should be in Build()?
+
+        id = self.db.build.add(build)
+
+        self.log.info('Build {0} added.'.format(id))
+        ret = {
+            'id': id,
+        }
+        return ret, 201

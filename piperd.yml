@@ -1,14 +1,14 @@
 agent:
-  name: sto4-buildagent-a1
-  fqdn: sto4-buildagent-a1.piper.ninjaloot.se
+  id: esm1-buildagent-a1
+  fqdn: esm1-buildagent-a1.piper.ninjaloot.se
   active: true
-
-properties:
-  classes:
-    - piper.prop.FacterProp
 
 db:
   class: piper.db.RethinkDB
   db: piper
   host: localhost
   port: 28015
+
+api:
+  address: 127.0.0.1
+  port: 27001

@@ -1,5 +1,7 @@
 import logbook
 
+from piper import utils
+
 
 class LazyDatabaseMixin:
     """
@@ -28,6 +30,38 @@ class LazyDatabaseMixin:
         self._db = val
 
     db = property(_get_db, _set_db)
+
+    def as_dict(self):
+        """
+        Generate a dict representation of the object, suitable for DB use.
+
+        All attributes listed in `FIELDS_TO_DB` will be entered
+        into the resulting dictionary, even if they are **None**. The *id*
+        is an exception to this since the database would not be able to handle
+        that.
+
+        """
+
+        ret = {}
+
+        for key in self.FIELDS_TO_DB:
+            val = getattr(self, key, None)
+            if key == 'id' and val is None:
+                # id cannot be sent as a null value because the database
+                # will be sad.
+                continue
+
+            # Handling of special fields with raw notations
+            if hasattr(val, 'raw'):
+                val = val.raw
+            ret[key] = val
+
+        # Set the timestamp so that the database doesn't need to care. The
+        # timestamp will technically be a bit earlier than the insertion, but
+        # that probably doesn't matter much.
+        ret['updated'] = utils.now()
+
+        return ret
 
 
 class AgentManager:

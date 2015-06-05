@@ -1,7 +1,7 @@
 from piper.cli import cmd_piperd
-from piper.api import api
+from piper import api
+from piper import agent
 from piper.db import core as db
-from piper import prop
 from piper import config
 
 import mock
@@ -14,7 +14,11 @@ class TestEntry:
         cmd_piperd.entry(self.mock)
         clibase.assert_called_once_with(
             'piperd',
-            (api.ApiCLI, db.DbCLI, prop.PropCLI),
+            (
+                api.ApiCLI,
+                db.DbCLI,
+                agent.AgentCLI,
+            ),
             config.AgentConfig,
             args=self.mock
         )
@@ -24,10 +28,3 @@ class TestEntry:
     def test_return_value(self, clibase):
         ret = cmd_piperd.entry()
         assert ret is clibase.return_value.entry.return_value
-
-
-class TestEntryIntegration:
-    @mock.patch('piper.api.api.Flask')
-    def test_api_start(self, flask):
-        cmd_piperd.entry(['api', 'start'])
-        flask.return_value.run.assert_called_once_with(debug=True)

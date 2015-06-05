@@ -2,7 +2,7 @@ REQUIREMENT_SCHEMA = {
     'description': 'A set of requirement definitions',
     'type': ['object', 'null'],
     'addtionalProperties': {
-        'required': ['reason', 'class', 'key', 'equals'],
+        'required': ['reason', 'key', 'equals'],
         'properties': {
             'reason': {
                 'description':

@@ -64,23 +64,37 @@ class Colorizer:
 
         """
 
-        match = self.regexp.search(message)
-        if match:
-            start, stop = match.span()
-            before, after = match.string[:start], match.string[stop:]
-            colored = self.formatting.format(*match.groups(), t=self.terminal)
+        try:
+            match = self.regexp.search(message)
+            if match:
+                start, stop = match.span()
+                before, after = match.string[:start], match.string[stop:]
+                colored = self.formatting.format(
+                    *match.groups(), t=self.terminal
+                )
 
-            # Colorize the remaining part as well; there might be matching
-            # parts left in the part that was not colorized yet.
-            done, after = self.colorize(after)
-            message = before + colored + after
-            if done:
-                return True, message
+                # Colorize the remaining part as well; there might be matching
+                # parts left in the part that was not colorized yet.
+                done, after = self.colorize(after)
+                message = before + colored + after
+                if done:
+                    return True, message
 
-        return bool(match), message
+            return bool(match), message
+
+        except TypeError:  # pragma: nocover
+            # We were passed something we don't understand. Just pass down.
+            return True, message
 
 
 COLORIZERS = (
+    # Colorize UUIDs
+    Colorizer(
+        r'(\w{8}-\w{4}-\w{4}-\w{4}-\w{12})',
+        '{t.bold_magenta}{0}{t.normal}',
+        True,
+        re.I
+    ),
     # Colorize error messages
     Colorizer(r'^(err(?:or)?)(.*)$', '{t.bold_red}{0}{1}', True, re.I),
     # Colorize warning messages

@@ -7,6 +7,15 @@ from piper.db.core import DbCLI
 from piper.db.core import Database
 
 
+@pytest.fixture
+def lazy():
+    lazy = LazyDatabaseMixin()
+    lazy.FIELDS_TO_DB = (
+        'id', 'test', 'hax'
+    )
+    return lazy
+
+
 class DbCLITest:
     def setup_method(self, method):
         self.config = mock.Mock()
@@ -89,3 +98,24 @@ class TestLazyDatabaseMixinDb:
 
         db = self.ldm.config.get_database.return_value
         assert ret is db
+
+
+class TestLazyDatabaseMixinAsDict(object):
+    def test_without_id_key(self, lazy):
+        ret = lazy.as_dict()
+        assert 'id' not in ret
+
+    def test_with_id_key(self, lazy):
+        lazy.id = True  # Can't use a mock because it will have a .raw
+        ret = lazy.as_dict()
+        assert ret['id'] is lazy.id
+
+    @mock.patch('piper.utils.now')
+    def test_timestamp_is_added(self, now, lazy):
+        ret = lazy.as_dict()
+        assert ret['updated'] is now.return_value
+
+    def test_raw_value(self, lazy):
+        lazy.hax = mock.Mock()
+        ret = lazy.as_dict()
+        assert ret['hax'] is lazy.hax.raw

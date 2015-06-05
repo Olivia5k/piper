@@ -57,7 +57,7 @@ class Config:
         else:
             self.log.debug('Using provided raw configuration.')
 
-        self.validate_config()
+        # self.validate_config()
         self.load_classes()
         return self
 
@@ -192,11 +192,11 @@ class AgentConfig(Config):
                 'description': 'Agent configuration',
                 'type': 'object',
                 'additionalProperties': False,
-                'required': ['name', 'fqdn', 'active'],
+                'required': ['id', 'fqdn', 'active'],
                 'properties': {
-                    'name': {
+                    'id': {
                         'description':
-                            'Descriptive name, used for display in interfaces',
+                            'Agent identifier',
                         'type': 'string',
                     },
                     'fqdn': {
@@ -216,15 +216,19 @@ class AgentConfig(Config):
                 },
             },
             'db': DB_SCHEMA,
-            'properties': {
-                'description': 'Agent property configuration',
+            'api': {
+                'description': 'API configuration',
                 'type': 'object',
                 'additionalProperties': False,
-                'required': ['classes'],
+                'required': ['address', 'port'],
                 'properties': {
-                    'classes': {
-                        'description': 'Classes to use for property loading',
-                        'type': 'array',
+                    'address': {
+                        'description': 'Address to bind to',
+                        'type': 'string',
+                    },
+                    'port': {
+                        'description': 'Port to listen on',
+                        'type': 'integer',
                     },
                 },
             },
