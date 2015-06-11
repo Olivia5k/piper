@@ -16,6 +16,7 @@ install_requires = (
     'six>=1.9.0,<2.0.0a0',
     'sh>=1.11,<2.0a0',
     'pyxdg>=0.25,<1.0a0',
+    'requests>=2.7.0,<3.0.0a0',
 )
 
 tests_require = (
