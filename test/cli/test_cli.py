@@ -13,7 +13,6 @@ class TestCLIEntry:
         self.cli.log_handlers = mock.MagicMock(), mock.MagicMock()
 
         self.cli.set_debug = mock.Mock()
-        self.cli.load_config = mock.Mock()
         self.cli.config = mock.Mock()
 
         self.parser = mock.MagicMock()
@@ -28,7 +27,6 @@ class TestCLIEntry:
 
         assert ret == self.runners[self.ns.command].return_value
         self.cli.set_debug.assert_called_once_with()
-        self.cli.load_config.assert_called_once_with()
         self.cli.build_parser.assert_called_once_with()
 
         parser, runners = self.cli.build_parser.return_value
@@ -41,7 +39,7 @@ class TestCLIEntry:
             handler.push_application.assert_called_once_with()
 
     def test_no_command_runs_help(self):
-        self.cli.config.command = False
+        self.ns.command = False
 
         ret = self.cli.entry()
 
@@ -91,6 +89,7 @@ class TestCLIGetRunners:
         )
         for cls in self.classes:
             cls.runner = mock.Mock()
+            cls.config_class = mock.Mock()
             cls.return_value.compose.return_value = cls.key, cls.runner
 
         self.cli = CLI(self.name, self.classes, mock.Mock())
@@ -105,7 +104,7 @@ class TestCLIGetRunners:
     def test_calls(self):
         self.cli.get_runners(self.sub)
         for cls in self.classes:
-            cls.assert_called_once_with(self.cli.config)
+            cls.assert_called_once_with(cls.config_class().load())
             cls.return_value.compose.assert_called_once_with(self.sub)
 
 

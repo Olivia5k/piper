@@ -98,18 +98,18 @@ class TestBuildRun(BuildTest):
             setattr(self.build, method, mock.Mock())
 
     def test_run_calls(self):
-        self.build.run()
+        self.build.run('pipeline', 'env')
 
         for method in self.methods:
             getattr(self.build, method).assert_called_once_with()
 
     def test_run_returns_boolean_success(self):
         self.build.success = False
-        ret = self.build.run()
+        ret = self.build.run('pipeline', 'env')
         assert ret is False
 
         self.build.success = True
-        ret = self.build.run()
+        ret = self.build.run('other', 'illusion')
         assert ret is True
 
 
@@ -156,6 +156,7 @@ class TestBuildConfigureEnv:
         }
 
         self.build = Build(self.config)
+        self.build.env = env_key
 
     def test_configure_env(self):
         self.build.configure_env()
@@ -224,6 +225,7 @@ class TestBuildConfigurePipeline:
     def get_build(self, config):
         build = Build(self.config)
         build.steps = dict(zip(self.step_keys, self.steps))
+        build.pipeline = self.pipeline_key
         return build
 
     def test_configure_pipeline(self):
@@ -355,7 +357,7 @@ class TestExecCLIRun:
 
         assert ret == 0
         b.assert_called_once_with(self.config)
-        b.return_value.run.assert_called_once_with()
+        b.return_value.run.assert_called_once_with(ns.pipeline, ns.env)
 
     @mock.patch('piper.build.Build')
     def test_nonzero_exitcode_on_failure(self, b, ns):

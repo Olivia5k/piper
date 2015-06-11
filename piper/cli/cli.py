@@ -47,7 +47,15 @@ class CLI:
         )
 
     def get_runners(self, sub):
-        return dict(cli(self.config).compose(sub) for cli in self.classes)
+        ret = {}
+        for cli_class in self.classes:
+            config = cli_class.config_class().load()
+            cli = cli_class(config)
+            key, runner = cli.compose(sub)
+
+            ret[key] = runner
+
+        return ret
 
     def get_handlers(self):  # pragma: nocover
         debug = False
@@ -55,9 +63,6 @@ class CLI:
             debug = True
 
         self.log_handlers = logging.get_handlers(debug)
-
-    def load_config(self):  # pragma: nocover
-        self.config = self.config_class().load()
 
     def set_debug(self):
         # Lower the logging level if we're being verbose.
@@ -72,18 +77,16 @@ class CLI:
             handler.push_application()
 
         self.set_debug()
-        self.load_config()
 
         parser, runners = self.build_parser()
         ns = parser.parse_args(self.args)
-        self.config.merge_namespace(ns)
 
         # Just running the command should print the help.
-        if not self.config.command:
+        if not ns.command:
             parser.print_help()
             return 0
 
         # Actually execute the command
-        exitcode = runners[self.config.command](ns)
+        exitcode = runners[ns.command](ns)
 
         return exitcode

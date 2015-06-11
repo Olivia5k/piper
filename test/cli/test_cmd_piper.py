@@ -1,3 +1,5 @@
+from piper import agent
+from piper import api
 from piper import build
 from piper import config
 from piper.db import core as db
@@ -11,10 +13,18 @@ class TestEntry:
     @mock.patch('piper.cli.cmd_piper.CLI')
     def test_calls(self, clibase):
         self.mock = mock.Mock()
+        classes = (
+            build.BuildCLI,
+            build.ExecCLI,
+            agent.AgentCLI,
+            api.ApiCLI,
+            db.DbCLI,
+        )
+
         cmd_piper.entry(self.mock)
         clibase.assert_called_once_with(
             'piper',
-            (build.ExecCLI, build.BuildCLI),
+            classes,
             config.BuildConfig,
             args=self.mock
         )

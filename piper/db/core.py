@@ -1,5 +1,6 @@
 import logbook
 
+from piper import config
 from piper import utils
 
 
@@ -230,6 +231,8 @@ class Database:
 
 
 class DbCLI(LazyDatabaseMixin):
+    config_class = config.AgentConfig
+
     def __init__(self, config):
         self.config = config
         self.log = logbook.Logger(self.__class__.__name__)

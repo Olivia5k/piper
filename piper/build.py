@@ -54,9 +54,12 @@ class Build(LazyDatabaseMixin):
         self.crashed = False
         self.status = None
 
+        self.pipeline = None
+        self.env = None
+
         self.log = logbook.Logger(self.__class__.__name__)
 
-    def run(self):
+    def run(self, pipeline, env):
         """
         Main entry point
 
@@ -65,7 +68,10 @@ class Build(LazyDatabaseMixin):
 
         """
 
-        self.log.info('Setting up {0}...'.format(self.config.raw['pipeline']))
+        self.pipeline = pipeline
+        self.env = env
+
+        self.log.info('Setting up {0}...'.format(self.pipeline))
         self.started = utils.now()
 
         self.setup()
@@ -116,13 +122,13 @@ class Build(LazyDatabaseMixin):
 
         """
 
+        self.pipeline = pipeline
+        self.env = env
+
         self.log.info('Adding to queue: {0} {1}'.format(pipeline, env))
         app_conf = config.get_app_config()
 
         url = '{0}/builds/'.format(app_conf['masters'][0])
-
-        self.config.raw['pipeline'] = pipeline
-        self.config.raw['env'] = env
 
         requests.post(url, json=self.config.raw)
 
@@ -163,7 +169,7 @@ class Build(LazyDatabaseMixin):
         """
 
         self.log.debug('Loading environment...')
-        env_config = self.config.raw['envs'][self.config.raw['env']]
+        env_config = self.config.raw['envs'][self.env]
         cls = self.config.classes[env_config['class']]
 
         self.env = cls(self, env_config)
@@ -192,8 +198,7 @@ class Build(LazyDatabaseMixin):
 
         """
 
-        key = self.config.raw['pipeline']
-        for step_key in self.config.raw['pipelines'][key]:
+        for step_key in self.config.raw['pipelines'][self.pipeline]:
             step = self.steps[step_key]
             self.order.append(step)
 
@@ -219,8 +224,7 @@ class Build(LazyDatabaseMixin):
         """
 
         total = len(self.order)
-        pipeline = self.config.raw['pipeline']
-        self.log.info('Running {0}...'.format(pipeline))
+        self.log.info('Running {0}...'.format(self.pipeline))
 
         for x, step in enumerate(self.order, start=1):
             step.set_index(x, total)
@@ -237,7 +241,7 @@ class Build(LazyDatabaseMixin):
             else:
                 # If the success is not positive, bail and stop running.
                 step.log.error('Step failed.')
-                self.log.error('{0} failed.'.format(pipeline))
+                self.log.error('{0} failed.'.format(self.pipeline))
                 self.success = False
                 break
 
@@ -261,6 +265,8 @@ class Build(LazyDatabaseMixin):
 
 
 class ExecCLI:
+    config_class = config.BuildConfig
+
     def __init__(self, config):
         self.config = config
 
@@ -284,12 +290,14 @@ class ExecCLI:
         return 'exec', self.run
 
     def run(self, ns):
-        success = Build(self.config).run()
+        success = Build(self.config).run(ns.pipeline, ns.env)
 
         return 0 if success else 1
 
 
 class BuildCLI:
+    config_class = config.BuildConfig
+
     def __init__(self, config):
         self.config = config
 

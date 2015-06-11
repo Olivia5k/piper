@@ -4,6 +4,7 @@ import logbook
 
 from piper.api import RESTful
 from piper.build import Build
+from piper.config import AgentConfig
 from piper.config import BuildConfig
 from piper.db.core import LazyDatabaseMixin
 from piper.utils import oneshot
@@ -177,6 +178,8 @@ class Agent(LazyDatabaseMixin):
 
 
 class AgentCLI(LazyDatabaseMixin):
+    config_class = AgentConfig
+
     def __init__(self, config):
         self.config = config
         self.agent = Agent(config)

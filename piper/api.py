@@ -6,10 +6,12 @@ import types
 
 from aiohttp import web
 from piper.db.core import LazyDatabaseMixin
+from piper import config
 
 
 class ApiCLI(LazyDatabaseMixin):
     _modules = None
+    config_class = config.AgentConfig
 
     def __init__(self, config):
         self.config = config
