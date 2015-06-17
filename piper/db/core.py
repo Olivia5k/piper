@@ -146,53 +146,6 @@ class BuildManager:
         raise NotImplementedError()
 
 
-class ConfigManager:
-    def register(self, build):
-        """
-        Register a configuration to the database.
-
-        """
-
-        raise NotImplementedError()
-
-
-class ProjectManager:
-    def get(self, build):
-        """
-        Lazily get the project.
-
-        Create the project if it does not exist. If the VCS root for the
-        project does not exist, create that too.
-
-        """
-
-        raise NotImplementedError()
-
-
-class VCSManager:
-    def get(self, build):
-        """
-        Lazily get the VCS.
-
-        """
-
-        raise NotImplementedError()
-
-
-class PropertyManager:
-    def update(self):
-        """
-        Update agent properties.
-
-        """
-
-        raise NotImplementedError()
-
-
-class PropertyNamespaceManager:
-    pass
-
-
 class Database:
     """
     Abstract class representing a persistance layer
@@ -201,11 +154,6 @@ class Database:
 
     agent = AgentManager()
     build = BuildManager()
-    config = ConfigManager()
-    project = ProjectManager()
-    vcs = VCSManager()
-    property = PropertyManager()
-    propertynamespace = PropertyNamespaceManager()
 
     def __init__(self):
         self.log = logbook.Logger(self.__class__.__name__)
