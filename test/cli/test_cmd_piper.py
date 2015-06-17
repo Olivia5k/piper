@@ -37,13 +37,21 @@ class TestEntry:
 
 
 class TestEntryIntegration:
+    """
+    Test randomly selected points of entry to make sure that the mechanisms
+    seem to work.
+
+    """
+
     def test_db_init(self):
         args = ['db', 'init']
         cli = CLI('piper', (db.DbCLI,), config.BuildConfig, args=args)
 
         db.DbCLI.db = mock.Mock()
-        cli.entry()
-        db.DbCLI.db.init.assert_called_once_with(cli.config)
+        ret = cli.entry()
+
+        assert ret == 0
+        assert db.DbCLI.db.init.call_count == 1
 
     @mock.patch('piper.build.Build.run')
     def test_exec(self, run):
@@ -51,4 +59,4 @@ class TestEntryIntegration:
         cli = CLI('piper', (build.ExecCLI,), config.BuildConfig, args=args)
 
         cli.entry()
-        run.assert_called_once_with()
+        run.assert_called_once_with('build', 'local')
