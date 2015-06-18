@@ -198,7 +198,7 @@ class AgentCLI(LazyDatabaseMixin):
         ...
 
     def run(self, ns):
-        if self.config.agent_command in (None, 'start'):
+        if ns.agent_command in (None, 'start'):
             self.log.info('Starting agent')
             self.agent.listen()
 

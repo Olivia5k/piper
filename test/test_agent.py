@@ -247,14 +247,14 @@ class TestAgentRegister(object):
 
 class TestAgentCliRun(object):
     def test_without_argument(self, cli, ns):
-        cli.config.agent_command = None
+        ns.agent_command = None
         cli.agent.listen = Mock()
         cli.run(ns)
 
         cli.agent.listen.assert_called_once_with()
 
     def test_with_start_argument(self, cli, ns):
-        cli.config.agent_command = 'start'
+        ns.agent_command = 'start'
         cli.agent.listen = Mock()
         cli.run(ns)
 
