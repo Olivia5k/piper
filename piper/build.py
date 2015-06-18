@@ -43,10 +43,9 @@ class Build(LazyDatabaseMixin):
     def __init__(self, config):
         self.config = config
 
-        self.vcs = GitVCS('github', 'git@github.com')
-
         self.id = None
         self.version = None
+        self.vcs = None
         self.steps = {}
         self.order = []
         self.started = None
@@ -110,11 +109,15 @@ class Build(LazyDatabaseMixin):
         self.set_logfile()
         self.set_version()
 
+        self.configure_vcs()
         self.configure_env()
         self.configure_steps()
         self.configure_pipeline()
 
         self.setup_env()
+
+    def clone(self):
+        self.vcs.clone()
 
     def queue(self, pipeline, env):
         """
@@ -161,6 +164,17 @@ class Build(LazyDatabaseMixin):
         self.version = cls(self, ver_config)
         self.version.validate()
         self.log.info(str(self.version))
+
+    def configure_vcs(self):
+        """
+        Configures the VCS so that code can be fetched.
+
+        """
+
+        self.log.debug('Setting up VCS...')
+        self.vcs = GitVCS('github', 'git@github.com')
+        self.vcs.setup()
+        self.log.debug('VCS configured.')
 
     def configure_env(self):
         """
